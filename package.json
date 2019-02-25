@@ -1,0 +1,28 @@
+{
+  "name": "fernspieleditor",
+  "version": "0.1.0",
+  "description": "Online editor for fernspielapparat phonebooks",
+  "main": "index.js",
+  "repository": "https://github.com/krachzack/fernspieleditor.git",
+  "author": "krachzack <hello@phstadler.com>",
+  "license": "Unlicense",
+  "dependencies": {
+    "picnic": "^6.5.0",
+    "sanitize.css": "^8.0.0",
+    "vue": "^2.6.7",
+    "vue-hot-reload-api": "^2.3.3"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^2.6.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-html": "^5.0.3",
+    "eslint-plugin-vue": "^5.2.2",
+    "sass": "^1.17.2",
+    "standard": "^12.0.1",
+    "vue-template-compiler": "^2.6.7"
+  },
+  "scripts": {
+    "test": "standard --plugin vue 'assets/javascript/**/*.{js,vue}' index.js",
+    "fix": "standard --fix"
+  }
+}
