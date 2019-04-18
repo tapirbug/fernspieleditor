@@ -1,4 +1,8 @@
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { CONTINUE_RENAME_STATE } from './action-types.js'
+import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from './mutation-types.js'
+
 /**
  * Visualizes the currently edited network.
  */
@@ -6,77 +10,69 @@ export default {
   name: 'network-view',
   data: function () {
     return {
-      selectedIndex: null,
-      /** Index currently held at the pointer */
-      palm: null,
-      /** Grabbed element */
       palmEl: null,
+      firstGrabPosition: null,
       lastGrabPosition: null,
-      states: [
-        {
-          name: "ring",
-          network: {
-            position: {
-              x: 0,
-              y: 10
-            }
-          }
-        },
-        {
-          name: "countdown",
-          network: {
-            position: {
-              x: 500,
-              y: 10
-            }
-          }
-        }
-      ]
     }
   },
   computed: {
-  },
-  methods: {
-    grab (idx) {
-      this.select(idx)
-      this.startGrab(idx)
-    },
-    select (idx) {
-      this.selectedIndex = idx
-    },
-    startGrab (idx, position, el) {
-      this.palm = idx
-      this.palmEl = el
-      this.lastGrabPosition = position
-    },
-    endGrab () {
-      this.palm = null
-      this.lastGrabPosition = null
-    },
-    continueGrab (nextGrabPosition) {
-      const moveDistance = delta(this.lastGrabPosition, nextGrabPosition)
-      if (moveDistance.x === 0 && moveDistance.y === 0) {
-        // Moved not even a single pixel, stop
-        return
+    ...mapState(['states', 'focusedStateId']),
+    ...mapGetters(['focusedState', 'isFocused', 'stateNamed']),
+    movedPos() {
+      if (!this.firstGrabPosition || !this.focusedStateId) {
+        return undefined
       }
 
-      const palmElPos = this.position(this.palm)
+      const moveDistance = delta(this.firstGrabPosition, this.lastGrabPosition)
+
+      const palmElPos = this.palmEl.getBoundingClientRect()
       const movedPos = translate(
-        palmElPos,
+        this.focusedState.network.position,
         moveDistance
       )
 
-      palmElPos.x = Math.max(0, movedPos.x)
-      palmElPos.y = Math.max(0, movedPos.y)
+      movedPos.x = Math.max(0, movedPos.x)
+      movedPos.y = Math.max(0, movedPos.y)
+
+      return movedPos
+    }
+  },
+  methods: {
+    ...mapMutations([ ADD_STATE, FOCUS_STATE, MOVE_STATE ]),
+    ...mapActions([ CONTINUE_RENAME_STATE ]),
+    select (id) {
+      this[FOCUS_STATE](id)
+    },
+    startGrab (position, el) {
+      this.palmEl = el
+      this.firstGrabPosition = position
+      this.lastGrabPosition = position
+    },
+    continueGrab (nextGrabPosition) {
+      if (!this.firstGrabPosition || !this.palmEl) {
+        return
+      }
 
       this.lastGrabPosition = nextGrabPosition
+      
+      // Only move visually, commit at the end of the grab
+      this.movePalm(this.movedPos)
     },
-    canDragPalmTo (targetPos) {
-      const sourcePos = this.position(this.palm)
-
+    movePalm(to) {
+      if (to) {
+        this.palmEl.style.left = to.x + "px"
+        this.palmEl.style.top = to.y + "px" 
+      }
+    },
+    endGrab () {
+      this.movePalm(this.movedPos)
+      this[MOVE_STATE]({ id: this.focusedStateId, to: this.movedPos })
+      this.palmEl = null
+      this.firstGrabPosition = null
+      this.lastGrabPosition = null
     },
     move (evt) {
-      if (this.palm !== null) {
+      if (this.lastGrabPosition) {
         const released = evt.buttons === 0
 
         if (released) {
@@ -87,16 +83,18 @@ export default {
         }
       }
     },
-    down (idx, evt) {
+    down (id, evt) {
       const pos = this.evtPosition (evt)
       const el = evt.target
-      this.startGrab(idx, pos, el)
+      this.startGrab(id, pos, el)
+      this.select(id)
+      this.startGrab(pos, el)
     },
-    position (idx) {
-      return this.states[idx].network.position
-    },
-    changeName (idx, newName) {
-      this.states[idx].name = newName
+    typed (evt) {
+      this[CONTINUE_RENAME_STATE]({
+        id: this.focusedStateId,
+        to: evt.target.innerText
+      })
     },
     insert (evt) {
       if (!evt.target.classList.contains('network-view')) {
@@ -112,7 +110,7 @@ export default {
       position.x += insertionOffsetToPtr.x
       position.y += insertionOffsetToPtr.y
 
-      this.states.push({
+      this[ADD_STATE]({
         name: "New state",
         network: { position }
       })
@@ -157,16 +155,18 @@ function abs2 (vec) {
   <section class="network-view" v-on:mousemove="move" v-on:dblclick="insert">
     <article class="network-view-state"
              v-for="(state, idx) in states"
-             :key="idx"
+             :key="state.id"
+             v-bind:class="{ 'is-focused': isFocused(state) }"
              v-bind:style="{ left: state.network.position.x, top: state.network.position.y }"
              v-bind:tabindex="10000 + idx"
-             v-on:focus="select(idx)"
-             v-on:mousedown="down(idx, $event)">
+             v-bind:autofocus="isFocused(state) ? 'autofocus' : ''"
+             v-on:focus="select(state.id)"
+             v-on:mousedown="down(state.id, $event)">
       <header contenteditable="true"
-              v-on:blur="changeName(idx, $event.target.innerText)"
-              v-on:keyup="changeName(idx, $event.target.innerText)"
-              v-on:paste="changeName(idx, $event.target.innerText)"
-              v-on:input="changeName(idx, $event.target.innerText)">{{state.name}}</header>
+              v-on:blur="typed"
+              v-on:keyup="typed"
+              v-on:paste="typed"
+              v-on:input="typed">{{state.name}}</header>
     </article>
   </section>
 </template>
@@ -196,5 +196,10 @@ $state-bg: #fafafa;
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+
+
+  &.is-focused {
+    font-style: italic;
+  }
 }
 </style>

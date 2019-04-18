@@ -1,6 +1,6 @@
 <script>
-import Bar from './Bar.vue'
-import NetworkView from './NetworkView.vue'
+import Bar from './bar.vue'
+import NetworkView from './network-view.vue'
 
 export default {
   name: 'app',

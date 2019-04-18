@@ -1,4 +1,4 @@
-import run from './assets/javascript/app.js'
+import run from './assets/javascript/run.js'
 
 const existingEl = document.querySelector('#fernspieleditor-wrapper')
 const el = existingEl || (() => {
