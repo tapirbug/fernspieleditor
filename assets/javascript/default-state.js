@@ -3,24 +3,16 @@ export default {
   focusedStateId: null,
   states: [
     {
-      id: 1,
-      name: "ring",
+      id: 'afe30063-b562-4681-80c6-a784cea5af5c',
+      name: 'ring',
+      description: '',
+      speech: '',
       network: {
         position: {
-          x: 0,
-          y: 10
+          x: 200,
+          y: 300
         }
       }
     },
-    {
-      id: 10,
-      name: "countdown",
-      network: {
-        position: {
-          x: 500,
-          y: 10
-        }
-      }
-    }
   ]
 }

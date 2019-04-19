@@ -1,7 +1,9 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { CONTINUE_RENAME_STATE } from './action-types.js'
+import { CONTINUE_UPDATE_STATE } from './action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from './mutation-types.js'
+import { evtPosition, translate, delta } from './points.js'
+import Vue from 'vue'
 
 /**
  * Visualizes the currently edited network.
@@ -39,9 +41,12 @@ export default {
   },
   methods: {
     ...mapMutations([ ADD_STATE, FOCUS_STATE, MOVE_STATE ]),
-    ...mapActions([ CONTINUE_RENAME_STATE ]),
+    ...mapActions([ CONTINUE_UPDATE_STATE ]),
     select (id) {
       this[FOCUS_STATE](id)
+    },
+    deselect () {
+      this[FOCUS_STATE](undefined)
     },
     startGrab (position, el) {
       this.palmEl = el
@@ -85,15 +90,17 @@ export default {
     },
     down (id, evt) {
       const pos = this.evtPosition (evt)
-      const el = evt.target
+      const el = evt.target.classList.contains('network-view-state')
+        ? evt.target
+        : evt.target.parentElement
       this.startGrab(id, pos, el)
       this.select(id)
       this.startGrab(pos, el)
     },
-    typed (evt) {
-      this[CONTINUE_RENAME_STATE]({
-        id: this.focusedStateId,
-        to: evt.target.innerText
+    typed (evt, id) {
+      this[CONTINUE_UPDATE_STATE]({
+        id,
+        name: evt.target.innerText
       })
     },
     insert (evt) {
@@ -124,35 +131,10 @@ export default {
     }
   },
 }
-
-function evtPosition (evt) {
-  return {
-    x: evt.pageX,
-    y: evt.pageY
-  }
-}
-
-function translate (pos, delta) {
-  return {
-    x: pos.x + delta.x,
-    y: pos.y + delta.y,
-  }
-}
-
-function delta (pos0, pos1) {
-  return {
-    x: pos1.x - pos0.x,
-    y: pos1.y - pos0.y
-  }
-}
-
-function abs2 (vec) {
-  return Math.sqrt
-}
 </script>
 
 <template>
-  <section class="network-view" v-on:mousemove="move" v-on:dblclick="insert">
+  <section class="network-view" v-on:mousemove="move" v-on:dblclick="insert" v-on:click="deselect">
     <article class="network-view-state"
              v-for="(state, idx) in states"
              :key="state.id"
@@ -161,12 +143,16 @@ function abs2 (vec) {
              v-bind:tabindex="10000 + idx"
              v-bind:autofocus="isFocused(state) ? 'autofocus' : ''"
              v-on:focus="select(state.id)"
-             v-on:mousedown="down(state.id, $event)">
+             v-on:mousedown="down(state.id, $event)"
+             v-on:click="$event.stopPropagation()">
+
       <header contenteditable="true"
-              v-on:blur="typed"
-              v-on:keyup="typed"
-              v-on:paste="typed"
-              v-on:input="typed">{{state.name}}</header>
+              v-on:focus="select(state.id)"
+              v-on:blur="typed($event, state.id)"
+              v-on:focusout="typed($event, state.id)"
+              v-on:keydown.tab="typed($event, state.id)"
+              v-text="state.name">
+      </header>
     </article>
   </section>
 </template>
