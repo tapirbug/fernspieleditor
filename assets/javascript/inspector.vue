@@ -1,29 +1,39 @@
 <script>
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
-import { mapGetters, mapActions } from 'vuex'
+import { REMOVE_TRANSITION } from './mutation-types.js'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
+import TransitionDialog from './transition-dialog.vue'
 
 /**
  * Editor for the currently focused element.
  */
 export default {
   name: 'inspector',
+  components: {
+    'transition-dialog': TransitionDialog
+  },
   data () {
     return {
+      addingTransition: false
     }
   },
   computed: {
-    ...mapGetters(['focusedState']),
+    ...mapGetters(['focusedState', 'transitionSummariesFrom']),
     nothingFocused () {
       return !this.focusedState
     }
   },
   methods: {
+    ...mapMutations([REMOVE_TRANSITION]),
     ...mapActions([CONTINUE_UPDATE_STATE]),
     change (evt, prop) {
       this[CONTINUE_UPDATE_STATE]({
         id: this.focusedState.id,
         [prop]: evt.target.value
       })
+    },
+    removeTransition(summary) {
+      this[REMOVE_TRANSITION](summary)
     }
   }
 }
@@ -64,6 +74,36 @@ export default {
              v-on:paste="change($event, 'speech')"
              v-on:input="change($event, 'speech')"></textarea>
 
+      <h3>Transitions</h3>
+      <article class="card" v-for="transition in transitionSummariesFrom(focusedState)"
+            :key="transition.when + transition.to">
+        <header>
+          <div class="inspector-transition-summary flex two">
+            <div class="inspector-transition-summary-text">
+              <span v-text="transition.when"></span>
+              to
+              <span v-text="transition.to"></span>
+            </div>
+            <div class="inspector-modify-transition-btns">
+              <button class="dangerous" v-on:click="removeTransition(transition)">Delete</button>
+            </div>
+          </div>
+        </header>
+      </article>
+
+      <transition-dialog v-if="addingTransition"
+                         v-bind:from="focusedState.id"
+                         v-on:addtransitiondone="addingTransition = false"></transition-dialog>
+
+      <div class="inspector-add-transition-btns">
+
+        <button v-on:click="addingTransition = true"
+                v-bind:disabled="addingTransition">Add transition</button>
+        <button v-bind:class="{ warning: addingTransition }"
+                v-bind:disabled="!addingTransition"
+                v-on:click="addingTransition = false">Cancel</button>
+      </div>
+
       <h3>Debug</h3>
       <dl>
         <dt>ID</dt>
@@ -94,5 +134,29 @@ $inspector-passive-msg-color: #777;
 
 .inspector-input-speech {
   resize: vertical;
+}
+
+.inspector-add-transition-btns {
+  text-align: center;
+}
+
+.inspector-transition-summary {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inspector-transition-summary-text {
+  margin-top: -0.2em;
+  padding-left: 0.5em;
+}
+
+.inspector-transition-summary-text,
+.inspector-modify-transition-btns {
+  padding-bottom: 0 !important;
+}
+
+.inspector-modify-transition-btns {
+  text-align: right;
+  flex-basis: 30%;
 }
 </style>

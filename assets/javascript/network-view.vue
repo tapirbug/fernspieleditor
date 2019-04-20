@@ -89,10 +89,15 @@ export default {
       }
     },
     down (id, evt) {
-      const pos = this.evtPosition (evt)
       const el = evt.target.classList.contains('network-view-state')
         ? evt.target
-        : evt.target.parentElement
+        : evt.target.classList.contains('network-view-state-name') ? evt.target.parentElement : false
+
+      if (!el) {
+        return
+      }
+
+      const pos = this.evtPosition (evt)
       this.startGrab(id, pos, el)
       this.select(id)
       this.startGrab(pos, el)
@@ -146,13 +151,13 @@ export default {
              v-on:mousedown="down(state.id, $event)"
              v-on:click="$event.stopPropagation()">
 
-      <header contenteditable="true"
+      <header class="network-view-state-name"
+              contenteditable="true"
               v-on:focus="select(state.id)"
               v-on:blur="typed($event, state.id)"
               v-on:focusout="typed($event, state.id)"
               v-on:keydown.tab="typed($event, state.id)"
-              v-text="state.name">
-      </header>
+              v-text="state.name"></header>
     </article>
   </section>
 </template>
@@ -184,7 +189,7 @@ $state-bg: #fafafa;
                                   supported by Chrome and Opera */
 
 
-  &.is-focused {
+  &.is-focused .network-view-state-name {
     font-style: italic;
   }
 }

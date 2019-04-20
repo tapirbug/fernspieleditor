@@ -4,6 +4,9 @@ export const UPDATE_STATE = 'UPDATE_STATE'
 export const ADD_STATE = 'ADD_STATE'
 export const MOVE_STATE = 'MOVE_STATE'
 
+export const ADD_TRANSITION = 'ADD_TRANSITION'
+export const REMOVE_TRANSITION = 'REMOVE_TRANSITION'
+
 // Change UI state without modifying the phonebook
 // that would be generated
 
