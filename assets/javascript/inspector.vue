@@ -27,9 +27,13 @@ export default {
     ...mapMutations([REMOVE_TRANSITION]),
     ...mapActions([CONTINUE_UPDATE_STATE]),
     change (evt, prop) {
+      const value = (prop === 'ring')
+        ? parseFloat(evt.target.value)
+        : evt.target.value
+
       this[CONTINUE_UPDATE_STATE]({
         id: this.focusedState.id,
-        [prop]: evt.target.value
+        [prop]: value
       })
     },
     removeTransition(summary) {
@@ -73,6 +77,17 @@ export default {
              v-on:keyup="change($event, 'speech')"
              v-on:paste="change($event, 'speech')"
              v-on:input="change($event, 'speech')"></textarea>
+      <input class="stack"
+             type="number"
+             min="0"
+             max="5"
+             step="0.25"
+             placeholder="Ring time"
+             v-bind:value="focusedState.ring"
+             v-on:blur="change($event, 'ring')"
+             v-on:keyup="change($event, 'ring')"
+             v-on:paste="change($event, 'ring')"
+             v-on:input="change($event, 'ring')" />
 
       <h3>Transitions</h3>
       <article class="card" v-for="transition in transitionSummariesFrom(focusedState)"

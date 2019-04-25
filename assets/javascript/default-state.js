@@ -7,6 +7,7 @@ export default {
       name: 'ring',
       description: '',
       speech: '',
+      ring: 0,
       network: {
         position: {
           x: 200,
