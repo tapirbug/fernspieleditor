@@ -137,24 +137,26 @@ export default {
             </label>
           </section>
         </div>
-        
+
       </div>
     </div>
-    
+
   </section>
 </template>
 
 <style lang="scss">
-.transition-dialog {
+$dialog-height: 10em;
 
-  &-condition div {
+.transition-dialog {
+  &-condition > div {
+    margin: 0;
     padding: 0;
   }
 
   &-state-selection {
     margin: 0 !important; /* override picnic CSS selector with higher specificity */
     padding-bottom: 0.6em !important; /* override picnic CSS selector with higher specificity */
-    max-height: 10em;
+    max-height: $dialog-height;
     overflow: auto !important; /* override picnic CSS selector with higher specificity */
   }
 

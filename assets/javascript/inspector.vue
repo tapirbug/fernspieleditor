@@ -106,9 +106,11 @@ export default {
         </header>
       </article>
 
-      <transition-dialog v-if="addingTransition"
-                         v-bind:from="focusedState.id"
-                         v-on:addtransitiondone="addingTransition = false"></transition-dialog>
+      <transition name="slide">
+        <transition-dialog v-if="addingTransition"
+                          v-bind:from="focusedState.id"
+                          v-on:addtransitiondone="addingTransition = false"></transition-dialog>
+      </transition>
 
       <div class="inspector-add-transition-btns">
 
@@ -118,12 +120,6 @@ export default {
                 v-bind:disabled="!addingTransition"
                 v-on:click="addingTransition = false">Cancel</button>
       </div>
-
-      <h3>Debug</h3>
-      <dl>
-        <dt>ID</dt>
-        <dd>{{focusedState.id}}</dd>
-      </dl>
     </div>
   </section>
 </template>
@@ -173,5 +169,14 @@ $inspector-passive-msg-color: #777;
 .inspector-modify-transition-btns {
   text-align: right;
   flex-basis: 30%;
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: max-height 0.2s ease-in;
+  max-height: 10em;
+  overflow: hidden;
+}
+.slide-enter, .slide-leave-to {
+  max-height: 0;
 }
 </style>
