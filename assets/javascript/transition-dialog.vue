@@ -17,7 +17,9 @@ export default {
       timeoutSeconds: null,
       allTransitionTypes: {
         dial: 'Dial',
-        timeout: 'Timeout'
+        timeout: 'Timeout',
+        pick_up: 'Pick up',
+        hang_up: 'Hang up',
       }
     }
   },
@@ -53,7 +55,7 @@ export default {
           return {
             [num]: this.transitionTargetId
           }
-        } else {
+        } else if (transitionType === 'timeout') {
           if (!this.timeoutSeconds) {
             return
           }
@@ -63,6 +65,9 @@ export default {
             to: this.transitionTargetId,
             after: parseFloat(this.timeoutSeconds),
           }
+        } else {
+          // pick up or hang up
+          return { to: this.transitionTargetId }
         }
       })()
 

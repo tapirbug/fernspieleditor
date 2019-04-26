@@ -1,5 +1,5 @@
-import Vue from "vue"
-import Vuex from "vuex"
+import Vue from 'vue'
+import Vuex from 'vuex'
 import defaultState from './default-state.js'
 import uuid from './uuid.js'
 import { ADD_STATE, MOVE_STATE, UPDATE_STATE, FOCUS_STATE, ADD_TRANSITION, REMOVE_TRANSITION } from './mutation-types.js'
@@ -16,12 +16,28 @@ const describeTransition = {
   } ],
   dial: (transitions) => Object.keys(transitions)
     .sort()
-    .map(num => { return {
-      type: 'dial',
-      num,
-      when: `Dial ${num}`,
-      to: transitions[num]
-    } })
+    .map(num => {
+      return {
+        type: 'dial',
+        num,
+        when: `Dial ${num}`,
+        to: transitions[num]
+      }
+    }),
+  pick_up: (to) => {
+    return [ {
+      type: 'pick_up',
+      when: 'Pick up',
+      to
+    } ]
+  },
+  hang_up: (to) => {
+    return [ {
+      type: 'hang_up',
+      when: 'Hang up',
+      to
+    } ]
+  }
 }
 
 const getters = {
@@ -45,10 +61,10 @@ const getters = {
           return []
         }
         return describeTransition[type](
-          state.transitions[id][type],
+          state.transitions[id][type]
         ).map(desc => { return { ...desc, from: id, to: getters.findState(state)(desc.to).name } })
       })
-      .reduce((a,b) => a.concat(b), [])
+      .reduce((a, b) => a.concat(b), [])
 }
 
 let renamingTimeout = false
@@ -108,13 +124,16 @@ const mutations = {
   },
   [ADD_TRANSITION] (vuexState, { transitionType, from, ...config }) {
     const existingTransitions = vuexState.transitions
+    const isObj = transitionType !== 'hang_up' && transitionType !== 'pick_up'
     const updatedTransitions = {
       [from]: {
         ...existingTransitions[from],
-        [transitionType]: {
-          ...existingTransitions[from][transitionType],
-          ...config
-        }
+        [transitionType]: isObj
+          ? {
+            ...existingTransitions[from][transitionType],
+            ...config
+          }
+          : config.to
       }
     }
     vuexState.transitions = {
@@ -126,7 +145,7 @@ const mutations = {
     if (summary.type === 'dial') {
       Vue.delete(vuexState.transitions[summary.from].dial, summary.num)
     } else {
-      // timeout and others
+      // timeout, pick up, hang up and others, remove the whole thing
       Vue.delete(vuexState.transitions[summary.from], summary.type)
     }
   }
