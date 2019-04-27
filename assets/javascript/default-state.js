@@ -8,12 +8,6 @@ export default {
       description: '',
       speech: '',
       ring: 0,
-      network: {
-        position: {
-          x: 200,
-          y: 300
-        }
-      }
     },
   },
   transitions: {
@@ -21,6 +15,19 @@ export default {
       timeout: {
         after: 1.5,
         to: 'afe30063-b562-4681-80c6-a784cea5af5c'
+      }
+    }
+  },
+  vendor: {
+    // Fernspieleditor additions to the core format
+    fernspieleditor: {
+      'afe30063-b562-4681-80c6-a784cea5af5c': {
+        network: {
+          position: {
+            x: 200,
+            y: 300
+          }
+        }
       }
     }
   }

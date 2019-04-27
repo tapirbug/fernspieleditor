@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     ...mapState(['states', 'focusedStateId']),
-    ...mapGetters(['focusedState', 'isFocused', 'stateNamed']),
+    ...mapGetters(['findNetwork', 'focusedState', 'isFocused', 'stateNamed']),
     movedPos() {
       if (!this.firstGrabPosition || !this.focusedStateId) {
         return undefined
@@ -29,7 +29,7 @@ export default {
 
       const palmElPos = this.palmEl.getBoundingClientRect()
       const movedPos = translate(
-        this.focusedState.network.position,
+        this.findNetwork(this.focusedState).position,
         moveDistance
       )
 
@@ -123,8 +123,10 @@ export default {
       position.y += insertionOffsetToPtr.y
 
       this[ADD_STATE]({
-        name: "New state",
-        network: { position }
+        state: {
+          name: "New state",
+        },
+        position
       })
     },
     /** Position of a mouse event relative to this.$el */
@@ -144,7 +146,7 @@ export default {
              v-for="(state, idx) in states"
              :key="state.id"
              v-bind:class="{ 'is-focused': isFocused(state) }"
-             v-bind:style="{ left: state.network.position.x, top: state.network.position.y }"
+             v-bind:style="{ left: findNetwork(state).position.x, top: findNetwork(state).position.y }"
              v-bind:tabindex="10000 + idx"
              v-bind:autofocus="isFocused(state) ? 'autofocus' : ''"
              v-on:focus="select(state.id)"

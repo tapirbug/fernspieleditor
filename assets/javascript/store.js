@@ -79,18 +79,27 @@ const getters = {
         .map(id => getters.transitionSummariesFrom(state)({ id }))
         .reduce((a, b) => a.concat(b), [])
         .filter(summary => summary.to === id),
-  phonebookYaml: ({ states, transitions }) => {
+  phonebookYaml: ({ states, transitions, vendor }) => {
     return YAML.stringify({
       states: Object.values(states)
         .reduce(
           (acc, {id, ...state}) => {
-            acc[JSON.parse(JSON.stringify(id))] = JSON.parse(JSON.stringify(state)) // deep copies
+            acc[id] = state
             return acc
           },
           {}
         ), // core phonebook format does not duplicate id, remove them
-      transitions: JSON.parse(JSON.stringify(transitions))
+      transitions,
+      vendor,
     })
+  },
+  /// Finds network properties of state with ID
+  findNetwork: ({ vendor }) => ({ id }) => {
+    if (typeof vendor.fernspieleditor[id] === 'undefined') {
+      return
+    }
+
+    return vendor.fernspieleditor[id].network
   }
 }
 
@@ -110,7 +119,7 @@ const actions = {
 }
 
 const mutations = {
-  [ADD_STATE] (vuexState, newState) {
+  [ADD_STATE] (vuexState, { state: newState, position }) {
     const id = uuid()
     vuexState.states = {
       ...vuexState.states,
@@ -123,6 +132,12 @@ const mutations = {
     vuexState.transitions = {
       ...vuexState.transitions,
       [id]: {}
+    }
+    vuexState.vendor.fernspieleditor = {
+      ...vuexState.vendor.fernspieleditor,
+      [id]: {
+        network: { position }
+      }
     }
   },
   [UPDATE_STATE] (vuexState, payload) {
@@ -150,15 +165,18 @@ const mutations = {
         vuexState.focusedStateId = null
       }
 
+      // Remove network positions
+      Vue.delete(vuexState.vendor.fernspieleditor, id)
+
       // Finally, delete the state itself
       Vue.delete(vuexState.states, id)
     }
   },
   [MOVE_STATE] (vuexState, { id, to }) {
-    const state = getters.findState(vuexState)(id)
+    const network = getters.findNetwork(vuexState)({id})
 
-    if (state) {
-      state.network.position = to
+    if (network) {
+      network.position = to
     }
   },
   [FOCUS_STATE] (vuexState, id) {
