@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.6.0",
+    "cssnano": "^4.1.10",
     "eslint": "^5.16.0",
     "eslint-plugin-html": "^5.0.3",
     "eslint-plugin-vue": "^5.2.2",
