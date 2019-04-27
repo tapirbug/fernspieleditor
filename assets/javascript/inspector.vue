@@ -18,7 +18,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['focusedState', 'transitionSummariesFrom']),
+    ...mapGetters(['focusedState', 'transitionSummariesFrom', 'transitionSummariesTo']),
     nothingFocused () {
       return !this.focusedState
     }
@@ -115,6 +115,21 @@ export default {
           </div>
         </header>
       </article>
+      <article class="card" v-for="transition in transitionSummariesTo(focusedState)"
+            :key="transition.when + transition.to">
+        <header>
+          <div class="inspector-transition-summary flex two">
+            <div class="inspector-transition-summary-text">
+              <span v-text="transition.when"></span>
+              from
+              <span v-text="transition.fromName"></span>
+            </div>
+            <div class="inspector-modify-transition-btns">
+              <button class="dangerous" v-on:click="removeTransition(transition)">Delete</button>
+            </div>
+          </div>
+        </header>
+      </article>
 
       <transition name="slide">
         <transition-dialog v-if="addingTransition"
@@ -141,7 +156,7 @@ $danger-color: #ff4136;
 .inspector {
   position: relative;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   padding: 0 0.6em;
 }
 
