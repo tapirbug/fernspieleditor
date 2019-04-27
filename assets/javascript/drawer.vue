@@ -83,6 +83,12 @@ $drawer-grabbing-area-width: 1em;
   position: relative;
   background-color: #f0f0f0;
   box-shadow: -2px 0px 9px 1px #aaa;
+  overflow: auto;
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
 .drawer-grabbing-area {
