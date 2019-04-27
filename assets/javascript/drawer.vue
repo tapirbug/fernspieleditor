@@ -12,13 +12,14 @@ export default {
       hidden: false,
       /// Current width in percent of the parent element.
       /// If hidden, holds the last width before hiding.
-      width: 27,
+      minWidth: 10,
+      width: 22,
       dragStartPos: null
     }
   },
   computed: {
     cssWidth () {
-      return this.hidden ? "0" : (this.width + "%");
+      return this.hidden ? "0" : (Math.max(this.width, this.minWidth) + "%");
     }
   },
   methods: {
@@ -47,7 +48,7 @@ export default {
     },
     continueResize (to) {
       const deltaX = this.dragStartPos.x - to.x;
-      this.$el.style.flexBasis = `${this.width + this.pxToPercentOfParent(deltaX)}%`
+      this.$el.style.flexBasis = `${Math.max(this.minWidth, this.width + this.pxToPercentOfParent(deltaX))}%`
     },
     finishResize (at) {
       const deltaX = this.dragStartPos.x - at.x;
