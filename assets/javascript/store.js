@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import defaultState from './default-state.js'
 import uuid from './uuid.js'
-import { ADD_STATE, MOVE_STATE, UPDATE_STATE, FOCUS_STATE, ADD_TRANSITION, REMOVE_TRANSITION } from './mutation-types.js'
+import { ADD_STATE, MOVE_STATE, UPDATE_STATE, REMOVE_STATE, FOCUS_STATE, ADD_TRANSITION, REMOVE_TRANSITION } from './mutation-types.js'
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
 import createLogger from 'vuex/dist/logger'
 
@@ -62,9 +62,22 @@ const getters = {
         }
         return describeTransition[type](
           state.transitions[id][type]
-        ).map(desc => { return { ...desc, from: id, to: getters.findState(state)(desc.to).name } })
+        ).map(desc => {
+          return {
+            ...desc,
+            from: id,
+            fromName: getters.findState(state)(id).name,
+            toName: getters.findState(state)(desc.to).name
+          }
+        })
       })
-      .reduce((a, b) => a.concat(b), [])
+      .reduce((a, b) => a.concat(b), []),
+  transitionSummariesTo: (state) => ({ id }) =>
+      Object.keys(state.transitions)
+        .filter(idOrOther => idOrOther !== id)
+        .map(id => getters.transitionSummariesFrom(state)({ id }))
+        .reduce((a, b) => a.concat(b), [])
+        .filter(summary => summary.to === id)
 }
 
 let renamingTimeout = false
@@ -109,6 +122,24 @@ const mutations = {
       )
     }
   },
+  [REMOVE_STATE] (vuexState, id) {
+    const state = getters.findState(vuexState)(id)
+
+    if (state) {
+      // Delete transitions originating from deleted
+      Vue.delete(vuexState.transitions, id)
+      // And transitions from other states to the deleted too
+      getters.transitionSummariesTo(vuexState)({ id })
+        .forEach(summary => removeTransition(vuexState, summary))
+
+      if (vuexState.focusedStateId === id) {
+        vuexState.focusedStateId = null
+      }
+
+      // Finally, delete the state itself
+      Vue.delete(vuexState.states, id)
+    }
+  },
   [MOVE_STATE] (vuexState, { id, to }) {
     const state = getters.findState(vuexState)(id)
 
@@ -141,13 +172,15 @@ const mutations = {
       ...updatedTransitions
     }
   },
-  [REMOVE_TRANSITION] (vuexState, summary) {
-    if (summary.type === 'dial') {
-      Vue.delete(vuexState.transitions[summary.from].dial, summary.num)
-    } else {
-      // timeout, pick up, hang up and others, remove the whole thing
-      Vue.delete(vuexState.transitions[summary.from], summary.type)
-    }
+  [REMOVE_TRANSITION]: removeTransition
+}
+
+function removeTransition (vuexState, summary) {
+  if (summary.type === 'dial') {
+    Vue.delete(vuexState.transitions[summary.from].dial, summary.num)
+  } else {
+    // timeout, pick up, hang up and others, remove the whole thing
+    Vue.delete(vuexState.transitions[summary.from], summary.type)
   }
 }
 

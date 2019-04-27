@@ -1,6 +1,6 @@
 <script>
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
-import { REMOVE_TRANSITION } from './mutation-types.js'
+import { REMOVE_TRANSITION, REMOVE_STATE } from './mutation-types.js'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import TransitionDialog from './transition-dialog.vue'
 
@@ -24,7 +24,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations([REMOVE_TRANSITION]),
+    ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE]),
     ...mapActions([CONTINUE_UPDATE_STATE]),
     change (evt, prop) {
       const value = (prop === 'ring')
@@ -38,6 +38,9 @@ export default {
     },
     removeTransition(summary) {
       this[REMOVE_TRANSITION](summary)
+    },
+    removeState () {
+      this[REMOVE_STATE](this.focusedState.id)
     }
   }
 }
@@ -89,6 +92,13 @@ export default {
              v-on:paste="change($event, 'ring')"
              v-on:input="change($event, 'ring')" />
 
+      <article class="inspector-actions">
+        <header><h3>Actions</h3></header>
+        <footer>
+          <button class="dangerous" v-on:click="removeState">Delete state</button>
+        </footer>
+      </article>
+
       <h3>Transitions</h3>
       <article class="card" v-for="transition in transitionSummariesFrom(focusedState)"
             :key="transition.when + transition.to">
@@ -97,7 +107,7 @@ export default {
             <div class="inspector-transition-summary-text">
               <span v-text="transition.when"></span>
               to
-              <span v-text="transition.to"></span>
+              <span v-text="transition.toName"></span>
             </div>
             <div class="inspector-modify-transition-btns">
               <button class="dangerous" v-on:click="removeTransition(transition)">Delete</button>
@@ -126,6 +136,7 @@ export default {
 
 <style lang="scss">
 $inspector-passive-msg-color: #777;
+$danger-color: #ff4136;
 
 .inspector {
   position: relative;
@@ -169,6 +180,16 @@ $inspector-passive-msg-color: #777;
 .inspector-modify-transition-btns {
   text-align: right;
   flex-basis: 30%;
+}
+
+.inspector-actions {
+  .dangerous {
+    background-color: $danger-color;
+  }
+
+  footer {
+    text-align: center;
+  }
 }
 
 .slide-enter-active, .slide-leave-active {

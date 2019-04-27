@@ -2,6 +2,7 @@
 
 export const UPDATE_STATE = 'UPDATE_STATE'
 export const ADD_STATE = 'ADD_STATE'
+export const REMOVE_STATE = 'REMOVE_STATE'
 export const MOVE_STATE = 'MOVE_STATE'
 
 export const ADD_TRANSITION = 'ADD_TRANSITION'
