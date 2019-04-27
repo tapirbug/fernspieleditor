@@ -1,0 +1,14 @@
+@function blackToWhite() {
+  @return #{ "invert(1)" };
+}
+
+$icon-width: 0.8em;
+
+.icon {
+  width: $icon-width;
+  margin-top: -0.1em;
+  margin-right: $icon-width * 0.15;
+  height: auto;
+  vertical-align: middle;
+  filter: blackToWhite();
+}

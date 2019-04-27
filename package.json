@@ -7,6 +7,8 @@
   "author": "krachzack <hello@phstadler.com>",
   "license": "Unlicense",
   "dependencies": {
+    "file-saver": "^2.0.1",
+    "json-to-pretty-yaml": "^1.2.2",
     "picnic": "^6.5.0",
     "sanitize.css": "^8.0.0",
     "vue": "^2.6.10",

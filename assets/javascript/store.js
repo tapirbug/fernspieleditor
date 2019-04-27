@@ -3,8 +3,9 @@ import Vuex from 'vuex'
 import defaultState from './default-state.js'
 import uuid from './uuid.js'
 import { ADD_STATE, MOVE_STATE, UPDATE_STATE, REMOVE_STATE, FOCUS_STATE, ADD_TRANSITION, REMOVE_TRANSITION } from './mutation-types.js'
-import { CONTINUE_UPDATE_STATE } from './action-types.js'
+import { CONTINUE_UPDATE_STATE, SAVE_AS } from './action-types.js'
 import createLogger from 'vuex/dist/logger'
+import YAML from 'json-to-pretty-yaml'
 
 Vue.use(Vuex)
 
@@ -77,7 +78,20 @@ const getters = {
         .filter(idOrOther => idOrOther !== id)
         .map(id => getters.transitionSummariesFrom(state)({ id }))
         .reduce((a, b) => a.concat(b), [])
-        .filter(summary => summary.to === id)
+        .filter(summary => summary.to === id),
+  phonebookYaml: ({ states, transitions }) => {
+    return YAML.stringify({
+      states: Object.values(states)
+        .reduce(
+          (acc, {id, ...state}) => {
+            acc[JSON.parse(JSON.stringify(id))] = JSON.parse(JSON.stringify(state)) // deep copies
+            return acc
+          },
+          {}
+        ), // core phonebook format does not duplicate id, remove them
+      transitions: JSON.parse(JSON.stringify(transitions))
+    })
+  }
 }
 
 let renamingTimeout = false
@@ -92,7 +106,7 @@ const actions = {
       () => commit(UPDATE_STATE, payload),
       100
     )
-  }
+  },
 }
 
 const mutations = {
