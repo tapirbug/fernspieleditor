@@ -36,14 +36,11 @@ export default {
         if (prop === 'ring') {
           return parseFloat(evt.target.value)
         } else if (prop === 'terminal') {
-          console.log(evt.target)
           return !!evt.target.checked
         } else {
           return evt.target.value
         }
       })()
-
-      console.log(value)
 
       this[CONTINUE_UPDATE_STATE]({
         id: this.focusedState.id,
@@ -210,6 +207,7 @@ $danger-color: #ff4136;
 
 .inspector-input-speech {
   resize: vertical;
+  height: 8em;
 }
 
 .inspector-add-transition-btns {

@@ -12,7 +12,7 @@ export default {
       hidden: false,
       /// Current width in percent of the parent element.
       /// If hidden, holds the last width before hiding.
-      width: 20,
+      width: 27,
       dragStartPos: null
     }
   },
@@ -95,6 +95,7 @@ $drawer-grabbing-area-width: 1em;
   position: absolute;
   top: 0;
   bottom: 0;
+  z-index: 10000;
   left: -($drawer-grabbing-area-width / 2);
   width: $drawer-grabbing-area-width;
   cursor: w-resize;
