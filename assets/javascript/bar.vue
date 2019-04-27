@@ -11,10 +11,18 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['phonebookYaml'])
+    ...mapGetters(['phonebookYaml', 'phonebookYamlBlockers']),
+    isBlocked () {
+      return this.phonebookYamlBlockers.length > 0
+    },
   },
   methods: {
     serialize () {
+      if (this.isBlocked) {
+        this.failSerialize(this.phonebookYamlBlockers)
+        return
+      }
+
       const yaml = new File(
         [this.phonebookYaml],
         'phonebook.yaml',
@@ -24,6 +32,9 @@ export default {
       )
 
       saveAs(yaml)
+    },
+    failSerialize (blockers) {
+      alert(`Cannot save because: ${blockers.join(", ")}.`)
     }
   }
 }
@@ -39,7 +50,8 @@ export default {
       <a href="#" class="pseudo button">Open</a>
       <a href="#"
          class="button"
-         v-on:click="serialize">
+         v-on:click="serialize"
+         v-bind:disabled="isBlocked">
         <img class="icon" src="../images/file-download.svg" alt="Download" title="Download a copy of the current phonebook" />
         Download
       </a>

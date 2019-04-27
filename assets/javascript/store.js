@@ -2,8 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import defaultState from './default-state.js'
 import uuid from './uuid.js'
-import { ADD_STATE, MOVE_STATE, UPDATE_STATE, REMOVE_STATE, FOCUS_STATE, ADD_TRANSITION, REMOVE_TRANSITION } from './mutation-types.js'
-import { CONTINUE_UPDATE_STATE, SAVE_AS } from './action-types.js'
+import {
+  MAKE_INITIAL_STATE,
+  ADD_STATE,
+  MOVE_STATE,
+  UPDATE_STATE,
+  REMOVE_STATE,
+  FOCUS_STATE,
+  ADD_TRANSITION,
+  REMOVE_TRANSITION
+} from './mutation-types.js'
+import {
+  CONTINUE_UPDATE_STATE
+} from './action-types.js'
 import createLogger from 'vuex/dist/logger'
 import YAML from 'json-to-pretty-yaml'
 
@@ -44,6 +55,8 @@ const describeTransition = {
 const getters = {
   findState: state => id =>
     state.states[id],
+  isInitial: state => ({ id }) =>
+    state.initial === id,
   stateNamed: state => name =>
     Object.values(state.states).find(state => state.name === name),
   focusedState: (state) =>
@@ -79,8 +92,23 @@ const getters = {
         .map(id => getters.transitionSummariesFrom(state)({ id }))
         .reduce((a, b) => a.concat(b), [])
         .filter(summary => summary.to === id),
-  phonebookYaml: ({ states, transitions, vendor }) => {
+  phonebookYamlBlockers: ({ initial }) => {
+    const blockers = []
+
+    if (!initial) {
+      blockers.push("Some state must be marked as the initial state")
+    }
+
+    return blockers
+  },
+  phonebookYaml: (vuexState) => {
+    if (getters.phonebookYamlBlockers(vuexState).length > 0) {
+      return
+    }
+
+    const { initial, states, transitions, vendor } = vuexState
     return YAML.stringify({
+      initial,
       states: Object.values(states)
         .reduce(
           (acc, {id, ...state}) => {
@@ -124,7 +152,7 @@ const mutations = {
     vuexState.states = {
       ...vuexState.states,
       [id]: {
-        ...Object.values(defaultState.states)[0],
+        ...initialStateProps(),
         id,
         ...newState
       }
@@ -140,11 +168,10 @@ const mutations = {
       }
     }
   },
-  [UPDATE_STATE] (vuexState, payload) {
-    const state = getters.findState(vuexState)(payload.id)
+  [UPDATE_STATE] (vuexState, { id, ...payload }) {
+    const state = getters.findState(vuexState)(id)
 
     if (state) {
-      delete payload.id
       Object.assign(
         state,
         payload
@@ -165,6 +192,10 @@ const mutations = {
         vuexState.focusedStateId = null
       }
 
+      if (vuexState.initial === id) {
+        vuexState.initial = null
+      }
+
       // Remove network positions
       Vue.delete(vuexState.vendor.fernspieleditor, id)
 
@@ -181,6 +212,12 @@ const mutations = {
   },
   [FOCUS_STATE] (vuexState, id) {
     vuexState.focusedStateId =
+      (getters.findState(vuexState)(id))
+        ? id
+        : null
+  },
+  [MAKE_INITIAL_STATE] (vuexState, id) {
+    vuexState.initial =
       (getters.findState(vuexState)(id))
         ? id
         : null
@@ -225,3 +262,11 @@ const store = new Vuex.Store({
 })
 
 export default store
+
+function initialStateProps () {
+  const initial = {
+    ...Object.values(defaultState.states)[0]
+  };
+  delete initial.ring
+  return initial
+}

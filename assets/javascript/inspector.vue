@@ -1,6 +1,6 @@
 <script>
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
-import { REMOVE_TRANSITION, REMOVE_STATE } from './mutation-types.js'
+import { REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE } from './mutation-types.js'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import TransitionDialog from './transition-dialog.vue'
 
@@ -18,18 +18,32 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['focusedState', 'transitionSummariesFrom', 'transitionSummariesTo']),
+    ...mapGetters([
+      'focusedState',
+      'isInitial',
+      'transitionSummariesFrom',
+      'transitionSummariesTo'
+    ]),
     nothingFocused () {
       return !this.focusedState
     }
   },
   methods: {
-    ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE]),
+    ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE]),
     ...mapActions([CONTINUE_UPDATE_STATE]),
     change (evt, prop) {
-      const value = (prop === 'ring')
-        ? parseFloat(evt.target.value)
-        : evt.target.value
+      const value = (() => {
+        if (prop === 'ring') {
+          return parseFloat(evt.target.value)
+        } else if (prop === 'terminal') {
+          console.log(evt.target)
+          return !!evt.target.checked
+        } else {
+          return evt.target.value
+        }
+      })()
+
+      console.log(value)
 
       this[CONTINUE_UPDATE_STATE]({
         id: this.focusedState.id,
@@ -41,6 +55,19 @@ export default {
     },
     removeState () {
       this[REMOVE_STATE](this.focusedState.id)
+    },
+    toggleActiveClass (when) {
+      return {
+        'is-active': when,
+        'is-inactive': !when
+      }
+    },
+    setInitial (evt) {
+      this[MAKE_INITIAL_STATE](
+        evt.target.checked
+          ? this.focusedState.id
+          : null
+      )
     }
   }
 }
@@ -91,6 +118,18 @@ export default {
              v-on:keyup="change($event, 'ring')"
              v-on:paste="change($event, 'ring')"
              v-on:input="change($event, 'ring')" />
+      <label class="stack">
+        <span class="inspector-initial-button toggle button" v-bind:class="toggleActiveClass(isInitial(focusedState))">Initial state</span>
+        <input type="checkbox"
+             v-bind:checked="isInitial(focusedState)"
+             v-on:input="setInitial($event)" />
+      </label>
+      <label class="stack">
+        <span class="inspector-terminal-button toggle button" v-bind:class="toggleActiveClass(focusedState.terminal)">Terminal state</span>
+        <input type="checkbox"
+             v-bind:value="focusedState.terminal"
+             v-on:input="change($event, 'terminal')" />
+      </label>
 
       <article class="inspector-actions">
         <header><h3>Actions</h3></header>
@@ -214,5 +253,28 @@ $danger-color: #ff4136;
 }
 .slide-enter, .slide-leave-to {
   max-height: 0;
+}
+
+$default-color: #0074d9;
+$success-green: #2ecc40;
+$error-red: #ff4136;
+
+.inspector-initial-button,
+.inspector-terminal-button {
+  &.is-inactive {
+    background-color: desaturate($default-color, 90%);
+  }
+}
+
+.inspector-initial-button {
+  &.is-active {
+    background-color: desaturate($success-green, 30%);
+  }
+}
+
+.inspector-terminal-button {
+  &.is-active {
+    background-color: desaturate($error-red, 30%);
+  }
 }
 </style>
