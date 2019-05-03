@@ -12,16 +12,17 @@ export default {
   name: 'network-view',
   data: function () {
     return {
+      palmId: null,
       palmEl: null,
       firstGrabPosition: null,
       lastGrabPosition: null,
     }
   },
   computed: {
-    ...mapState(['states', 'focusedStateId']),
+    ...mapState(['states']),
     ...mapGetters(['findNetwork', 'focusedState', 'isFocused', 'stateNamed']),
     movedPos() {
-      if (!this.firstGrabPosition || !this.focusedStateId) {
+      if (!this.firstGrabPosition || !this.palmId || !this.findNetwork(this.palmId)) {
         return undefined
       }
 
@@ -29,7 +30,7 @@ export default {
 
       const palmElPos = this.palmEl.getBoundingClientRect()
       const movedPos = translate(
-        this.findNetwork(this.focusedState).position,
+        this.findNetwork(this.palmId).position,
         moveDistance
       )
 
@@ -48,7 +49,8 @@ export default {
     deselect () {
       this[FOCUS_STATE](undefined)
     },
-    startGrab (position, el) {
+    startGrab (id, position, el) {
+      this.palmId = id
       this.palmEl = el
       this.firstGrabPosition = position
       this.lastGrabPosition = position
@@ -71,7 +73,8 @@ export default {
     },
     endGrab () {
       this.movePalm(this.movedPos)
-      this[MOVE_STATE]({ id: this.focusedStateId, to: this.movedPos })
+      this[MOVE_STATE]({ id: this.palmId, to: this.movedPos })
+      this.palmId = null
       this.palmEl = null
       this.firstGrabPosition = null
       this.lastGrabPosition = null
@@ -100,7 +103,6 @@ export default {
       const pos = this.evtPosition (evt)
       this.startGrab(id, pos, el)
       this.select(id)
-      this.startGrab(pos, el)
     },
     typed (evt, id) {
       this[CONTINUE_UPDATE_STATE]({
@@ -135,6 +137,14 @@ export default {
         x: evt.pageX - this.$el.offsetParent.offsetLeft,
         y: evt.pageY - this.$el.offsetParent.offsetTop
       }
+    },
+    stateStyle (id) {
+      const network = this.findNetwork(id)
+      const position = network ? network.position : { x: 0, y: 0 }
+      return {
+        left: position.x,
+        top: position.y
+      }
     }
   },
 }
@@ -143,22 +153,22 @@ export default {
 <template>
   <section class="network-view" v-on:mousemove="move" v-on:dblclick="insert" v-on:click="deselect">
     <article class="network-view-state"
-             v-for="(state, idx) in states"
-             :key="state.id"
-             v-bind:class="{ 'is-focused': isFocused(state) }"
-             v-bind:style="{ left: findNetwork(state).position.x, top: findNetwork(state).position.y }"
-             v-bind:tabindex="10000 + idx"
-             v-bind:autofocus="isFocused(state) ? 'autofocus' : ''"
-             v-on:focus="select(state.id)"
-             v-on:mousedown="down(state.id, $event)"
+             v-for="(state, id) in states"
+             :key="id"
+             v-bind:class="{ 'is-focused': isFocused(id) }"
+             v-bind:style="stateStyle(id)"
+             v-bind:tabindex="0"
+             v-bind:autofocus="isFocused(id) ? 'autofocus' : ''"
+             v-on:focus="select(id)"
+             v-on:mousedown="down(id, $event)"
              v-on:click="$event.stopPropagation()">
 
       <header class="network-view-state-name"
               contenteditable="true"
-              v-on:focus="select(state.id)"
-              v-on:blur="typed($event, state.id)"
-              v-on:focusout="typed($event, state.id)"
-              v-on:keydown.tab="typed($event, state.id)"
+              v-on:focus="select(id)"
+              v-on:blur="typed($event, id)"
+              v-on:focusout="typed($event, id)"
+              v-on:keydown.tab="typed($event, id)"
               v-text="state.name"></header>
     </article>
   </section>

@@ -1,6 +1,7 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { saveAs } from 'file-saver'
+import { LOAD_FILE } from './action-types.js'
 
 /**
  * Menu bar.
@@ -17,6 +18,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions([LOAD_FILE]),
     serialize () {
       if (this.isBlocked) {
         this.failSerialize(this.phonebookYamlBlockers)
@@ -35,6 +37,16 @@ export default {
     },
     failSerialize (blockers) {
       alert(`Cannot save because: ${blockers.join(", ")}.`)
+    },
+    startLoadFile (evt) {
+      const { files } = evt.target;
+      this[LOAD_FILE]({ files })
+        .then(
+          undefined,
+          err => {
+            alert(err)
+          }
+        )
     }
   }
 }
@@ -47,7 +59,13 @@ export default {
     </a>
     <div class="menu">
       <a href="#" class="pseudo button">Help</a>
-      <a href="#" class="pseudo button">Open</a>
+      <label class="pseudo button">
+        Open
+        <input class="menu-open-file-input"
+               type="file"
+               name="open-file"
+               v-on:input="startLoadFile" />
+      </label>
       <a href="#"
          class="button"
          v-on:click="serialize"
@@ -64,5 +82,9 @@ export default {
 
 .bar {
   height: $header-height;
+}
+
+.menu-open-file-input {
+  display: none;
 }
 </style>

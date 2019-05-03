@@ -1,10 +1,12 @@
+import uuid from './uuid.js'
+const initialStateId = uuid()
+
 export default {
   /// Name of the currently focused state or null if nothing selected.
   focusedStateId: null,
-  initial: 'afe30063-b562-4681-80c6-a784cea5af5c',
+  initial: initialStateId,
   states: {
-    'afe30063-b562-4681-80c6-a784cea5af5c': {
-      id: 'afe30063-b562-4681-80c6-a784cea5af5c',
+    [initialStateId]: {
       name: 'ring',
       description: '',
       speech: '',
@@ -13,17 +15,17 @@ export default {
     },
   },
   transitions: {
-    'afe30063-b562-4681-80c6-a784cea5af5c': {
+    [initialStateId]: {
       timeout: {
         after: 1.5,
-        to: 'afe30063-b562-4681-80c6-a784cea5af5c'
+        to: initialStateId
       }
     }
   },
   vendor: {
     // Fernspieleditor additions to the core format
     fernspieleditor: {
-      'afe30063-b562-4681-80c6-a784cea5af5c': {
+      [initialStateId]: {
         network: {
           position: {
             x: 200,

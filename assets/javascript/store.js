@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import defaultState from './default-state.js'
 import uuid from './uuid.js'
 import {
+  CLEAR_PHONEBOOK,
+  MERGE_PHONEBOOK,
   MAKE_INITIAL_STATE,
   ADD_STATE,
   MOVE_STATE,
@@ -13,10 +15,11 @@ import {
   REMOVE_TRANSITION
 } from './mutation-types.js'
 import {
-  CONTINUE_UPDATE_STATE
+  CONTINUE_UPDATE_STATE,
+  LOAD_FILE
 } from './action-types.js'
 import createLogger from 'vuex/dist/logger'
-import YAML from 'json-to-pretty-yaml'
+import YAML from 'yaml'
 
 Vue.use(Vuex)
 
@@ -49,13 +52,20 @@ const describeTransition = {
       when: 'Hang up',
       to
     } ]
+  },
+  end: (to) => {
+    return [ {
+      type: 'end',
+      when: 'Speech end',
+      to
+    } ]
   }
 }
 
 const getters = {
   findState: state => id =>
     state.states[id],
-  isInitial: state => ({ id }) =>
+  isInitial: state => id =>
     state.initial === id,
   stateNamed: state => name =>
     Object.values(state.states).find(state => state.name === name),
@@ -65,9 +75,9 @@ const getters = {
     const focused = getters.focusedState(state)
     return focused ? focused.name : undefined
   },
-  isFocused: vuexState => ({ id }) =>
+  isFocused: vuexState => id =>
     id === vuexState.focusedStateId,
-  transitionSummariesFrom: (state) => ({ id }) =>
+  transitionSummariesFrom: state => id =>
     Object.keys(state.transitions[id])
       .sort()
       .map(type => {
@@ -80,16 +90,16 @@ const getters = {
           return {
             ...desc,
             from: id,
-            fromName: getters.findState(state)(id).name,
-            toName: getters.findState(state)(desc.to).name
+            fromName: getters.findState(state)(id) ? getters.findState(state)(id).name : 'undefined',
+            toName: getters.findState(state)(desc.to) ? getters.findState(state)(desc.to).name : 'undefined'
           }
         })
       })
       .reduce((a, b) => a.concat(b), []),
-  transitionSummariesTo: (state) => ({ id }) =>
+  transitionSummariesTo: state => id =>
       Object.keys(state.transitions)
         .filter(idOrOther => idOrOther !== id)
-        .map(id => getters.transitionSummariesFrom(state)({ id }))
+        .map(id => getters.transitionSummariesFrom(state)(id))
         .reduce((a, b) => a.concat(b), [])
         .filter(summary => summary.to === id),
   phonebookYamlBlockers: ({ initial }) => {
@@ -109,20 +119,13 @@ const getters = {
     const { initial, states, transitions, vendor } = vuexState
     return YAML.stringify({
       initial,
-      states: Object.values(states)
-        .reduce(
-          (acc, {id, ...state}) => {
-            acc[id] = state
-            return acc
-          },
-          {}
-        ), // core phonebook format does not duplicate id, remove them
+      states,
       transitions,
       vendor,
     })
   },
   /// Finds network properties of state with ID
-  findNetwork: ({ vendor }) => ({ id }) => {
+  findNetwork: ({ vendor }) => id => {
     if (typeof vendor.fernspieleditor[id] === 'undefined') {
       return
     }
@@ -144,9 +147,175 @@ const actions = {
       100
     )
   },
+  [LOAD_FILE] ({ commit }, { files }) {
+    return getSingleFile(files)
+      .then(validateFilename)
+      .then(loadFile)
+      .then(YAML.parse)
+      .then(autoName)
+      .then(autoLayout)
+      .then(autoSelect)
+      .then(inlineAnyTransitions)
+      .then(validateContents)
+      .then(replaceState)
+
+    function getSingleFile (files) {
+      if (files.length < 1) {
+        return Promise.reject("No file selected")
+      }
+  
+      if (files.length > 1) {
+        return Promise.reject("Cannot select more than one file at a time.")
+      }
+
+      return Promise.resolve(files[0])
+    }
+
+    function validateFilename (file) {
+      const expectedPattern = /\.yaml$/i
+
+      if (!expectedPattern.test(file.name)) {
+        return Promise.reject("Phonebook files must end in .yaml")
+      }
+
+      return file
+    }
+
+    function loadFile (file) {
+      if (!FileReader) {
+        return Promise.reject("Your browser does not support or allow loading of local files. Consider using Firefox.")
+      }
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsText(file)
+      })      
+    }
+
+    function inlineAnyTransitions (newState) {
+      if (!newState.transitions || !newState.transitions.any) {
+        return newState
+      }
+
+      const any = newState.transitions.any
+      delete newState.transitions.any
+      newState.transitions = Object.entries(newState.transitions)
+        .map(
+          ([from, transitionsFrom]) => {
+            let dial = any.dial
+            if (!dial) {
+              dial = transitionsFrom.dial
+            } else if (transitionsFrom.dial) {
+              // both defined, merge dial
+              dial = {
+                ...any.dial,
+                ...transitionsFrom.dial
+              }
+            }
+
+            return [
+              from,
+              {
+                ...any,
+                ...transitionsFrom, // For everything except dial, replace transitions from any
+                dial
+              }
+            ]
+          }
+        )
+        .reduce(
+          (acc, [from, transitionsFrom]) => {
+            acc[from] = transitionsFrom
+            return acc
+          },
+          {}
+        )
+
+      return newState
+    }
+
+    function autoName (newState) {
+      Object.entries(newState.states)
+        .map(([id, state]) => {
+          // Use ID as name if no name defined
+          if (!state) {
+            newState.states[id] = {
+              name: id
+            }
+          } else if (typeof state.name === 'undefined') {
+            state.name = id
+          }
+        })
+
+      return newState
+    }
+
+    function autoLayout (newState) {
+      if (!newState.vendor) {
+        newState.vendor = {}
+      }
+
+      if (!newState.vendor.fernspieleditor) {
+        newState.vendor.fernspieleditor = {}
+      }
+
+      let posX = 0;
+      let posY = 0;
+      Object.keys(newState.states)
+        .forEach(id => {
+          if (!newState.vendor.fernspieleditor[id]) {
+            newState.vendor.fernspieleditor[id] = {
+              network: {
+                position: { x: (posX += 150), y: (posY += 50) }
+              }
+            }
+          }
+        })
+
+      return newState
+    }
+
+    function autoSelect (newState) {
+      if (newState.focusedStateId) {
+        return newState
+      }
+
+      const anyState = Object.entries(newState.states)[0]
+      const anyStateId = anyState ? anyState[0] : null
+      return {
+        focusedStateId: anyStateId,
+        ...newState
+      }
+    }
+
+    function validateContents (contents) {
+      if (!contents.states || !contents.transitions) {
+        return Promise.reject("Incompatible file format.")
+      }
+
+      return contents
+    }
+
+    function replaceState (newPhonebook) {
+      //commit(CLEAR_PHONEBOOK)
+      commit(MERGE_PHONEBOOK, newPhonebook)
+      return `Loading OK`
+    }
+  }
 }
 
 const mutations = {
+  [CLEAR_PHONEBOOK] (vuexState) {
+    Object.keys(defaultState)
+      .forEach(prop => Vue.delete(vuexState, prop))
+    vuexState.focusedStateId = null
+  },
+  [MERGE_PHONEBOOK] (vuexState, newPhonebook) {
+    Object.entries(newPhonebook)
+      .forEach(([key, val]) => Vue.set(vuexState, key, val))
+  },
   [ADD_STATE] (vuexState, { state: newState, position }) {
     const id = uuid()
     vuexState.states = {
@@ -185,7 +354,7 @@ const mutations = {
       // Delete transitions originating from deleted
       Vue.delete(vuexState.transitions, id)
       // And transitions from other states to the deleted too
-      getters.transitionSummariesTo(vuexState)({ id })
+      getters.transitionSummariesTo(vuexState)(id)
         .forEach(summary => removeTransition(vuexState, summary))
 
       if (vuexState.focusedStateId === id) {
@@ -204,7 +373,7 @@ const mutations = {
     }
   },
   [MOVE_STATE] (vuexState, { id, to }) {
-    const network = getters.findNetwork(vuexState)({id})
+    const network = getters.findNetwork(vuexState)(id)
 
     if (network) {
       network.position = to

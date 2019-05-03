@@ -1,7 +1,7 @@
 <script>
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
 import { REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE } from './mutation-types.js'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex'
 import TransitionDialog from './transition-dialog.vue'
 
 /**
@@ -18,6 +18,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['focusedStateId']),
     ...mapGetters([
       'focusedState',
       'isInitial',
@@ -43,7 +44,7 @@ export default {
       })()
 
       this[CONTINUE_UPDATE_STATE]({
-        id: this.focusedState.id,
+        id: this.focusedStateId,
         [prop]: value
       })
     },
@@ -51,7 +52,7 @@ export default {
       this[REMOVE_TRANSITION](summary)
     },
     removeState () {
-      this[REMOVE_STATE](this.focusedState.id)
+      this[REMOVE_STATE](this.focusedStateId)
     },
     toggleActiveClass (when) {
       return {
@@ -62,7 +63,7 @@ export default {
     setInitial (evt) {
       this[MAKE_INITIAL_STATE](
         evt.target.checked
-          ? this.focusedState.id
+          ? this.focusedStateId
           : null
       )
     }
@@ -116,9 +117,9 @@ export default {
              v-on:paste="change($event, 'ring')"
              v-on:input="change($event, 'ring')" />
       <label class="stack">
-        <span class="inspector-initial-button toggle button" v-bind:class="toggleActiveClass(isInitial(focusedState))">Initial state</span>
+        <span class="inspector-initial-button toggle button" v-bind:class="toggleActiveClass(isInitial(focusedStateId))">Initial state</span>
         <input type="checkbox"
-             v-bind:checked="isInitial(focusedState)"
+             v-bind:checked="isInitial(focusedStateId)"
              v-on:input="setInitial($event)" />
       </label>
       <label class="stack">
@@ -136,8 +137,8 @@ export default {
       </article>
 
       <h3>Transitions</h3>
-      <article class="card" v-for="transition in transitionSummariesFrom(focusedState)"
-            :key="transition.when + transition.to">
+      <article class="card" v-for="transition in transitionSummariesFrom(focusedStateId)"
+            :key="JSON.stringify(transition)">
         <header>
           <div class="inspector-transition-summary flex two">
             <div class="inspector-transition-summary-text">
@@ -151,8 +152,8 @@ export default {
           </div>
         </header>
       </article>
-      <article class="card" v-for="transition in transitionSummariesTo(focusedState)"
-            :key="transition.when + transition.to">
+      <article class="card" v-for="transition in transitionSummariesTo(focusedStateId)"
+            :key="JSON.stringify(transition)">
         <header>
           <div class="inspector-transition-summary flex two">
             <div class="inspector-transition-summary-text">
@@ -169,7 +170,7 @@ export default {
 
       <transition name="slide">
         <transition-dialog v-if="addingTransition"
-                          v-bind:from="focusedState.id"
+                          v-bind:from="focusedStateId"
                           v-on:addtransitiondone="addingTransition = false"></transition-dialog>
       </transition>
 
