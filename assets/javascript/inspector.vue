@@ -56,7 +56,7 @@ export default {
     },
     toggleActiveClass (when) {
       return {
-        'is-active': when,
+        'is-active': !!when,
         'is-inactive': !when
       }
     },

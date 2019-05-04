@@ -20,6 +20,7 @@ import {
 } from './action-types.js'
 import createLogger from 'vuex/dist/logger'
 import YAML from 'yaml'
+import { mapEntries, mapValues } from './map-obj.js'
 
 Vue.use(Vuex)
 
@@ -155,6 +156,7 @@ const actions = {
       .then(autoName)
       .then(autoLayout)
       .then(autoSelect)
+      .then(addMissingDefaultStateProps)
       .then(inlineAnyTransitions)
       .then(validateContents)
       .then(replaceState)
@@ -201,44 +203,37 @@ const actions = {
 
       const any = newState.transitions.any
       delete newState.transitions.any
-      newState.transitions = Object.entries(newState.transitions)
-        .map(
-          ([from, transitionsFrom]) => {
-            let dial = any.dial
-            if (!dial) {
-              dial = transitionsFrom.dial
-            } else if (transitionsFrom.dial) {
-              // both defined, merge dial
-              dial = {
-                ...any.dial,
-                ...transitionsFrom.dial
-              }
+      newState.transitions = mapEntries(
+        newState.transitions,
+        ([from, transitionsFrom]) => {
+          let dial = any.dial
+          if (!dial) {
+            dial = transitionsFrom.dial
+          } else if (transitionsFrom.dial) {
+            // both defined, merge dial
+            dial = {
+              ...any.dial,
+              ...transitionsFrom.dial
             }
-
-            return [
-              from,
-              {
-                ...any,
-                ...transitionsFrom, // For everything except dial, replace transitions from any
-                dial
-              }
-            ]
           }
-        )
-        .reduce(
-          (acc, [from, transitionsFrom]) => {
-            acc[from] = transitionsFrom
-            return acc
-          },
-          {}
-        )
+
+          return [
+            from,
+            {
+              ...any,
+              ...transitionsFrom, // For everything except dial, replace transitions from any
+              dial
+            }
+          ]
+        }
+      )
 
       return newState
     }
 
     function autoName (newState) {
       Object.entries(newState.states)
-        .map(([id, state]) => {
+        .forEach(([id, state]) => {
           // Use ID as name if no name defined
           if (!state) {
             newState.states[id] = {
@@ -287,6 +282,22 @@ const actions = {
       return {
         focusedStateId: anyStateId,
         ...newState
+      }
+    }
+
+    function addMissingDefaultStateProps (newState) {
+      console.log(newState.states)
+      return {
+        ...newState,
+        states: mapValues(
+          newState.states,
+          state => {
+            return {
+              ...initialStateProps(),
+              ...state
+            }
+          }
+        )
       }
     }
 
