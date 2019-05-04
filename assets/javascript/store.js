@@ -136,10 +136,11 @@ const getters = {
 }
 
 let renamingTimeout = false
+let renamingTimeoutId = ''
 
 const actions = {
   [CONTINUE_UPDATE_STATE] ({ commit }, payload) {
-    if (renamingTimeout) {
+    if (renamingTimeout && renamingTimeoutId === payload.id) {
       window.clearTimeout(renamingTimeout)
     }
 
@@ -147,6 +148,7 @@ const actions = {
       () => commit(UPDATE_STATE, payload),
       100
     )
+    renamingTimeoutId = payload.id
   },
   [LOAD_FILE] ({ commit }, { files }) {
     return getSingleFile(files)

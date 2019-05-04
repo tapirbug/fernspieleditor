@@ -32,7 +32,7 @@ export default {
   methods: {
     ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE]),
     ...mapActions([CONTINUE_UPDATE_STATE]),
-    change (evt, prop) {
+    change (evt, id, prop) {
       const value = (() => {
         if (prop === 'ring') {
           return parseFloat(evt.target.value)
@@ -44,7 +44,7 @@ export default {
       })()
 
       this[CONTINUE_UPDATE_STATE]({
-        id: this.focusedStateId,
+        id,
         [prop]: value
       })
     },
@@ -92,28 +92,28 @@ export default {
         placeholder="Name"
         maxlength="32"
         :value="focusedState.name"
-        @blur="change($event, 'name')"
-        @keyup="change($event, 'name')"
-        @paste="change($event, 'name')"
-        @input="change($event, 'name')"
+        @blur="change($event, focusedStateId, 'name')"
+        @keyup="change($event, focusedStateId, 'name')"
+        @paste="change($event, focusedStateId, 'name')"
+        @input="change($event, focusedStateId, 'name')"
       >
       <input
         class="stack"
         placeholder="Description"
         :value="focusedState.description"
-        @blur="change($event, 'description')"
-        @keyup="change($event, 'description')"
-        @paste="change($event, 'description')"
-        @input="change($event, 'description')"
+        @blur="change($event, focusedStateId, 'description')"
+        @keyup="change($event, focusedStateId, 'description')"
+        @paste="change($event, focusedStateId, 'description')"
+        @input="change($event, focusedStateId, 'description')"
       >
       <textarea
         class="stack inspector-input-speech"
         placeholder="Speech"
-        @blur="change($event, 'speech')"
-        @keyup="change($event, 'speech')"
-        @paste="change($event, 'speech')"
-        @input="change($event, 'speech')"
-        v-text="focusedState.speech"
+        :value="focusedState.speech"
+        @blur="change($event, focusedStateId, 'speech')"
+        @keyup="change($event, focusedStateId, 'speech')"
+        @paste="change($event, focusedStateId, 'speech')"
+        @input="change($event, focusedStateId, 'speech')"
       ></textarea>
       <input
         class="stack"
@@ -123,10 +123,10 @@ export default {
         step="0.25"
         placeholder="Ring time"
         :value="focusedState.ring"
-        @blur="change($event, 'ring')"
-        @keyup="change($event, 'ring')"
-        @paste="change($event, 'ring')"
-        @input="change($event, 'ring')"
+        @blur="change($event, focusedStateId, 'ring')"
+        @keyup="change($event, focusedStateId, 'ring')"
+        @paste="change($event, focusedStateId, 'ring')"
+        @input="change($event, focusedStateId, 'ring')"
       >
       <label class="stack">
         <span
@@ -147,7 +147,7 @@ export default {
         <input
           type="checkbox"
           :value="focusedState.terminal"
-          @input="change($event, 'terminal')"
+          @input="change($event, focusedStateId, 'terminal')"
         >
       </label>
 
@@ -261,6 +261,8 @@ $danger-color: #ff4136;
 .inspector-input-speech {
   resize: vertical;
   height: 8em;
+  height: 10em;
+  word-break: break-all;
 }
 
 .inspector-add-transition-btns {
