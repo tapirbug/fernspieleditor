@@ -68,7 +68,7 @@ export default {
               toPos: arrow.isToSelf
                 ? { ...toPos, y: toPos.y + 10 }
                 : toPos,
-              offset: arrow.isToSelf ? '0' : (arrow.hasInverse ? '-2em' : '0')
+              offset: arrow.isToSelf ? '0' : (arrow.hasInverse ? '-0.3em' : '0')
             }
           }
         )
