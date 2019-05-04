@@ -47,6 +47,70 @@ export default {
       movedPos.y = Math.max(0, movedPos.y)
 
       return movedPos
+    },
+    arrows () {
+      const transitionEdges = Object.keys(this.states)
+        .map(this.transitionSummariesFrom)
+        .reduce((a, b) => { a.push(...b); return a }, []) // flatten
+        .sort(byFromAndThenTo)
+
+      const arrows = transitionEdges.reduce(
+          appendArrow,
+          []
+        )
+        .map(
+          arrow => {
+            const fromPos = this.palmId === arrow.from ? this.movedPos : this.findNetwork(arrow.from).position
+            const toPos = arrow.isToSelf ? fromPos : (this.palmId === arrow.to ? this.movedPos : this.findNetwork(arrow.to).position)
+            return {
+              ...arrow,
+              fromPos,
+              toPos: arrow.isToSelf
+                ? { ...toPos, y: toPos.y + 10 }
+                : toPos,
+              offset: arrow.isToSelf ? '0' : (arrow.hasInverse ? '-2em' : '0')
+            }
+          }
+        )
+
+      return arrows
+
+      function byFromAndThenTo (a, b) {
+        const valA = a.from + a.to
+        const valB = b.from + b.to
+        if (valA < valB) {
+          return -1
+        }
+        if (valA > valB) {
+          return 1
+        }
+        return 0
+      }
+
+      function appendArrow (arrows, nextTransition) {
+        const lastArrow = (arrows.length === 0) ? false : arrows[arrows.length - 1]
+
+        if (lastArrow && lastArrow.from === nextTransition.from && lastArrow.to === nextTransition.to) {
+          lastArrow.label += ', ' + nextTransition.when
+        } else {
+          const isToSelf = nextTransition.from === nextTransition.to
+          const hasInverse = isToSelf || -1 !== transitionEdges.findIndex(
+            transition => transition.from === nextTransition.to && transition.to === nextTransition.from
+          )
+
+          arrows.push({
+            fromName: nextTransition.fromName,
+            toName: nextTransition.toName,
+            from: nextTransition.from,
+            to: nextTransition.to,
+            label: nextTransition.when,
+            isToSelf,
+            hasInverse
+          })
+        }
+
+        return arrows
+      }
     }
   },
   methods: {
@@ -155,45 +219,6 @@ export default {
         top: position.y
       }
     },
-    arrowFrom (transitionSummary) {
-      const network = this.findNetwork(transitionSummary.from)
-      const pos = network ? network.position : { x: 0, y: 0 }
-      return pos
-    },
-    arrowTo (transitionSummary) {
-      const network = this.findNetwork(transitionSummary.to)
-      const pos = network ? network.position : { x: 0, y: 0 }
-      return pos
-    },
-    offset (transitionSummary) {
-      return -this.indexOf(transitionSummary) * 10
-    },
-    indexOf (likeThisSummary) {
-      const outwards = this.transitionSummariesFrom(likeThisSummary.from)
-        .filter(from => from.to !== from.from && from.to === likeThisSummary.to)
-      const inwards = this.transitionSummariesFrom(likeThisSummary.to)
-        .filter(to => to.to !== to.from && to.to === likeThisSummary.from)
-      const transitions = outwards.concat(inwards)
-      const centeringOffset = transitions.length / 2
-
-      return centeringOffset + transitions
-          .sort((a, b) => {
-            const valA = a.from + a.to
-            const valB = b.from + b.to
-            if (valA < valB) {
-              return -1
-            }
-            if (valA > valB) {
-              return 1
-            }
-            return 0
-          })
-          .findIndex(at => JSON.stringify(at) === JSON.stringify(likeThisSummary))
-    },
-    nonRecursiveTransitionsFrom (stateId) {
-      return this.transitionSummariesFrom(stateId)
-        .filter(from => from.to !== stateId)
-    }
   }
 }
 </script>
@@ -228,19 +253,14 @@ export default {
       ></header>
     </article>
 
-    <div
-      v-for="(state, id) in states"
-      :key="`transitions-${id}`">
-
-      <arrow
-        v-for="summary in nonRecursiveTransitionsFrom(id)"
-        :key="JSON.stringify(summary)"
-        v-bind:from="arrowFrom(summary)" 
-        v-bind:to="arrowTo(summary)"
-        v-bind:normal-offset="offset(summary)">
-        {{summary.when}}
-      </arrow>
-    </div>
+    <arrow
+      v-for="arrow in arrows"
+      :key="'arrow-' + arrow.from + arrow.to"
+      v-bind:from="arrow.fromPos"
+      v-bind:to="arrow.toPos"
+      v-bind:normal-offset="arrow.offset">
+      {{arrow.label}}
+    </arrow>
   </section>
 </template>
 

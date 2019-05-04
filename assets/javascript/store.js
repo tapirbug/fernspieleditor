@@ -96,12 +96,12 @@ const getters = {
           }
         })
       })
-      .reduce((a, b) => a.concat(b), []),
+      .reduce((a, b) => { a.push(...b); return a }, []),
   transitionSummariesTo: state => id =>
     Object.keys(state.transitions)
       .filter(idOrOther => idOrOther !== id)
       .map(id => getters.transitionSummariesFrom(state)(id))
-      .reduce((a, b) => a.concat(b), [])
+      .reduce((a, b) => { a.push(...b); return a }, [])
       .filter(summary => summary.to === id),
   phonebookYamlBlockers: ({ initial }) => {
     const blockers = []

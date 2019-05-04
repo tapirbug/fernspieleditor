@@ -14,12 +14,28 @@ export default {
     },
     to: {
       type: Object,
-      required: false,
+      required: true,
       validator: isPoint
     },
     normalOffset: {
-      typoe: Number,
-      required: false
+      type: String,
+      required: false,
+      default: '0'
+    },
+    /// Leave out this many pixels of the arrow at the
+    /// beginning and and the end, except if that would
+    /// reverse the direction of the arrow.
+    trim: {
+      type: Number,
+      required: false,
+      default: 100
+    },
+    /// When resulting arrow would be smaller than this, extend outwards
+    /// and grow to this size.
+    minLength: {
+      type: Number,
+      required: false,
+      default: 10
     }
   },
   data () {
@@ -29,24 +45,32 @@ export default {
     arrowStyle () {
       const fullSignedSize = delta(this.from, this.to)
       const fullLen = length(fullSignedSize)
-
-      const startOffset = (fullLen < 80) ? 0 : 80;
-
       const direction = {
         x: fullSignedSize.x / fullLen,
         y: fullSignedSize.y / fullLen
       }
-      const from = {
-        x: this.from.x + startOffset * direction.x,
-        y: this.from.y + startOffset * direction.y
+
+      let from = { x: this.from.x, y: this.from.y }
+      let to = { x: this.to.x, y: this.to.y }
+
+      const lenWithTrim = fullLen - 2 * this.trim
+      let missingFromToOffset = { x: 0, y: 0 }
+      if (lenWithTrim < this.minLength) {
+        const missingLen = this.minLength - lenWithTrim
+        from.x -= (missingLen / 2) * direction.x
+        from.y -= (missingLen / 2) * direction.y
+        to.x += (missingLen / 2) * direction.x
+        to.y += (missingLen / 2) * direction.y
       }
-      const to = {
-        x: this.to.x - startOffset * direction.x,
-        y: this.to.y - startOffset * direction.y
-      }
+
+      from.x += this.trim * direction.x
+      from.y += this.trim * direction.y
+      to.x -= this.trim * direction.x
+      to.y -= this.trim * direction.y
+
       const signedSize = delta(from, to)
       const len = length(signedSize)
-      
+
       const angle = !signedSize.x ? 0 : Math.atan2(
         signedSize.y, signedSize.x
       )
@@ -57,7 +81,7 @@ export default {
 
       return {
         'transform-origin': 'bottom left',
-        transform: `translateY(-100%) ${moveToFrom} ${rotateToTo} translateY(${normalOffset}px)`,
+        transform: `translateY(-100%) ${moveToFrom} ${rotateToTo} translateY(${normalOffset})`,
         width: `${len}px`
       }
     }
@@ -103,8 +127,8 @@ $arrow-height: 0.3em;
     position: absolute;
     left: 100%;
     bottom: -$arrow-height;
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-top: $arrow-height solid transparent;
     border-bottom: $arrow-height solid transparent;
     border-left: $arrow-width solid $arrow-color;
