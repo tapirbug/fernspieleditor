@@ -1,6 +1,6 @@
 // File loading
 export const CLEAR_PHONEBOOK = 'CLEAR_PHONEBOOK'
-export const MERGE_PHONEBOOK = 'MERGE_PHONEBOOK'
+export const REPLACE_PHONEBOOK = 'REPLACE_PHONEBOOK'
 
 // State mutations
 

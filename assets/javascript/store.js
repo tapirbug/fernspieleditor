@@ -4,7 +4,7 @@ import defaultState from './default-state.js'
 import uuid from './uuid.js'
 import {
   CLEAR_PHONEBOOK,
-  MERGE_PHONEBOOK,
+  REPLACE_PHONEBOOK,
   MAKE_INITIAL_STATE,
   ADD_STATE,
   MOVE_STATE,
@@ -300,7 +300,7 @@ const actions = {
 
     function replaceState (newPhonebook) {
       //commit(CLEAR_PHONEBOOK)
-      commit(MERGE_PHONEBOOK, newPhonebook)
+      commit(REPLACE_PHONEBOOK, newPhonebook)
       return `Loading OK`
     }
   }
@@ -312,7 +312,7 @@ const mutations = {
       .forEach(prop => Vue.delete(vuexState, prop))
     vuexState.focusedStateId = null
   },
-  [MERGE_PHONEBOOK] (vuexState, newPhonebook) {
+  [REPLACE_PHONEBOOK] (vuexState, newPhonebook) {
     Object.entries(newPhonebook)
       .forEach(([key, val]) => Vue.set(vuexState, key, val))
   },
