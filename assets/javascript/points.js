@@ -9,7 +9,7 @@ export function evtPosition (evt) {
 export function translate (pos, delta) {
   return {
     x: pos.x + delta.x,
-    y: pos.y + delta.y,
+    y: pos.y + delta.y
   }
 }
 

@@ -17,4 +17,3 @@ export const REMOVE_TRANSITION = 'REMOVE_TRANSITION'
 // that would be generated
 
 export const FOCUS_STATE = 'FOCUS_STATE'
-

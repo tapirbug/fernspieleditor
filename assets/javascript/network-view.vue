@@ -2,33 +2,31 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from './mutation-types.js'
-import { evtPosition, translate, delta } from './points.js'
-import Vue from 'vue'
+import { translate, delta } from './points.js'
 
 /**
  * Visualizes the currently edited network.
  */
 export default {
-  name: 'network-view',
+  name: 'NetworkView',
   data: function () {
     return {
       palmId: null,
       palmEl: null,
       firstGrabPosition: null,
-      lastGrabPosition: null,
+      lastGrabPosition: null
     }
   },
   computed: {
     ...mapState(['states']),
     ...mapGetters(['findNetwork', 'focusedState', 'isFocused', 'stateNamed']),
-    movedPos() {
+    movedPos () {
       if (!this.firstGrabPosition || !this.palmId || !this.findNetwork(this.palmId)) {
         return undefined
       }
 
       const moveDistance = delta(this.firstGrabPosition, this.lastGrabPosition)
 
-      const palmElPos = this.palmEl.getBoundingClientRect()
       const movedPos = translate(
         this.findNetwork(this.palmId).position,
         moveDistance
@@ -61,14 +59,14 @@ export default {
       }
 
       this.lastGrabPosition = nextGrabPosition
-      
+
       // Only move visually, commit at the end of the grab
       this.movePalm(this.movedPos)
     },
-    movePalm(to) {
+    movePalm (to) {
       if (to) {
-        this.palmEl.style.left = to.x + "px"
-        this.palmEl.style.top = to.y + "px" 
+        this.palmEl.style.left = to.x + 'px'
+        this.palmEl.style.top = to.y + 'px'
       }
     },
     endGrab () {
@@ -84,10 +82,10 @@ export default {
         const released = evt.buttons === 0
 
         if (released) {
-          this.endGrab ()
+          this.endGrab()
         } else {
-          const pos = this.evtPosition (evt)
-          this.continueGrab (pos)
+          const pos = this.evtPosition(evt)
+          this.continueGrab(pos)
         }
       }
     },
@@ -100,7 +98,7 @@ export default {
         return
       }
 
-      const pos = this.evtPosition (evt)
+      const pos = this.evtPosition(evt)
       this.startGrab(id, pos, el)
       this.select(id)
     },
@@ -126,7 +124,7 @@ export default {
 
       this[ADD_STATE]({
         state: {
-          name: "New state",
+          name: 'New state'
         },
         position
       })
@@ -146,30 +144,38 @@ export default {
         top: position.y
       }
     }
-  },
+  }
 }
 </script>
 
 <template>
-  <section class="network-view" v-on:mousemove="move" v-on:dblclick="insert" v-on:click="deselect">
-    <article class="network-view-state"
-             v-for="(state, id) in states"
-             :key="id"
-             v-bind:class="{ 'is-focused': isFocused(id) }"
-             v-bind:style="stateStyle(id)"
-             v-bind:tabindex="0"
-             v-bind:autofocus="isFocused(id) ? 'autofocus' : ''"
-             v-on:focus="select(id)"
-             v-on:mousedown="down(id, $event)"
-             v-on:click="$event.stopPropagation()">
-
-      <header class="network-view-state-name"
-              contenteditable="true"
-              v-on:focus="select(id)"
-              v-on:blur="typed($event, id)"
-              v-on:focusout="typed($event, id)"
-              v-on:keydown.tab="typed($event, id)"
-              v-text="state.name"></header>
+  <section
+    class="network-view"
+    @mousemove="move"
+    @dblclick="insert"
+    @click="deselect"
+  >
+    <article
+      v-for="(state, id) in states"
+      :key="id"
+      class="network-view-state"
+      :class="{ 'is-focused': isFocused(id) }"
+      :style="stateStyle(id)"
+      :tabindex="0"
+      :autofocus="isFocused(id) ? 'autofocus' : ''"
+      @focus="select(id)"
+      @mousedown="down(id, $event)"
+      @click="$event.stopPropagation()"
+    >
+      <header
+        class="network-view-state-name"
+        contenteditable="true"
+        @focus="select(id)"
+        @blur="typed($event, id)"
+        @focusout="typed($event, id)"
+        @keydown.tab="typed($event, id)"
+        v-text="state.name"
+      ></header>
     </article>
   </section>
 </template>
@@ -199,7 +205,6 @@ $state-bg: #fafafa;
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
-
 
   &.is-focused .network-view-state-name {
     font-style: italic;

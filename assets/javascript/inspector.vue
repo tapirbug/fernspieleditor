@@ -8,7 +8,7 @@ import TransitionDialog from './transition-dialog.vue'
  * Editor for the currently focused element.
  */
 export default {
-  name: 'inspector',
+  name: 'Inspector',
   components: {
     'transition-dialog': TransitionDialog
   },
@@ -48,7 +48,7 @@ export default {
         [prop]: value
       })
     },
-    removeTransition(summary) {
+    removeTransition (summary) {
       this[REMOVE_TRANSITION](summary)
     },
     removeState () {
@@ -73,72 +73,102 @@ export default {
 
 <template>
   <section class="inspector">
-    <div class="inspector-passive-msg" v-if="nothingFocused">
+    <div
+      v-if="nothingFocused"
+      class="inspector-passive-msg"
+    >
       <p>Click on a state to focus it.</p>
       <p>Double click to add a new state.</p>
       <p>Drag with your mouse to move.</p>
     </div>
     <div v-if="focusedState">
       <header>
-        <h2>{{focusedState.name}}</h2>
+        <h2>{{ focusedState.name }}</h2>
       </header>
 
       <h3>Properties</h3>
-      <input class="stack"
-             placeholder="Name"
-             maxlength="32"
-             v-bind:value="focusedState.name"
-             v-on:blur="change($event, 'name')"
-             v-on:keyup="change($event, 'name')"
-             v-on:paste="change($event, 'name')"
-             v-on:input="change($event, 'name')" />
-      <input class="stack"
-             placeholder="Description"
-             v-bind:value="focusedState.description"
-             v-on:blur="change($event, 'description')"
-             v-on:keyup="change($event, 'description')"
-             v-on:paste="change($event, 'description')"
-             v-on:input="change($event, 'description')" />
-      <textarea class="stack inspector-input-speech" placeholder="Speech"
-             v-text="focusedState.speech"
-             v-on:blur="change($event, 'speech')"
-             v-on:keyup="change($event, 'speech')"
-             v-on:paste="change($event, 'speech')"
-             v-on:input="change($event, 'speech')"></textarea>
-      <input class="stack"
-             type="number"
-             min="0"
-             max="5"
-             step="0.25"
-             placeholder="Ring time"
-             v-bind:value="focusedState.ring"
-             v-on:blur="change($event, 'ring')"
-             v-on:keyup="change($event, 'ring')"
-             v-on:paste="change($event, 'ring')"
-             v-on:input="change($event, 'ring')" />
+      <input
+        class="stack"
+        placeholder="Name"
+        maxlength="32"
+        :value="focusedState.name"
+        @blur="change($event, 'name')"
+        @keyup="change($event, 'name')"
+        @paste="change($event, 'name')"
+        @input="change($event, 'name')"
+      >
+      <input
+        class="stack"
+        placeholder="Description"
+        :value="focusedState.description"
+        @blur="change($event, 'description')"
+        @keyup="change($event, 'description')"
+        @paste="change($event, 'description')"
+        @input="change($event, 'description')"
+      >
+      <textarea
+        class="stack inspector-input-speech"
+        placeholder="Speech"
+        @blur="change($event, 'speech')"
+        @keyup="change($event, 'speech')"
+        @paste="change($event, 'speech')"
+        @input="change($event, 'speech')"
+        v-text="focusedState.speech"
+      ></textarea>
+      <input
+        class="stack"
+        type="number"
+        min="0"
+        max="5"
+        step="0.25"
+        placeholder="Ring time"
+        :value="focusedState.ring"
+        @blur="change($event, 'ring')"
+        @keyup="change($event, 'ring')"
+        @paste="change($event, 'ring')"
+        @input="change($event, 'ring')"
+      >
       <label class="stack">
-        <span class="inspector-initial-button toggle button" v-bind:class="toggleActiveClass(isInitial(focusedStateId))">Initial state</span>
-        <input type="checkbox"
-             v-bind:checked="isInitial(focusedStateId)"
-             v-on:input="setInitial($event)" />
+        <span
+          class="inspector-initial-button toggle button"
+          :class="toggleActiveClass(isInitial(focusedStateId))"
+        >Initial state</span>
+        <input
+          type="checkbox"
+          :checked="isInitial(focusedStateId)"
+          @input="setInitial($event)"
+        >
       </label>
       <label class="stack">
-        <span class="inspector-terminal-button toggle button" v-bind:class="toggleActiveClass(focusedState.terminal)">Terminal state</span>
-        <input type="checkbox"
-             v-bind:value="focusedState.terminal"
-             v-on:input="change($event, 'terminal')" />
+        <span
+          class="inspector-terminal-button toggle button"
+          :class="toggleActiveClass(focusedState.terminal)"
+        >Terminal state</span>
+        <input
+          type="checkbox"
+          :value="focusedState.terminal"
+          @input="change($event, 'terminal')"
+        >
       </label>
 
       <article class="inspector-actions">
         <header><h3>Actions</h3></header>
         <footer>
-          <button class="dangerous" v-on:click="removeState">Delete state</button>
+          <button
+            class="dangerous"
+            @click="removeState"
+          >
+            Delete state
+          </button>
         </footer>
       </article>
 
       <h3>Transitions</h3>
-      <article class="card" v-for="transition in transitionSummariesFrom(focusedStateId)"
-            :key="JSON.stringify(transition)">
+      <article
+        v-for="transition in transitionSummariesFrom(focusedStateId)"
+        :key="JSON.stringify(transition)"
+        class="card"
+      >
         <header>
           <div class="inspector-transition-summary flex two">
             <div class="inspector-transition-summary-text">
@@ -147,13 +177,21 @@ export default {
               <span v-text="transition.toName"></span>
             </div>
             <div class="inspector-modify-transition-btns">
-              <button class="dangerous" v-on:click="removeTransition(transition)">Delete</button>
+              <button
+                class="dangerous"
+                @click="removeTransition(transition)"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </header>
       </article>
-      <article class="card" v-for="transition in transitionSummariesTo(focusedStateId)"
-            :key="JSON.stringify(transition)">
+      <article
+        v-for="transition in transitionSummariesTo(focusedStateId)"
+        :key="JSON.stringify(transition)"
+        class="card"
+      >
         <header>
           <div class="inspector-transition-summary flex two">
             <div class="inspector-transition-summary-text">
@@ -162,25 +200,39 @@ export default {
               <span v-text="transition.fromName"></span>
             </div>
             <div class="inspector-modify-transition-btns">
-              <button class="dangerous" v-on:click="removeTransition(transition)">Delete</button>
+              <button
+                class="dangerous"
+                @click="removeTransition(transition)"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </header>
       </article>
 
       <transition name="slide">
-        <transition-dialog v-if="addingTransition"
-                          v-bind:from="focusedStateId"
-                          v-on:addtransitiondone="addingTransition = false"></transition-dialog>
+        <transition-dialog
+          v-if="addingTransition"
+          :from="focusedStateId"
+          @addtransitiondone="addingTransition = false"
+        ></transition-dialog>
       </transition>
 
       <div class="inspector-add-transition-btns">
-
-        <button v-on:click="addingTransition = true"
-                v-bind:disabled="addingTransition">Add transition</button>
-        <button v-bind:class="{ warning: addingTransition }"
-                v-bind:disabled="!addingTransition"
-                v-on:click="addingTransition = false">Cancel</button>
+        <button
+          :disabled="addingTransition"
+          @click="addingTransition = true"
+        >
+          Add transition
+        </button>
+        <button
+          :class="{ warning: addingTransition }"
+          :disabled="!addingTransition"
+          @click="addingTransition = false"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </section>

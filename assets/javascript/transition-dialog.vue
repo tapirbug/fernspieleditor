@@ -6,8 +6,13 @@ import { ADD_TRANSITION } from './mutation-types.js'
  * A floating dialog over a state to add transitions.
  */
 export default {
-  name: 'transition-dialog',
-  props: ['from'],
+  name: 'TransitionDialog',
+  props: {
+    from: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       done: false,
@@ -19,12 +24,12 @@ export default {
         dial: 'Dial',
         timeout: 'Timeout',
         pick_up: 'Pick up',
-        hang_up: 'Hang up',
+        hang_up: 'Hang up'
       }
     }
   },
   computed: {
-    ...mapState(['states']),
+    ...mapState(['states'])
   },
   methods: {
     ...mapMutations([ADD_TRANSITION]),
@@ -46,7 +51,7 @@ export default {
           if (this.dialNumber === null) {
             return
           }
-          const num = this.dialNumber|0
+          const num = this.dialNumber | 0
           if (num < 0 || num > 9) {
             return
           }
@@ -63,7 +68,7 @@ export default {
           // Timeout
           return {
             to: this.transitionTargetId,
-            after: parseFloat(this.timeoutSeconds),
+            after: parseFloat(this.timeoutSeconds)
           }
         } else {
           // pick up or hang up
@@ -81,7 +86,7 @@ export default {
         ...config
       }
     },
-    updateTransitionIfComplete(otherwiseFocusSel) {
+    updateTransitionIfComplete (otherwiseFocusSel) {
       this.$nextTick(() => {
         const config = this.config()
 
@@ -93,37 +98,75 @@ export default {
         }
       })
     }
-  },
+  }
 }
 </script>
 
 <template>
-  <section class="transition-dialog" v-if="!done">
-
+  <section
+    v-if="!done"
+    class="transition-dialog"
+  >
     <div class="transition-dialog-tabs tabs two">
-      <input id="tab-1" type="radio" name="tabgroupB" checked>
-      <label class="pseudo button toggle" for="tab-1">When</label>
+      <input
+        id="tab-1"
+        type="radio"
+        name="tabgroupB"
+        checked
+      >
+      <label
+        class="pseudo button toggle"
+        for="tab-1"
+      >When</label>
 
-      <input id="tab-2" type="radio" name="tabgroupB" />
-      <label class="pseudo button toggle" for="tab-2">To</label>
+      <input
+        id="tab-2"
+        type="radio"
+        name="tabgroupB"
+      >
+      <label
+        class="pseudo button toggle"
+        for="tab-2"
+      >To</label>
 
       <div class="row transition-dialog-tabs-contents">
-
         <div>
           <section class="transition-dialog-condition">
             <div class="flex two">
               <div>
-                <input v-model="dialNumber" type="number" class="stack" placeholder="0-9" title="Number to dial for the transition" min="0" max="9" />
-                <input v-model="timeoutSeconds" type="number" class="stack" placeholder="0.5" title="Timeout in seconds" min="0" max="3600" step="0.1" />
+                <input
+                  v-model="dialNumber"
+                  type="number"
+                  class="stack"
+                  placeholder="0-9"
+                  title="Number to dial for the transition"
+                  min="0"
+                  max="9"
+                >
+                <input
+                  v-model="timeoutSeconds"
+                  type="number"
+                  class="stack"
+                  placeholder="0.5"
+                  title="Timeout in seconds"
+                  min="0"
+                  max="3600"
+                  step="0.1"
+                >
               </div>
               <div>
-                <label v-for="(availableName, availableId) in allTransitionTypes" :key="availableId"
-                        class="stack pseudo button toggle">
-                        {{availableName}}
-                        <input v-bind:value="availableId"
-                              type="radio"
-                              v-on:click="updateTransitionIfComplete('#tab-2')"
-                              v-model="transitionType"/>
+                <label
+                  v-for="(availableName, availableId) in allTransitionTypes"
+                  :key="availableId"
+                  class="stack pseudo button toggle"
+                >
+                  {{ availableName }}
+                  <input
+                    v-model="transitionType"
+                    :value="availableId"
+                    type="radio"
+                    @click="updateTransitionIfComplete('#tab-2')"
+                  >
                 </label>
               </div>
             </div>
@@ -132,20 +175,23 @@ export default {
 
         <div>
           <section class="transition-dialog-state-selection">
-            <label v-for="(state, id) in states" :key="`${id}-label`"
-                    v-on:change="updateTransitionIfComplete('#tab-1')"
-                    class="stack pseudo button toggle">
-                    {{state.name}}
-                    <input v-bind:value="id"
-                          type="radio"
-                          v-model="transitionTargetId"/>
+            <label
+              v-for="(state, id) in states"
+              :key="`${id}-label`"
+              class="stack pseudo button toggle"
+              @change="updateTransitionIfComplete('#tab-1')"
+            >
+              {{ state.name }}
+              <input
+                v-model="transitionTargetId"
+                :value="id"
+                type="radio"
+              >
             </label>
           </section>
         </div>
-
       </div>
     </div>
-
   </section>
 </template>
 

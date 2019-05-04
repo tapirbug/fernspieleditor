@@ -5,19 +5,19 @@ import Inspector from './inspector.vue'
 import NetworkView from './network-view.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
+  components: {
+    'bar': Bar,
+    'drawer': Drawer,
+    'inspector': Inspector,
+    'network-view': NetworkView
+  },
   data: function () {
     return {}
   },
   computed: {
   },
   methods: {
-  },
-  components: {
-    'bar': Bar,
-    'drawer': Drawer,
-    'inspector': Inspector,
-    'network-view': NetworkView,
   }
 }
 </script>

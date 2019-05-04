@@ -19,5 +19,6 @@ module.exports = {
         "vue"
     ],
     "rules": {
+        "vue/html-self-closing": "off"
     }
 };

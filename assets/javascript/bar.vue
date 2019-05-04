@@ -7,7 +7,7 @@ import { LOAD_FILE } from './action-types.js'
  * Menu bar.
  */
 export default {
-  name: 'bar',
+  name: 'Bar',
   data () {
     return {}
   },
@@ -15,7 +15,7 @@ export default {
     ...mapGetters(['phonebookYaml', 'phonebookYamlBlockers']),
     isBlocked () {
       return this.phonebookYamlBlockers.length > 0
-    },
+    }
   },
   methods: {
     ...mapActions([LOAD_FILE]),
@@ -36,10 +36,10 @@ export default {
       saveAs(yaml)
     },
     failSerialize (blockers) {
-      alert(`Cannot save because: ${blockers.join(", ")}.`)
+      alert(`Cannot save because: ${blockers.join(', ')}.`)
     },
     startLoadFile (evt) {
-      const { files } = evt.target;
+      const { files } = evt.target
       this[LOAD_FILE]({ files })
         .then(
           undefined,
@@ -54,23 +54,38 @@ export default {
 
 <template>
   <nav class="bar">
-    <a href="#" class="brand">
+    <a
+      href="#"
+      class="brand"
+    >
       <span>fernspieleditor</span>
     </a>
     <div class="menu">
-      <a href="#" class="pseudo button">Help</a>
+      <a
+        href="#"
+        class="pseudo button"
+      >Help</a>
       <label class="pseudo button">
         Open
-        <input class="menu-open-file-input"
-               type="file"
-               name="open-file"
-               v-on:input="startLoadFile" />
+        <input
+          class="menu-open-file-input"
+          type="file"
+          name="open-file"
+          @input="startLoadFile"
+        >
       </label>
-      <a href="#"
-         class="button"
-         v-on:click="serialize"
-         v-bind:disabled="isBlocked">
-        <img class="icon" src="../images/file-download.svg" alt="Download" title="Download a copy of the current phonebook" />
+      <a
+        href="#"
+        class="button"
+        :disabled="isBlocked"
+        @click="serialize"
+      >
+        <img
+          class="icon"
+          src="../images/file-download.svg"
+          alt="Download"
+          title="Download a copy of the current phonebook"
+        >
         Download
       </a>
     </div>

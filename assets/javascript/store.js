@@ -97,16 +97,16 @@ const getters = {
       })
       .reduce((a, b) => a.concat(b), []),
   transitionSummariesTo: state => id =>
-      Object.keys(state.transitions)
-        .filter(idOrOther => idOrOther !== id)
-        .map(id => getters.transitionSummariesFrom(state)(id))
-        .reduce((a, b) => a.concat(b), [])
-        .filter(summary => summary.to === id),
+    Object.keys(state.transitions)
+      .filter(idOrOther => idOrOther !== id)
+      .map(id => getters.transitionSummariesFrom(state)(id))
+      .reduce((a, b) => a.concat(b), [])
+      .filter(summary => summary.to === id),
   phonebookYamlBlockers: ({ initial }) => {
     const blockers = []
 
     if (!initial) {
-      blockers.push("Some state must be marked as the initial state")
+      blockers.push('Some state must be marked as the initial state')
     }
 
     return blockers
@@ -121,7 +121,7 @@ const getters = {
       initial,
       states,
       transitions,
-      vendor,
+      vendor
     })
   },
   /// Finds network properties of state with ID
@@ -161,11 +161,11 @@ const actions = {
 
     function getSingleFile (files) {
       if (files.length < 1) {
-        return Promise.reject("No file selected")
+        return Promise.reject(new Error('No file selected'))
       }
-  
+
       if (files.length > 1) {
-        return Promise.reject("Cannot select more than one file at a time.")
+        return Promise.reject(new Error('Cannot select more than one file at a time.'))
       }
 
       return Promise.resolve(files[0])
@@ -175,7 +175,7 @@ const actions = {
       const expectedPattern = /\.yaml$/i
 
       if (!expectedPattern.test(file.name)) {
-        return Promise.reject("Phonebook files must end in .yaml")
+        return Promise.reject(new Error('Phonebook files must end in .yaml'))
       }
 
       return file
@@ -183,7 +183,7 @@ const actions = {
 
     function loadFile (file) {
       if (!FileReader) {
-        return Promise.reject("Your browser does not support or allow loading of local files. Consider using Firefox.")
+        return Promise.reject(new Error('Your browser does not support or allow loading of local files. Consider using Firefox.'))
       }
 
       return new Promise((resolve, reject) => {
@@ -191,7 +191,7 @@ const actions = {
         reader.onload = () => resolve(reader.result)
         reader.onerror = reject
         reader.readAsText(file)
-      })      
+      })
     }
 
     function inlineAnyTransitions (newState) {
@@ -261,8 +261,8 @@ const actions = {
         newState.vendor.fernspieleditor = {}
       }
 
-      let posX = 0;
-      let posY = 0;
+      let posX = 0
+      let posY = 0
       Object.keys(newState.states)
         .forEach(id => {
           if (!newState.vendor.fernspieleditor[id]) {
@@ -292,14 +292,14 @@ const actions = {
 
     function validateContents (contents) {
       if (!contents.states || !contents.transitions) {
-        return Promise.reject("Incompatible file format.")
+        return Promise.reject(new Error('Incompatible file format.'))
       }
 
       return contents
     }
 
     function replaceState (newPhonebook) {
-      //commit(CLEAR_PHONEBOOK)
+      // commit(CLEAR_PHONEBOOK)
       commit(REPLACE_PHONEBOOK, newPhonebook)
       return `Loading OK`
     }
@@ -435,7 +435,7 @@ export default store
 function initialStateProps () {
   const initial = {
     ...Object.values(defaultState.states)[0]
-  };
+  }
   delete initial.ring
   return initial
 }

@@ -30,7 +30,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
-    "lint": "eslint --ext .js,.vue assets/javascript",
-    "fix": "eslint --fix --ext .js,.vue assets/javascript"
+    "lint": "eslint --ext .js,.vue assets/javascript index.js",
+    "fix": "eslint --fix --ext .js,.vue assets/javascript index.js"
   }
 }

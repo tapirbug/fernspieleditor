@@ -11,8 +11,8 @@ export default {
       description: '',
       speech: '',
       ring: 0.5,
-      terminal: false,
-    },
+      terminal: false
+    }
   },
   transitions: {
     [initialStateId]: {

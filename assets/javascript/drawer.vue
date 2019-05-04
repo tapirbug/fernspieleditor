@@ -1,12 +1,12 @@
 <script>
-import { evtPosition, translate, delta } from './points.js'
+import { evtPosition } from './points.js'
 
 /**
  * An element sticking to the right side of the screen that can
  * be hidden and resized.
  */
 export default {
-  name: 'drawer',
+  name: 'Drawer',
   data () {
     return {
       hidden: false,
@@ -21,6 +21,16 @@ export default {
       parentWidth: 0
     }
   },
+  computed: {
+    actualWidth () {
+      return this.hidden
+        ? '0'
+        : this.guardSize(this.width)
+    },
+    cssWidth () {
+      return `${this.actualWidth}%`
+    }
+  },
   mounted () {
     window.removeEventListener('resize', this.handleContainerResize)
     window.addEventListener('resize', this.handleContainerResize)
@@ -28,17 +38,6 @@ export default {
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.handleContainerResize)
-  },
-  computed: {
-    actualWidth () {
-      this.parentWidth // Let vue know it depends on it
-      return this.hidden
-        ? '0'
-        : this.guardSize(this.width)
-    },
-    cssWidth () {
-      return `${this.actualWidth}%`;
-    }
   },
   methods: {
     handleContainerResize () {
@@ -50,7 +49,7 @@ export default {
       const moveHandler = (evt) => {
         const pos = evtPosition(evt)
 
-        const released = evt.buttons === 0;
+        const released = evt.buttons === 0
         if (released) {
           window.removeEventListener(
             'mousemove',
@@ -68,25 +67,26 @@ export default {
       )
     },
     continueResize (to) {
-      const deltaX = this.dragStartPos.x - to.x;
+      const deltaX = this.dragStartPos.x - to.x
       this.$el.style.flexBasis = `${this.guardSize(this.width + this.pxToPercentOfParent(deltaX))}%`
     },
     finishResize (at) {
-      const deltaX = this.dragStartPos.x - at.x;
+      const deltaX = this.dragStartPos.x - at.x
       this.width += this.pxToPercentOfParent(deltaX)
     },
     pxToPercentOfParent (px) {
-      if(!px || !this.$el) {
+      const containerSize = this.parentWidth
+
+      if (!px || !this.$el) {
         return 0
       }
 
-      const containerSize = this.parentWidth
       return 100 * (px / containerSize)
     },
     guardSize (desiredPercent) {
       return Math.max(
-          this.pxToPercentOfParent(this.minWidth),
-          Math.min(desiredPercent, this.maxWidth)
+        this.pxToPercentOfParent(this.minWidth),
+        Math.min(desiredPercent, this.maxWidth)
       )
     }
   }
@@ -94,11 +94,14 @@ export default {
 </script>
 
 <template>
-  <section class="drawer"
-           v-bind:style="{ 'flex-basis': cssWidth }">
-
-    <div class="drawer-grabbing-area"
-         v-on:mousedown="startResize"></div>
+  <section
+    class="drawer"
+    :style="{ 'flex-basis': cssWidth }"
+  >
+    <div
+      class="drawer-grabbing-area"
+      @mousedown="startResize"
+    ></div>
 
     <slot></slot>
   </section>
