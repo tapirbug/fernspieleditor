@@ -157,6 +157,7 @@ const actions = {
       .then(autoLayout)
       .then(autoSelect)
       .then(addMissingDefaultStateProps)
+      .then(addMissingTransitionMaps)
       .then(inlineAnyTransitions)
       .then(validateContents)
       .then(replaceState)
@@ -286,7 +287,6 @@ const actions = {
     }
 
     function addMissingDefaultStateProps (newState) {
-      console.log(newState.states)
       return {
         ...newState,
         states: mapValues(
@@ -298,6 +298,33 @@ const actions = {
             }
           }
         )
+      }
+    }
+
+    function addMissingTransitionMaps (newState) {
+      console.log({
+        ...newState,
+        transitions: Object.keys(newState.states)
+          .map(id => [id, newState.transitions[id] || {}])
+          .reduce(
+            (acc, [key, transitions]) => {
+              acc[key] = transitions
+              return acc
+            },
+            {}
+          )
+      })
+      return {
+        ...newState,
+        transitions: Object.keys(newState.states)
+          .map(id => [id, newState.transitions[id] || {}])
+          .reduce(
+            (acc, [key, transitions]) => {
+              acc[key] = transitions
+              return acc
+            },
+            {}
+          )
       }
     }
 

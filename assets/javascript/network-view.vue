@@ -3,12 +3,16 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from './action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from './mutation-types.js'
 import { translate, delta } from './points.js'
+import Arrow from './arrow.vue'
 
 /**
  * Visualizes the currently edited network.
  */
 export default {
   name: 'NetworkView',
+  components: {
+    'arrow': Arrow
+  },
   data: function () {
     return {
       palmId: null,
@@ -19,7 +23,7 @@ export default {
   },
   computed: {
     ...mapState(['states']),
-    ...mapGetters(['findNetwork', 'focusedState', 'isFocused', 'stateNamed']),
+    ...mapGetters(['findNetwork', 'focusedState', 'isFocused', 'stateNamed', 'transitionSummariesFrom']),
     movedPos () {
       if (!this.firstGrabPosition || !this.palmId || !this.findNetwork(this.palmId)) {
         return undefined
@@ -143,6 +147,14 @@ export default {
         left: position.x,
         top: position.y
       }
+    },
+    arrowFrom (transitionSummary) {
+      const network = this.findNetwork(transitionSummary.from)
+      return network ? network.position : { x: 0, y: 0 }
+    },
+    arrowTo (transitionSummary) {
+      const network = this.findNetwork(transitionSummary.to)
+      return network ? network.position : { x: 0, y: 0 }
     }
   }
 }
@@ -177,6 +189,19 @@ export default {
         v-text="state.name"
       ></header>
     </article>
+
+    <div
+      v-for="(state, id) in states"
+      :key="`transitions-${id}`">
+
+      <arrow
+        v-for="summary in transitionSummariesFrom(id)"
+        :key="JSON.stringify(summary)"
+        v-bind:from="arrowFrom(summary)" 
+        v-bind:to="arrowTo(summary)">
+        {{summary.when}}
+      </arrow>
+    </div>
   </section>
 </template>
 
@@ -205,6 +230,8 @@ $state-bg: #fafafa;
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+
+  transform: translate(-50%, -50%);
 
   &.is-focused .network-view-state-name {
     font-style: italic;

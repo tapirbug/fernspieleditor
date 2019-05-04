@@ -19,3 +19,14 @@ export function delta (pos0, pos1) {
     y: pos1.y - pos0.y
   }
 }
+
+export function length (vec) {
+  return Math.sqrt(vec.x * vec.x + vec.y * vec.y)
+}
+
+export function abs2 (vec) {
+  return {
+    x: Math.abs(vec.x),
+    y: Math.abs(vec.x),
+  }
+}
