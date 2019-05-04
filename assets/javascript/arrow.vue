@@ -16,6 +16,10 @@ export default {
       type: Object,
       required: false,
       validator: isPoint
+    },
+    normalOffset: {
+      typoe: Number,
+      required: false
     }
   },
   data () {
@@ -26,7 +30,7 @@ export default {
       const fullSignedSize = delta(this.from, this.to)
       const fullLen = length(fullSignedSize)
 
-      const startOffset = 80;
+      const startOffset = (fullLen < 80) ? 0 : 80;
 
       const direction = {
         x: fullSignedSize.x / fullLen,
@@ -43,23 +47,20 @@ export default {
       const signedSize = delta(from, to)
       const len = length(signedSize)
       
-      console.log(signedSize)
       const angle = !signedSize.x ? 0 : Math.atan2(
         signedSize.y, signedSize.x
       )
       const moveToFrom = `translate(${from.x}px, ${from.y}px)`
       const rotateToTo = `rotate(${angle}rad)`
-      console.log(`${rotateToTo} ${moveToFrom}`)
+
+      const normalOffset = this.normalOffset
 
       return {
         'transform-origin': 'bottom left',
-        transform: `translateY(-100%) ${moveToFrom} ${rotateToTo}`,
+        transform: `translateY(-100%) ${moveToFrom} ${rotateToTo} translateY(${normalOffset}px)`,
         width: `${len}px`
       }
     }
-  },
-  methods: {
-    
   }
 }
 
@@ -77,9 +78,11 @@ function isPoint (obj) {
       <slot></slot>
     </header>
   </article>
+  </div>
 </template>
 
 <style lang="scss">
+$arrow-thickness: 0.1em;
 $arrow-color: black;
 $arrow-width: 0.6em;
 $arrow-height: 0.3em;
@@ -88,7 +91,7 @@ $arrow-height: 0.3em;
   position: absolute;
   top: 0;
   left: 0;
-  border-bottom: 0.1em solid $arrow-color;
+  border-bottom: $arrow-thickness solid $arrow-color;
   //transform: translateY(-50%);
 
   header {

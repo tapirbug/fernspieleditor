@@ -23,7 +23,14 @@ export default {
   },
   computed: {
     ...mapState(['states']),
-    ...mapGetters(['findNetwork', 'focusedState', 'isFocused', 'stateNamed', 'transitionSummariesFrom']),
+    ...mapGetters([
+      'findNetwork',
+      'focusedState',
+      'isFocused',
+      'stateNamed',
+      'transitionSummariesFrom',
+      'transitionSummariesTo'
+    ]),
     movedPos () {
       if (!this.firstGrabPosition || !this.palmId || !this.findNetwork(this.palmId)) {
         return undefined
@@ -150,11 +157,42 @@ export default {
     },
     arrowFrom (transitionSummary) {
       const network = this.findNetwork(transitionSummary.from)
-      return network ? network.position : { x: 0, y: 0 }
+      const pos = network ? network.position : { x: 0, y: 0 }
+      return pos
     },
     arrowTo (transitionSummary) {
       const network = this.findNetwork(transitionSummary.to)
-      return network ? network.position : { x: 0, y: 0 }
+      const pos = network ? network.position : { x: 0, y: 0 }
+      return pos
+    },
+    offset (transitionSummary) {
+      return -this.indexOf(transitionSummary) * 10
+    },
+    indexOf (likeThisSummary) {
+      const outwards = this.transitionSummariesFrom(likeThisSummary.from)
+        .filter(from => from.to !== from.from && from.to === likeThisSummary.to)
+      const inwards = this.transitionSummariesFrom(likeThisSummary.to)
+        .filter(to => to.to !== to.from && to.to === likeThisSummary.from)
+      const transitions = outwards.concat(inwards)
+      const centeringOffset = transitions.length / 2
+
+      return centeringOffset + transitions
+          .sort((a, b) => {
+            const valA = a.from + a.to
+            const valB = b.from + b.to
+            if (valA < valB) {
+              return -1
+            }
+            if (valA > valB) {
+              return 1
+            }
+            return 0
+          })
+          .findIndex(at => JSON.stringify(at) === JSON.stringify(likeThisSummary))
+    },
+    nonRecursiveTransitionsFrom (stateId) {
+      return this.transitionSummariesFrom(stateId)
+        .filter(from => from.to !== stateId)
     }
   }
 }
@@ -195,10 +233,11 @@ export default {
       :key="`transitions-${id}`">
 
       <arrow
-        v-for="summary in transitionSummariesFrom(id)"
+        v-for="summary in nonRecursiveTransitionsFrom(id)"
         :key="JSON.stringify(summary)"
         v-bind:from="arrowFrom(summary)" 
-        v-bind:to="arrowTo(summary)">
+        v-bind:to="arrowTo(summary)"
+        v-bind:normal-offset="offset(summary)">
         {{summary.when}}
       </arrow>
     </div>
