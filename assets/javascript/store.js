@@ -20,7 +20,7 @@ import {
 } from './action-types.js'
 import createLogger from 'vuex/dist/logger'
 import YAML from 'yaml'
-import { mapEntries, mapValues } from './map-obj.js'
+import { mapValues } from './map-obj.js'
 
 Vue.use(Vuex)
 
@@ -68,6 +68,8 @@ const getters = {
     state.states[id],
   isInitial: state => id =>
     state.initial === id,
+  isAny: _ => id =>
+    id === 'any',
   stateNamed: state => name =>
     Object.values(state.states).find(state => state.name === name),
   focusedState: (state) =>
@@ -160,7 +162,6 @@ const actions = {
       .then(autoSelect)
       .then(addMissingDefaultStateProps)
       .then(addMissingTransitionMaps)
-      .then(inlineAnyTransitions)
       .then(validateContents)
       .then(replaceState)
 
@@ -197,41 +198,6 @@ const actions = {
         reader.onerror = reject
         reader.readAsText(file)
       })
-    }
-
-    function inlineAnyTransitions (newState) {
-      if (!newState.transitions || !newState.transitions.any) {
-        return newState
-      }
-
-      const any = newState.transitions.any
-      delete newState.transitions.any
-      newState.transitions = mapEntries(
-        newState.transitions,
-        ([from, transitionsFrom]) => {
-          let dial = any.dial
-          if (!dial) {
-            dial = transitionsFrom.dial
-          } else if (transitionsFrom.dial) {
-            // both defined, merge dial
-            dial = {
-              ...any.dial,
-              ...transitionsFrom.dial
-            }
-          }
-
-          return [
-            from,
-            {
-              ...any,
-              ...transitionsFrom, // For everything except dial, replace transitions from any
-              dial
-            }
-          ]
-        }
-      )
-
-      return newState
     }
 
     function autoName (newState) {
@@ -304,18 +270,6 @@ const actions = {
     }
 
     function addMissingTransitionMaps (newState) {
-      console.log({
-        ...newState,
-        transitions: Object.keys(newState.states)
-          .map(id => [id, newState.transitions[id] || {}])
-          .reduce(
-            (acc, [key, transitions]) => {
-              acc[key] = transitions
-              return acc
-            },
-            {}
-          )
-      })
       return {
         ...newState,
         transitions: Object.keys(newState.states)

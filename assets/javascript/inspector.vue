@@ -22,6 +22,7 @@ export default {
     ...mapGetters([
       'focusedState',
       'isInitial',
+      'isAny',
       'transitionSummariesFrom',
       'transitionSummariesTo'
     ]),
@@ -88,6 +89,7 @@ export default {
 
       <h3>Properties</h3>
       <input
+        v-if="!isAny(focusedStateId)"
         class="stack"
         placeholder="Name"
         maxlength="32"
@@ -107,6 +109,7 @@ export default {
         @input="change($event, focusedStateId, 'description')"
       >
       <textarea
+        v-if="!isAny(focusedStateId)"
         class="stack inspector-input-speech"
         placeholder="Speech"
         :value="focusedState.speech"
@@ -116,6 +119,7 @@ export default {
         @input="change($event, focusedStateId, 'speech')"
       ></textarea>
       <input
+        v-if="!isAny(focusedStateId)"
         class="stack"
         type="number"
         min="0"
@@ -128,7 +132,10 @@ export default {
         @paste="change($event, focusedStateId, 'ring')"
         @input="change($event, focusedStateId, 'ring')"
       >
-      <label class="stack">
+      <label
+        v-if="!isAny(focusedStateId)"
+        class="stack"
+      >
         <span
           class="inspector-initial-button toggle button"
           :class="toggleActiveClass(isInitial(focusedStateId))"
@@ -139,7 +146,10 @@ export default {
           @input="setInitial($event)"
         >
       </label>
-      <label class="stack">
+      <label
+        v-if="!isAny(focusedStateId)"
+        class="stack"
+      >
         <span
           class="inspector-terminal-button toggle button"
           :class="toggleActiveClass(focusedState.terminal)"
@@ -151,7 +161,10 @@ export default {
         >
       </label>
 
-      <article class="inspector-actions">
+      <article
+        v-if="!isAny(focusedStateId)"
+        class="inspector-actions"
+      >
         <header><h3>Actions</h3></header>
         <footer>
           <button
