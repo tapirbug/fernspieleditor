@@ -55,7 +55,12 @@ export default {
         to: ringingStateId
       }
     },
-    [speakingStateId]: {}
+    [speakingStateId]: {
+      timeout: {
+        after: 5.0,
+        to: speakingStateId
+      }
+    }
   },
   vendor: {
     // Fernspieleditor additions to the core format
