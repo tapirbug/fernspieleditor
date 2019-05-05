@@ -55,9 +55,9 @@ export default {
         .sort(byFromAndThenTo)
 
       const arrows = transitionEdges.reduce(
-          appendArrow,
-          []
-        )
+        appendArrow,
+        []
+      )
         .map(
           arrow => {
             const fromPos = this.palmId === arrow.from ? this.movedPos : this.findNetwork(arrow.from).position
@@ -94,9 +94,9 @@ export default {
           lastArrow.label += ', ' + nextTransition.when
         } else {
           const isToSelf = nextTransition.from === nextTransition.to
-          const hasInverse = isToSelf || -1 !== transitionEdges.findIndex(
+          const hasInverse = isToSelf || transitionEdges.findIndex(
             transition => transition.from === nextTransition.to && transition.to === nextTransition.from
-          )
+          ) !== -1
 
           arrows.push({
             fromName: nextTransition.fromName,
@@ -218,7 +218,7 @@ export default {
         left: position.x,
         top: position.y
       }
-    },
+    }
   }
 }
 </script>
@@ -256,10 +256,11 @@ export default {
     <arrow
       v-for="arrow in arrows"
       :key="'arrow-' + arrow.from + arrow.to"
-      v-bind:from="arrow.fromPos"
-      v-bind:to="arrow.toPos"
-      v-bind:normal-offset="arrow.offset">
-      {{arrow.label}}
+      :from="arrow.fromPos"
+      :to="arrow.toPos"
+      :normal-offset="arrow.offset"
+    >
+      {{ arrow.label }}
     </arrow>
   </section>
 </template>

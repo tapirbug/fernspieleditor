@@ -27,6 +27,6 @@ export function length (vec) {
 export function abs2 (vec) {
   return {
     x: Math.abs(vec.x),
-    y: Math.abs(vec.x),
+    y: Math.abs(vec.x)
   }
 }

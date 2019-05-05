@@ -1,5 +1,5 @@
 <script>
-import { length, delta, abs2 } from './points.js'
+import { length, delta } from './points.js'
 
 /**
  * An arrow with a label connecting two points
@@ -54,7 +54,6 @@ export default {
       let to = { x: this.to.x, y: this.to.y }
 
       const lenWithTrim = fullLen - 2 * this.trim
-      let missingFromToOffset = { x: 0, y: 0 }
       if (lenWithTrim < this.minLength) {
         const missingLen = this.minLength - lenWithTrim
         from.x -= (missingLen / 2) * direction.x
@@ -97,12 +96,14 @@ function isPoint (obj) {
 </script>
 
 <template>
-  <article class="arrow" v-bind:style="arrowStyle">
+  <article
+    class="arrow"
+    :style="arrowStyle"
+  >
     <header>
       <slot></slot>
     </header>
   </article>
-  </div>
 </template>
 
 <style lang="scss">
