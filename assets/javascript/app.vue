@@ -1,15 +1,15 @@
 <script>
+import Auxiliary from './auxiliary.vue'
 import Bar from './bar.vue'
 import Drawer from './drawer.vue'
-import Inspector from './inspector.vue'
 import NetworkView from './network-view.vue'
 
 export default {
   name: 'App',
   components: {
+    'auxiliary': Auxiliary,
     'bar': Bar,
     'drawer': Drawer,
-    'inspector': Inspector,
     'network-view': NetworkView
   },
   data: function () {
@@ -32,7 +32,7 @@ export default {
         </div>
         <drawer>
           <header>
-            <inspector></inspector>
+            <auxiliary></auxiliary>
           </header>
         </drawer>
       </div>
