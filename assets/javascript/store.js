@@ -317,7 +317,7 @@ const mutations = {
       [id]: {
         ...initialStateProps(),
         id,
-        ...newState
+        ...sanitizeState(newState)
       }
     }
     vuexState.transitions = {
@@ -337,7 +337,7 @@ const mutations = {
     if (state) {
       Object.assign(
         state,
-        payload
+        sanitizeState(payload)
       )
     }
   },
@@ -432,4 +432,67 @@ function initialStateProps () {
   }
   delete initial.ring
   return initial
+}
+
+/**
+ * Returns a version of the given complete or partial state
+ * object with its properties sanitized and of the correct
+ * type.
+ * 
+ * The returned object can then be used for updating or
+ * creating of states.
+ * 
+ * The original state is not modified.
+ * 
+ * @param state potentially tainted state
+ * @returns sanitized state
+ */
+function sanitizeState (state) {
+  const sanitized = {
+    // keep unknown properties
+    ...state,
+  }
+
+  // and sanitize known ones
+  cleanIfPresent(sanitized, 'name', toStr)
+  cleanIfPresent(sanitized, 'description', toStr)
+  cleanIfPresent(sanitized, 'speech', toStr)
+  cleanIfPresent(sanitized, 'ring', toFiniteFloat)
+  cleanIfPresent(sanitized, 'terminal', toBool)
+
+  return sanitized
+
+  function toStr (orig) {
+    return '' + orig
+  }
+
+  function toFiniteFloat (orig) {
+    if (typeof orig === 'string') {
+      orig = parseFloat(orig)
+    }
+
+    const ok = typeof orig === "number" && isFinite(orig)
+    return ok ? orig : 0.0;
+  }
+
+  function toBool (orig) {
+    return !!orig
+  }
+}
+
+/**
+ * Modifies the given object in-place by applying
+ * the given function to the property specified
+ * with the given string.
+ * 
+ * No effect is property is undefined.
+ * 
+ * @param {object} obj Object to modify in-place
+ * @param {string} prop Property to modify
+ * @param {function} cleaner Returns cleaned version of the property value, if present
+ */
+function cleanIfPresent(obj, prop, cleaner) {
+  if (typeof obj[prop] !== 'undefined') {
+    obj[prop] = cleaner(obj[prop])
+  }
 }
