@@ -17,7 +17,7 @@ export default {
 </script>
 
 <template>
-  <article class="sound-editor">
+  <article class="auxiliary-editor sound-editor">
     <h2>Sounds</h2>
   </article>
 </template>

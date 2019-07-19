@@ -73,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <section class="inspector">
+  <article class="auxiliary-editor inspector">
     <div
       v-if="nothingFocused"
       class="inspector-passive-msg"
@@ -248,7 +248,7 @@ export default {
         </button>
       </div>
     </div>
-  </section>
+  </article>
 </template>
 
 <style lang="scss">
@@ -259,7 +259,6 @@ $danger-color: #ff4136;
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 0 0.6em;
 }
 
 .inspector-passive-msg {
