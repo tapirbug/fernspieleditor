@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import defaultState from './default-state.js'
+import defaultVueState from './startup-phonebook.js'
+import defaultState from './default-sound.js'
 import uuid from './uuid.js'
 import {
   CLEAR_PHONEBOOK,
@@ -302,7 +303,7 @@ const actions = {
 
 const mutations = {
   [CLEAR_PHONEBOOK] (vuexState) {
-    Object.keys(defaultState)
+    Object.keys(defaultVueState())
       .forEach(prop => Vue.delete(vuexState, prop))
     vuexState.focusedStateId = null
   },
@@ -418,7 +419,7 @@ function removeTransition (vuexState, summary) {
 
 const store = new Vuex.Store({
   plugins: [createLogger()],
-  state: { ...defaultState },
+  state: { ...defaultVueState() },
   mutations,
   getters,
   actions
@@ -428,7 +429,7 @@ export default store
 
 function initialStateProps () {
   const initial = {
-    ...Object.values(defaultState.states)[0]
+    ...defaultState()
   }
   delete initial.ring
   return initial
