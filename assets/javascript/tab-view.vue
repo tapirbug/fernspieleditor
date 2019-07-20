@@ -20,7 +20,7 @@ export default {
     contentContainerStyle: function () {
       return {
         width: `${this.labels.length * 100}%`,
-        'margin-left': `${this.selected * -100}%`
+        transform: `translateX(${(-100 / this.labels.length) * this.selected}%)`
       }
     },
     contentElementStyle: function () {
@@ -60,14 +60,19 @@ export default {
 }
 
 .tab-view-contents {
+  width: 100%;
   overflow: hidden;
 }
 
 .tab-view-content {
-  float: left;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .tab-view-contents-inner {
-  transition: margin-left ease 0.5s;
+  white-space: nowrap;
+  display: flex;
+  transition: transform ease 0.3s;
 }
 </style>

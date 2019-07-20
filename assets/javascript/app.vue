@@ -31,9 +31,7 @@ export default {
           <network-view></network-view>
         </div>
         <drawer>
-          <header>
-            <auxiliary></auxiliary>
-          </header>
+          <auxiliary></auxiliary>
         </drawer>
       </div>
     </section>

@@ -255,17 +255,8 @@ export default {
 $inspector-passive-msg-color: #777;
 $danger-color: #ff4136;
 
-.inspector {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
 .inspector-passive-msg {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  margin-top: 4em;
   text-align: center;
   color: $inspector-passive-msg-color;
 }
