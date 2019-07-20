@@ -123,12 +123,13 @@ const getters = {
       return
     }
 
-    const { initial, states, transitions, vendor } = vuexState
+    const { initial, states, transitions, vendor, sounds } = vuexState
     return YAML.stringify({
       initial,
       states,
       transitions,
       vendor,
+      sounds
     })
   },
   /// Finds network properties of state with ID
