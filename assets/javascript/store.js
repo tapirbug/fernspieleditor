@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import defaultVueState from './startup-phonebook.js'
-import defaultState from './default-sound.js'
+import defaultState from './default-state.js'
+import defaultSound from './default-sound.js'
 import uuid from './uuid.js'
 import {
   CLEAR_PHONEBOOK,
@@ -13,7 +14,9 @@ import {
   REMOVE_STATE,
   FOCUS_STATE,
   ADD_TRANSITION,
-  REMOVE_TRANSITION
+  REMOVE_TRANSITION,
+  ADD_SOUND,
+  UPDATE_SOUND
 } from './mutation-types.js'
 import {
   CONTINUE_UPDATE_STATE,
@@ -405,7 +408,15 @@ const mutations = {
       ...updatedTransitions
     }
   },
-  [REMOVE_TRANSITION]: removeTransition
+  [REMOVE_TRANSITION]: removeTransition,
+  [UPDATE_SOUND] (state, { id, ...updatedProps }) {
+    console.log(sanitizeSound(updatedProps))
+    const before = state.sounds[id] || defaultSound()
+    state.sounds[id] = {
+      ...before,
+      ...sanitizeSound(updatedProps)
+    }
+  }
 }
 
 function removeTransition (vuexState, summary) {
@@ -462,23 +473,35 @@ function sanitizeState (state) {
   cleanIfPresent(sanitized, 'terminal', toBool)
 
   return sanitized
+}
 
-  function toStr (orig) {
-    return '' + orig
+function sanitizeSound (sound) {
+  const sanitized = { ...sound }
+
+  cleanIfPresent(sanitized, 'name', toStr)
+  cleanIfPresent(sanitized, 'loop', toBool)
+  cleanIfPresent(sanitized, 'speech', toStr)
+  cleanIfPresent(sanitized, 'volume', toFiniteFloat)
+  cleanIfPresent(sanitized, 'backoff', toFiniteFloat)
+
+  return sanitized
+}
+
+function toStr (orig) {
+  return '' + orig
+}
+
+function toFiniteFloat (orig) {
+  if (typeof orig === 'string') {
+    orig = parseFloat(orig)
   }
 
-  function toFiniteFloat (orig) {
-    if (typeof orig === 'string') {
-      orig = parseFloat(orig)
-    }
+  const ok = typeof orig === "number" && isFinite(orig)
+  return ok ? orig : 0.0;
+}
 
-    const ok = typeof orig === "number" && isFinite(orig)
-    return ok ? orig : 0.0;
-  }
-
-  function toBool (orig) {
-    return !!orig
-  }
+function toBool (orig) {
+  return !!orig
 }
 
 /**
