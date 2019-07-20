@@ -3,6 +3,7 @@ import { CONTINUE_UPDATE_STATE } from './action-types.js'
 import { REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE } from './mutation-types.js'
 import { mapGetters, mapActions, mapMutations, mapState } from 'vuex'
 import TransitionDialog from './transition-dialog.vue'
+import SoundPicker from './sound-picker.vue'
 
 /**
  * Editor for the currently focused element.
@@ -10,7 +11,8 @@ import TransitionDialog from './transition-dialog.vue'
 export default {
   name: 'Inspector',
   components: {
-    'transition-dialog': TransitionDialog
+    'transition-dialog': TransitionDialog,
+    'sound-picker': SoundPicker,
   },
   data () {
     return {
@@ -33,16 +35,29 @@ export default {
   methods: {
     ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE]),
     ...mapActions([CONTINUE_UPDATE_STATE]),
-    change (evt, id, prop) {
-      const value = (() => {
-        if (prop === 'ring') {
-          return parseFloat(evt.target.value)
-        } else if (prop === 'terminal') {
-          return !!evt.target.checked
+    change (evtOrNewValue, id, prop) {
+      let value = (() => {
+        if (typeof evtOrNewValue !== 'object') {
+          // Scalar has been passed directly
+          return evtOrNewValue
+        } else if (typeof evtOrNewValue.target !== 'undefined') {
+          // Was a real event, pluck the data out of it
+          const target = evtOrNewValue.target
+          if (target.type === 'checkbox') {
+            // A checkbox or similar
+            return !!target.checked
+          } else {
+            return target.value
+          }
         } else {
-          return evt.target.value
+          // Some other object, set as the new value directly
+          return evtOrNewValue
         }
       })()
+
+      if (prop === 'ring') {
+        value = parseFloat(value)
+      }
 
       this[CONTINUE_UPDATE_STATE]({
         id,
@@ -67,6 +82,9 @@ export default {
           ? this.focusedStateId
           : null
       )
+    },
+    setSounds (sounds) {
+      console.log(sounds)
     }
   }
 }
@@ -151,21 +169,6 @@ export default {
         >
       </label>
 
-      <article
-        v-if="!isAny(focusedStateId)"
-        class="inspector-actions"
-      >
-        <header><h3>Actions</h3></header>
-        <footer>
-          <button
-            class="dangerous"
-            @click="removeState"
-          >
-            Delete state
-          </button>
-        </footer>
-      </article>
-
       <h3>Transitions</h3>
       <article
         v-for="transition in transitionSummariesFrom(focusedStateId)"
@@ -237,6 +240,26 @@ export default {
           Cancel
         </button>
       </div>
+
+      <h3>Sounds</h3>
+      <article>
+        <sound-picker v-bind:picked="focusedState.sounds" @picked="change($event, focusedStateId, 'sounds')"></sound-picker>
+      </article>
+
+      <article
+        v-if="!isAny(focusedStateId)"
+        class="inspector-actions"
+      >
+        <header><h3>Danger Zone</h3></header>
+        <footer>
+          <button
+            class="dangerous"
+            @click="removeState"
+          >
+            Delete state
+          </button>
+        </footer>
+      </article>
     </div>
   </article>
 </template>
