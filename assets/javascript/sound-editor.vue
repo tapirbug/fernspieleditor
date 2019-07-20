@@ -1,6 +1,7 @@
 <script>
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 import { ADD_SOUND, UPDATE_SOUND } from './mutation-types.js'
+import { isAudioFilename } from './sound-mimes.js'
 
 /**
  * Menu bar.
@@ -34,6 +35,53 @@ export default {
       if (this.newSoundName.length > 0) {
         this.addSound({ name: this.newSoundName })
       }
+    },
+    updateFile (soundId, filePickerEl) {
+      const files = filePickerEl.files
+      if (this.isAcceptableAudio(files)) {
+        // Seems to be an audio file, set the file handle in the state
+        this.updateSound({
+          id: soundId,
+          file: files[0]
+        })
+      } else {
+        // Set to no file when unsuccessful
+        this.resetPicker(soundId)
+      }
+    },
+    isAcceptableAudio (files) {
+      if (!files || files.length == 0) {
+        return false
+      }
+
+      const file = files[0]
+      const MiB = 1024 * 1024;
+      const maxSize = 10 * MiB;
+      if (file.size > maxSize) {
+        alert(`File is too big (~${Math.floor(file.size / MiB)}MiB)`)
+        return false
+      }
+
+      if (!isAudioFilename(file.name)) {
+        alert(`Unrecognized audio format. Try converting to MP3 or WAV.`)
+        return false
+      }
+
+      return true
+    },
+    resetPicker (soundId) {
+      this.$el.querySelector('[type="file"]').value = ''
+      this.updateSound({
+        id: soundId,
+        file: ''
+      })
+    },
+    hasFile (soundId) {
+      return typeof this.sounds[soundId].file === 'object' || // file object
+        typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.length > 0 // string filename
+    },
+    isEmbedded (soundId) {
+      return typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.startsWith('data:')
     }
   }
 }
@@ -71,6 +119,17 @@ export default {
                       title="Text written here will be spoken out loud when entering a state with this sound applied."
                       v-bind:value="sound.speech"
                       @input="updateSound({ id: soundId, speech: $event.target.value })"></textarea>
+                
+            <h4>WAV/MP3</h4>
+            <div class="file-input">
+              <span v-if="isEmbedded(soundId)">
+                <span class="label normal" v-if="isEmbedded(soundId)">Embedded</span>
+              </span>
+              <input type="file"
+                    title="Drop a file here to proivde custom sound or music. When set, text-to-speech is disabled."
+                    @input="updateFile(soundId, $event.target)">
+              <button v-bind:disabled="!hasFile(soundId)" @click="resetPicker(soundId)">Clear</button>
+            </div>
           </div>
         </details>
       </li>

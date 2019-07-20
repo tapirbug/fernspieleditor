@@ -25,15 +25,17 @@ export default {
         return
       }
 
-      const yaml = new File(
-        [this.phonebookYaml],
-        'phonebook.yaml',
-        {
-          type: 'application/x-yaml' // No official MIME type :(
-        }
+      this.phonebookYaml.then(
+        phonebookYaml => saveAs(
+          new File(
+            [phonebookYaml],
+            'phonebook.yaml',
+            {
+              type: 'application/x-yaml' // No official MIME type :(
+            }
+          )
+        )
       )
-
-      saveAs(yaml)
     },
     failSerialize (blockers) {
       alert(`Cannot save because: ${blockers.join(', ')}.`)

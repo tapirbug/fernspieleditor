@@ -25,6 +25,7 @@ import {
 import createLogger from 'vuex/dist/logger'
 import YAML from 'yaml'
 import { mapValues } from './map-obj.js'
+import { filenameToMime } from './sound-mimes.js'
 
 Vue.use(Vuex)
 
@@ -124,13 +125,56 @@ const getters = {
     }
 
     const { initial, states, transitions, vendor, sounds } = vuexState
-    return YAML.stringify({
-      initial,
-      states,
-      transitions,
-      vendor,
-      sounds
-    })
+    return inlineFiles(sounds)
+      .then(inlinedSounds =>
+        YAML.stringify({
+          initial,
+          states,
+          transitions,
+          vendor,
+          sounds: inlinedSounds
+        })
+      )
+
+    /**
+     * Converts contained file handles to data URIs, embedding
+     * them in the phonebook.
+     */
+    function inlineFiles (sounds) {
+      const soundIdsToInline = Object.keys(sounds)
+        .filter(soundId => typeof sounds[soundId].file === 'object');
+
+      return inlineNext({ ...sounds }, soundIdsToInline)
+
+      function inlineNext(sounds, idsToInline) {
+        if (idsToInline.length === 0) {
+          return Promise.resolve(sounds)
+        }
+
+        const id = idsToInline.pop()
+        return inlineFile(sounds[id]).then(sound => {
+          sounds[id] = sound
+          return inlineNext(sounds, idsToInline)
+        })
+      }
+
+      function inlineFile (sound) {
+        if (typeof sound.file !== 'object') {
+          return Promise.resolve(sound)
+        }
+
+        if (!FileReader) {
+          return Promise.reject(new Error("Your browser does not allow for file reading. Maybe upgrading your browser helps?"))
+        }
+
+        return fileToDataURL(sound.file).then(uri => {
+          return {
+            ...sound,
+            file: uri
+          }
+        })
+      }
+    }
   },
   /// Finds network properties of state with ID
   findNetwork: ({ vendor }) => id => {
@@ -140,6 +184,25 @@ const getters = {
 
     return vendor.fernspieleditor[id].network
   }
+}
+
+/**
+ * Converts a file object to a data URI and returns
+ * a promise for it.
+ * 
+ * @param {File} file 
+ */
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+    reader.onerror = err => {
+      reject(new Error(err))
+    }
+    reader.readAsDataURL(file)
+  })
 }
 
 let renamingTimeout = false
