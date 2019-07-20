@@ -128,7 +128,7 @@ const getters = {
       initial,
       states,
       transitions,
-      vendor
+      vendor,
     })
   },
   /// Finds network properties of state with ID
@@ -417,12 +417,12 @@ const mutations = {
     }
   },
   [ADD_SOUND] (state, newSound) {
+    const id = (typeof newSound.id !== 'string') ? uuid() : newSound.id;
     newSound = {
       ...defaultSound(),
       ...sanitizeSound(newSound),
-      id: (typeof newSound.id !== 'string') ? uuid() : newSound.id
     }
-    Vue.set(state.sounds, newSound.id, newSound)
+    Vue.set(state.sounds, id, newSound)
   }
 }
 

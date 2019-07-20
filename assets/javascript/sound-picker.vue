@@ -47,13 +47,13 @@ export default {
 <template>
   <article class="sound-picker">
     <label class="stack"
-          v-for="sound in sounds"
-          :key="`select-${sound.id}`">
+          v-for="(sound, soundId) in sounds"
+          :key="`select-${soundId}`">
 
       <input name="sound-picker-sounds"
              type="checkbox"
-             v-bind:checked="isPicked(sound.id)"
-             @change="setPicked(sound.id, $event.target.checked)">
+             v-bind:checked="isPicked(soundId)"
+             @change="setPicked(soundId, $event.target.checked)">
       <span class="button toggle">{{sound.name}}</span>
     </label>
   </article>

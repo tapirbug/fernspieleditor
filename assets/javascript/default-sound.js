@@ -3,7 +3,6 @@
  */
 export default function defaultSound() {
   return {
-    id: '<uninitialized ID>',
     name: 'New Sound',
     description: '',
     volume: 0.9,

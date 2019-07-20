@@ -45,21 +45,21 @@ export default {
 
     <ul class="sound-editor-sounds">
       <li class="sound-editor-sound"
-          v-for="sound in sounds"
-          :key="`sound-editor-li-${sound.id}`"
+          v-for="(sound, soundId) in sounds"
+          :key="`sound-editor-li-${soundId}`"
       >
         <details class="sound-editor-sound-props">
           <summary class="sound-editor-sound-simple">
             <span class="expansion-button"></span>
             <h3 class="sound-editor-sound-name">
-              <input type="text" v-bind:value="sound.name" @input="updateSound({ id: sound.id, name: $event.target.value })">
+              <input type="text" v-bind:value="sound.name" @input="updateSound({ id: soundId, name: $event.target.value })">
             </h3>
             <div class="sound-editor-sound-simple-input">
-              <input type="range" min="0" max="1" step="0.05" @change="updateSound({id: sound.id, volume: $event.target.value })">
+              <input type="range" min="0" max="1" step="0.05" @change="updateSound({id: soundId, volume: $event.target.value })">
             </div>
             <div class="sound-editor-sound-simple-input">
               <label>
-                <input type="checkbox" v-bind:checked="sound.loop" @change="updateSound({ id: sound.id, loop: $event.target.checked })">
+                <input type="checkbox" v-bind:checked="sound.loop" @change="updateSound({ id: soundId, loop: $event.target.checked })">
                 <span class="checkable">Loop</span>
               </label>
             </div>
@@ -70,7 +70,7 @@ export default {
                       placeholder="Speech"
                       title="Text written here will be spoken out loud when entering a state with this sound applied."
                       v-bind:value="sound.speech"
-                      @input="updateSound({ id: sound.id, speech: $event.target.value })"></textarea>
+                      @input="updateSound({ id: soundId, speech: $event.target.value })"></textarea>
           </div>
         </details>
       </li>

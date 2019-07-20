@@ -69,7 +69,6 @@ export default function startupPhonebook() {
     sounds: {
       [greetingSoundId]: {
         ...defaultSound(),
-        id: greetingSoundId,
         name: 'Introduction',
         volume: 0.9,
         backoff: 0.2,
