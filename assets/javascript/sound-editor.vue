@@ -9,6 +9,7 @@ export default {
   name: 'SoundEditor',
   data () {
     return {
+      newSoundName: '',
       /** Caches edit states distinct from the persistent sound state */
       editStates: {}
     }
@@ -21,11 +22,18 @@ export default {
       addSound: ADD_SOUND,
       updateSound: UPDATE_SOUND,
     }),
+    // Object for storing editing state associated with a sound
+    // that should not be part of the core model.
     editState (forSoundWithId) {
       if (typeof this.editStates[forSoundWithId] == 'undefined') {
         this.editStates[forSoundWithId] = {}
       }
       return this.editStates[forSoundWithId]
+    },
+    createSound () {
+      if (this.newSoundName.length > 0) {
+        this.addSound({ name: this.newSoundName })
+      }
     }
   }
 }
@@ -67,6 +75,18 @@ export default {
         </details>
       </li>
     </ul>
+
+    <article class="sound-editor-add">
+      <h3 class="sound-editor-sound-name">
+        <input type="text"
+                placeholder="Name"
+                v-model="newSoundName">
+      </h3>
+      <span class="sound-editor-add-actions">
+        <button @click="createSound()"
+                v-bind:disabled="newSoundName.length === 0">Add Sound</button>
+      </span>
+    </article>
   </article>
 </template>
 
@@ -135,6 +155,16 @@ $expansion-button-color: black;
 
   details[open] & {
     transform: rotate(90deg);
+  }
+}
+
+.sound-editor-add {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > *:first-child {
+    padding-right: 1em;
   }
 }
 

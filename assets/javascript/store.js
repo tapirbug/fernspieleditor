@@ -410,12 +410,19 @@ const mutations = {
   },
   [REMOVE_TRANSITION]: removeTransition,
   [UPDATE_SOUND] (state, { id, ...updatedProps }) {
-    console.log(sanitizeSound(updatedProps))
     const before = state.sounds[id] || defaultSound()
     state.sounds[id] = {
       ...before,
       ...sanitizeSound(updatedProps)
     }
+  },
+  [ADD_SOUND] (state, newSound) {
+    newSound = {
+      ...defaultSound(),
+      ...sanitizeSound(newSound),
+      id: (typeof newSound.id !== 'string') ? uuid() : newSound.id
+    }
+    Vue.set(state.sounds, newSound.id, newSound)
   }
 }
 
