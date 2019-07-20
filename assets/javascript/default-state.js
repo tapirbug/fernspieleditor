@@ -6,7 +6,6 @@ export default function defaultState() {
     id: '<uninitialized ID>',
     name: 'New State',
     description: '',
-    speech: '',
     sounds: [],
     ring: 0.0,
     terminal: false

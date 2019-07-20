@@ -468,7 +468,6 @@ function sanitizeState (state) {
   // and sanitize known ones
   cleanIfPresent(sanitized, 'name', toStr)
   cleanIfPresent(sanitized, 'description', toStr)
-  cleanIfPresent(sanitized, 'speech', toStr)
   cleanIfPresent(sanitized, 'ring', toFiniteFloat)
   cleanIfPresent(sanitized, 'terminal', toBool)
 

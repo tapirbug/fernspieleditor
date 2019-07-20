@@ -16,7 +16,6 @@ export default function startupPhonebook() {
       any: {
         name: 'Any',
         description: 'Transitions from any are used when the current state has no transition defined for an event',
-        speech: '',
         sounds: [],
         ring: 0.0,
         terminal: false
@@ -24,7 +23,6 @@ export default function startupPhonebook() {
       [ringAgainLaterStateId]: {
         name: 'Pause',
         description: 'Does nothing for a while and rings again afterwards',
-        speech: '',
         sounds: [],
         ring: 0.0,
         terminal: false
@@ -32,7 +30,6 @@ export default function startupPhonebook() {
       [ringingStateId]: {
         name: 'Ring',
         description: '',
-        speech: '',
         sounds: [],
         ring: 0.5,
         terminal: false
@@ -40,7 +37,6 @@ export default function startupPhonebook() {
       [speakingStateId]: {
         name: 'Introduce',
         description: '',
-        speech: '',
         sounds: [ greetingSoundId ],
         ring: 0.0,
         terminal: false
@@ -73,6 +69,8 @@ export default function startupPhonebook() {
     sounds: {
       [greetingSoundId]: {
         ...defaultSound(),
+        id: greetingSoundId,
+        name: 'Introduction',
         volume: 0.9,
         backoff: 0.2,
         loop: false,

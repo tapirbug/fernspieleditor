@@ -108,16 +108,6 @@ export default {
         @paste="change($event, focusedStateId, 'description')"
         @input="change($event, focusedStateId, 'description')"
       >
-      <textarea
-        v-if="!isAny(focusedStateId)"
-        class="stack inspector-input-speech"
-        placeholder="Speech"
-        :value="focusedState.speech"
-        @blur="change($event, focusedStateId, 'speech')"
-        @keyup="change($event, focusedStateId, 'speech')"
-        @paste="change($event, focusedStateId, 'speech')"
-        @input="change($event, focusedStateId, 'speech')"
-      ></textarea>
       <input
         v-if="!isAny(focusedStateId)"
         class="stack"
@@ -259,13 +249,6 @@ $danger-color: #ff4136;
   margin-top: 4em;
   text-align: center;
   color: $inspector-passive-msg-color;
-}
-
-.inspector-input-speech {
-  resize: vertical;
-  height: 8em;
-  height: 10em;
-  word-break: break-all;
 }
 
 .inspector-add-transition-btns {
