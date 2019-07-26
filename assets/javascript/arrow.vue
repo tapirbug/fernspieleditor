@@ -83,6 +83,9 @@ export default {
         transform: `translateY(-100%) ${moveToFrom} ${rotateToTo} translateY(${normalOffset})`,
         width: `${len}px`
       }
+    },
+    flip () {
+      return delta(this.from, this.to).x < 0
     }
   }
 }
@@ -100,7 +103,7 @@ function isPoint (obj) {
     class="arrow"
     :style="arrowStyle"
   >
-    <header>
+    <header v-bind:class="{'arrow-label-flipped': flip}">
       <slot></slot>
     </header>
   </article>
@@ -117,7 +120,6 @@ $arrow-height: 0.3em;
   top: 0;
   left: 0;
   border-bottom: $arrow-thickness solid $arrow-color;
-  //transform: translateY(-50%);
 
   header {
     text-align: center;
@@ -139,5 +141,9 @@ $arrow-height: 0.3em;
     border-bottom: $arrow-height solid transparent;
     border-left: $arrow-width solid $arrow-color;
   }
+}
+
+.arrow-label-flipped {
+  transform: scaleX(-1) scaleY(-1);
 }
 </style>
