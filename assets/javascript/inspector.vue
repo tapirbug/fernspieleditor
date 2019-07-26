@@ -30,7 +30,7 @@ export default {
     ]),
     nothingFocused () {
       return !this.focusedState
-    }
+    },
   },
   methods: {
     ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE]),
@@ -105,69 +105,71 @@ export default {
         <h2>{{ focusedState.name }}</h2>
       </header>
 
-      <h3>Properties</h3>
-      <input
-        v-if="!isAny(focusedStateId)"
-        class="stack"
-        placeholder="Name"
-        maxlength="32"
-        :value="focusedState.name"
-        @blur="change($event, focusedStateId, 'name')"
-        @keyup="change($event, focusedStateId, 'name')"
-        @paste="change($event, focusedStateId, 'name')"
-        @input="change($event, focusedStateId, 'name')"
-      >
-      <input
-        class="stack"
-        placeholder="Description"
-        :value="focusedState.description"
-        @blur="change($event, focusedStateId, 'description')"
-        @keyup="change($event, focusedStateId, 'description')"
-        @paste="change($event, focusedStateId, 'description')"
-        @input="change($event, focusedStateId, 'description')"
-      >
-      <input
-        v-if="!isAny(focusedStateId)"
-        class="stack"
-        type="number"
-        min="0"
-        max="5"
-        step="0.25"
-        placeholder="Ring time"
-        :value="focusedState.ring"
-        @blur="change($event, focusedStateId, 'ring')"
-        @keyup="change($event, focusedStateId, 'ring')"
-        @paste="change($event, focusedStateId, 'ring')"
-        @input="change($event, focusedStateId, 'ring')"
-      >
-      <label
-        v-if="!isAny(focusedStateId)"
-        class="stack"
-      >
-        <span
-          class="inspector-initial-button toggle button"
-          :class="toggleActiveClass(isInitial(focusedStateId))"
-        >Initial state</span>
+      <div v-if="isAny(focusedStateId)">
+        {{focusedState.description}}
+      </div>
+
+      <div class="inspector-properties" v-if="!isAny(focusedStateId)">
+        <h3>Properties</h3>
         <input
-          type="checkbox"
-          :checked="isInitial(focusedStateId)"
-          @input="setInitial($event)"
+          class="stack"
+          placeholder="Name"
+          maxlength="32"
+          :value="focusedState.name"
+          @blur="change($event, focusedStateId, 'name')"
+          @keyup="change($event, focusedStateId, 'name')"
+          @paste="change($event, focusedStateId, 'name')"
+          @input="change($event, focusedStateId, 'name')"
         >
-      </label>
-      <label
-        v-if="!isAny(focusedStateId)"
-        class="stack"
-      >
-        <span
-          class="inspector-terminal-button toggle button"
-          :class="toggleActiveClass(focusedState.terminal)"
-        >Terminal state</span>
         <input
-          type="checkbox"
-          :value="focusedState.terminal"
-          @input="change($event, focusedStateId, 'terminal')"
+          class="stack"
+          placeholder="Description"
+          :value="focusedState.description"
+          @blur="change($event, focusedStateId, 'description')"
+          @keyup="change($event, focusedStateId, 'description')"
+          @paste="change($event, focusedStateId, 'description')"
+          @input="change($event, focusedStateId, 'description')"
         >
-      </label>
+        <input
+          class="stack"
+          type="number"
+          min="0"
+          max="5"
+          step="0.25"
+          placeholder="Ring time"
+          :value="focusedState.ring"
+          @blur="change($event, focusedStateId, 'ring')"
+          @keyup="change($event, focusedStateId, 'ring')"
+          @paste="change($event, focusedStateId, 'ring')"
+          @input="change($event, focusedStateId, 'ring')"
+        >
+        <label
+          class="stack"
+        >
+          <span
+            class="inspector-initial-button toggle button"
+            :class="toggleActiveClass(isInitial(focusedStateId))"
+          >Initial state</span>
+          <input
+            type="checkbox"
+            :checked="isInitial(focusedStateId)"
+            @input="setInitial($event)"
+          >
+        </label>
+        <label
+          class="stack"
+        >
+          <span
+            class="inspector-terminal-button toggle button"
+            :class="toggleActiveClass(focusedState.terminal)"
+          >Terminal state</span>
+          <input
+            type="checkbox"
+            :value="focusedState.terminal"
+            @input="change($event, focusedStateId, 'terminal')"
+          >
+        </label>
+      </div>
 
       <h3>Transitions</h3>
       <article

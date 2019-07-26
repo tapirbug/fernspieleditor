@@ -22,8 +22,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['states']),
     ...mapGetters([
+      'states',
       'findNetwork',
       'focusedState',
       'isFocused',

@@ -13,13 +13,6 @@ export default function startupPhonebook() {
     focusedStateId: null,
     initial: ringingStateId,
     states: {
-      any: {
-        name: 'Any',
-        description: 'Transitions from any are used when the current state has no transition defined for an event',
-        sounds: [],
-        ring: 0.0,
-        terminal: false
-      },
       [ringAgainLaterStateId]: {
         name: 'Pause',
         description: 'Does nothing for a while and rings again afterwards',

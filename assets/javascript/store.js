@@ -26,6 +26,7 @@ import createLogger from 'vuex/dist/logger'
 import YAML from 'yaml'
 import { mapValues } from './map-obj.js'
 import { filenameToMime } from './sound-mimes.js'
+import startupPhonebook from './startup-phonebook.js';
 
 Vue.use(Vuex)
 
@@ -69,14 +70,23 @@ const describeTransition = {
 }
 
 const getters = {
+  states: state => {
+    return {
+      ...state.states,
+      any: {
+        name: 'Any',
+        description: 'Transitions from any are used when the current state has no transition defined for an event'
+      },
+    }
+  },
   findState: state => id =>
-    state.states[id],
+    getters.states(state)[id],
   isInitial: state => id =>
     state.initial === id,
   isAny: _ => id =>
     id === 'any',
   stateNamed: state => name =>
-    Object.values(state.states).find(state => state.name === name),
+    Object.values(getters.states(state)).find(state => state.name === name),
   focusedState: (state) =>
     getters.findState(state)(state.focusedStateId),
   focusedStateName (state) {
@@ -225,6 +235,7 @@ const actions = {
       .then(validateFilename)
       .then(loadFile)
       .then(YAML.parse)
+      .then(removeAnyProps)
       .then(autoName)
       .then(autoLayout)
       .then(autoSelect)
@@ -268,6 +279,19 @@ const actions = {
       })
     }
 
+    /**
+     * If incoming phonebooks define properties on `any`,
+     * remove the properties map.
+     */
+    function removeAnyProps (newState) {
+      const withoutAny = {
+        ...newState,
+        states: { ...newState.states }
+      }
+      delete withoutAny.states.any
+      return withoutAny
+    }
+
     function autoName (newState) {
       Object.entries(newState.states)
         .forEach(([id, state]) => {
@@ -296,6 +320,7 @@ const actions = {
       let posX = 0
       let posY = 0
       Object.keys(newState.states)
+        .concat('any')
         .forEach(id => {
           if (!newState.vendor.fernspieleditor[id]) {
             newState.vendor.fernspieleditor[id] = {
@@ -314,10 +339,8 @@ const actions = {
         return newState
       }
 
-      const anyState = Object.entries(newState.states)[0]
-      const anyStateId = anyState ? anyState[0] : null
       return {
-        focusedStateId: anyStateId,
+        focusedStateId: Object.entries(newState.states)[0] || 'any',
         ...newState
       }
     }
@@ -341,6 +364,7 @@ const actions = {
       return {
         ...newState,
         transitions: Object.keys(newState.states)
+          .concat('any')
           .map(id => [id, newState.transitions[id] || {}])
           .reduce(
             (acc, [key, transitions]) => {
