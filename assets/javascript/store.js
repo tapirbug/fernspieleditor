@@ -293,15 +293,29 @@ const actions = {
     }
 
     function autoName (newState) {
+      // First the state properties
       Object.entries(newState.states)
         .forEach(([id, state]) => {
-          // Use ID as name if no name defined
           if (!state) {
             newState.states[id] = {
               name: id
             }
           } else if (typeof state.name === 'undefined') {
+            // Use ID as name if no name defined
             state.name = id
+          }
+        })
+
+      // then the sounds
+      Object.entries(newState.sounds)
+        .forEach(([id, sound]) => {
+          if (!sound) {
+            newState.sounds[id] = {
+              name: id
+            }
+          } else if (typeof sound.name === 'undefined') {
+            // Use ID as name if no name defined
+            sound.name = id
           }
         })
 
