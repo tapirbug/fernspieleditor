@@ -1,7 +1,7 @@
 /**
  * A newly added, blank state
  */
-export default function defaultState() {
+export default function defaultState () {
   return {
     id: '<uninitialized ID>',
     name: 'New State',

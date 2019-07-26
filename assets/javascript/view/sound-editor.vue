@@ -1,5 +1,5 @@
 <script>
-import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { ADD_SOUND, UPDATE_SOUND } from '../store/mutation-types.js'
 import { isAudioFilename } from '../util/sound-mimes.js'
 
@@ -21,12 +21,12 @@ export default {
   methods: {
     ...mapMutations({
       addSound: ADD_SOUND,
-      updateSound: UPDATE_SOUND,
+      updateSound: UPDATE_SOUND
     }),
     // Object for storing editing state associated with a sound
     // that should not be part of the core model.
     editState (forSoundWithId) {
-      if (typeof this.editStates[forSoundWithId] == 'undefined') {
+      if (typeof this.editStates[forSoundWithId] === 'undefined') {
         this.editStates[forSoundWithId] = {}
       }
       return this.editStates[forSoundWithId]
@@ -50,13 +50,13 @@ export default {
       }
     },
     isAcceptableAudio (files) {
-      if (!files || files.length == 0) {
+      if (!files || files.length === 0) {
         return false
       }
 
       const file = files[0]
-      const MiB = 1024 * 1024;
-      const maxSize = 10 * MiB;
+      const MiB = 1024 * 1024
+      const maxSize = 10 * MiB
       if (file.size > maxSize) {
         alert(`File is too big (~${Math.floor(file.size / MiB)}MiB)`)
         return false
@@ -78,7 +78,7 @@ export default {
     },
     hasFile (soundId) {
       return typeof this.sounds[soundId].file === 'object' || // file object
-        typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.length > 0 // string filename
+        (typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.length > 0) // string filename
     },
     isEmbedded (soundId) {
       return typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.startsWith('data:')
@@ -92,43 +92,70 @@ export default {
     <h2>Sounds</h2>
 
     <ul class="sound-editor-sounds">
-      <li class="sound-editor-sound"
-          v-for="(sound, soundId) in sounds"
-          :key="`sound-editor-li-${soundId}`"
+      <li
+        v-for="(sound, soundId) in sounds"
+        :key="`sound-editor-li-${soundId}`"
+        class="sound-editor-sound"
       >
         <details class="sound-editor-sound-props">
           <summary class="sound-editor-sound-simple">
             <span class="expansion-button"></span>
             <h3 class="sound-editor-sound-name">
-              <input type="text" v-bind:value="sound.name" @input="updateSound({ id: soundId, name: $event.target.value })">
+              <input
+                type="text"
+                :value="sound.name"
+                @input="updateSound({ id: soundId, name: $event.target.value })"
+              >
             </h3>
             <div class="sound-editor-sound-simple-input">
-              <input type="range" min="0" max="1" step="0.05" @change="updateSound({id: soundId, volume: $event.target.value })">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                @change="updateSound({id: soundId, volume: $event.target.value })"
+              >
             </div>
             <div class="sound-editor-sound-simple-input">
               <label>
-                <input type="checkbox" v-bind:checked="sound.loop" @change="updateSound({ id: soundId, loop: $event.target.checked })">
+                <input
+                  type="checkbox"
+                  :checked="sound.loop"
+                  @change="updateSound({ id: soundId, loop: $event.target.checked })"
+                >
                 <span class="checkable">Loop</span>
               </label>
             </div>
           </summary>
           <div class="sound-editor-sound-props-details">
             <h4>Text-to-speech</h4>
-            <textarea class="sound-editor-speech-input"
-                      placeholder="Speech"
-                      title="Text written here will be spoken out loud when entering a state with this sound applied."
-                      v-bind:value="sound.speech"
-                      @input="updateSound({ id: soundId, speech: $event.target.value })"></textarea>
-                
+            <textarea
+              class="sound-editor-speech-input"
+              placeholder="Speech"
+              title="Text written here will be spoken out loud when entering a state with this sound applied."
+              :value="sound.speech"
+              @input="updateSound({ id: soundId, speech: $event.target.value })"
+            ></textarea>
+
             <h4>WAV/MP3</h4>
             <div class="file-input">
               <span v-if="isEmbedded(soundId)">
-                <span class="label normal" v-if="isEmbedded(soundId)">Embedded</span>
+                <span
+                  v-if="isEmbedded(soundId)"
+                  class="label normal"
+                >Embedded</span>
               </span>
-              <input type="file"
-                    title="Drop a file here to proivde custom sound or music. When set, text-to-speech is disabled."
-                    @input="updateFile(soundId, $event.target)">
-              <button v-bind:disabled="!hasFile(soundId)" @click="resetPicker(soundId)">Clear</button>
+              <input
+                type="file"
+                title="Drop a file here to proivde custom sound or music. When set, text-to-speech is disabled."
+                @input="updateFile(soundId, $event.target)"
+              >
+              <button
+                :disabled="!hasFile(soundId)"
+                @click="resetPicker(soundId)"
+              >
+                Clear
+              </button>
             </div>
           </div>
         </details>
@@ -137,13 +164,17 @@ export default {
 
     <article class="sound-editor-add">
       <h3 class="sound-editor-sound-name">
-        <input type="text"
-                placeholder="Name"
-                v-model="newSoundName">
+        <input
+          v-model="newSoundName"
+          type="text"
+          placeholder="Name"
+        >
       </h3>
       <span class="sound-editor-add-actions">
-        <button @click="createSound()"
-                v-bind:disabled="newSoundName.length === 0">Add Sound</button>
+        <button
+          :disabled="newSoundName.length === 0"
+          @click="createSound()"
+        >Add Sound</button>
       </span>
     </article>
   </article>

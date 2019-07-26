@@ -25,8 +25,6 @@ import {
 import createLogger from 'vuex/dist/logger'
 import YAML from 'yaml'
 import { mapValues } from '../util/map-obj.js'
-import { filenameToMime } from '../util/sound-mimes.js'
-import startupPhonebook from './fixtures/startup-phonebook.js';
 
 Vue.use(Vuex)
 
@@ -76,7 +74,7 @@ const getters = {
       any: {
         name: 'Any',
         description: 'Transitions from any are used when the current state has no transition defined for an event'
-      },
+      }
     }
   },
   findState: state => id =>
@@ -152,11 +150,11 @@ const getters = {
      */
     function inlineFiles (sounds) {
       const soundIdsToInline = Object.keys(sounds)
-        .filter(soundId => typeof sounds[soundId].file === 'object');
+        .filter(soundId => typeof sounds[soundId].file === 'object')
 
       return inlineNext({ ...sounds }, soundIdsToInline)
 
-      function inlineNext(sounds, idsToInline) {
+      function inlineNext (sounds, idsToInline) {
         if (idsToInline.length === 0) {
           return Promise.resolve(sounds)
         }
@@ -174,7 +172,7 @@ const getters = {
         }
 
         if (!FileReader) {
-          return Promise.reject(new Error("Your browser does not allow for file reading. Maybe upgrading your browser helps?"))
+          return Promise.reject(new Error('Your browser does not allow for file reading. Maybe upgrading your browser helps?'))
         }
 
         return fileToDataURL(sound.file).then(uri => {
@@ -199,10 +197,10 @@ const getters = {
 /**
  * Converts a file object to a data URI and returns
  * a promise for it.
- * 
- * @param {File} file 
+ *
+ * @param {File} file
  */
-function fileToDataURL(file) {
+function fileToDataURL (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -519,10 +517,10 @@ const mutations = {
     }
   },
   [ADD_SOUND] (state, newSound) {
-    const id = (typeof newSound.id !== 'string') ? uuid() : newSound.id;
+    const id = (typeof newSound.id !== 'string') ? uuid() : newSound.id
     newSound = {
       ...defaultSound(),
-      ...sanitizeSound(newSound),
+      ...sanitizeSound(newSound)
     }
     Vue.set(state.sounds, id, newSound)
   }
@@ -559,19 +557,19 @@ function initialStateProps () {
  * Returns a version of the given complete or partial state
  * object with its properties sanitized and of the correct
  * type.
- * 
+ *
  * The returned object can then be used for updating or
  * creating of states.
- * 
+ *
  * The original state is not modified.
- * 
+ *
  * @param state potentially tainted state
  * @returns sanitized state
  */
 function sanitizeState (state) {
   const sanitized = {
     // keep unknown properties
-    ...state,
+    ...state
   }
 
   // and sanitize known ones
@@ -604,8 +602,8 @@ function toFiniteFloat (orig) {
     orig = parseFloat(orig)
   }
 
-  const ok = typeof orig === "number" && isFinite(orig)
-  return ok ? orig : 0.0;
+  const ok = typeof orig === 'number' && isFinite(orig)
+  return ok ? orig : 0.0
 }
 
 function toBool (orig) {
@@ -616,14 +614,14 @@ function toBool (orig) {
  * Modifies the given object in-place by applying
  * the given function to the property specified
  * with the given string.
- * 
+ *
  * No effect is property is undefined.
- * 
+ *
  * @param {object} obj Object to modify in-place
  * @param {string} prop Property to modify
  * @param {function} cleaner Returns cleaned version of the property value, if present
  */
-function cleanIfPresent(obj, prop, cleaner) {
+function cleanIfPresent (obj, prop, cleaner) {
   if (typeof obj[prop] !== 'undefined') {
     obj[prop] = cleaner(obj[prop])
   }

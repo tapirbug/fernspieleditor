@@ -6,15 +6,15 @@ import { mapState } from 'vuex'
  */
 export default {
   name: 'SoundPicker',
-  data: function () {
-    return {}
-  },
   props: {
     picked: {
       type: Array,
       required: true,
-      default: () => [],
+      default: () => []
     }
+  },
+  data: function () {
+    return {}
   },
   computed: {
     ...mapState(['sounds'])
@@ -25,14 +25,14 @@ export default {
     },
     setPicked (soundId, isPicked) {
       const wasPicked = this.picked.includes(soundId)
-      
-      let nowPicked;
-      if (wasPicked == isPicked) {
+
+      let nowPicked
+      if (wasPicked === isPicked) {
         // as it should be, do nothing
-        return;
+        return
       } else if (wasPicked && !isPicked) {
         // previously picked, now unpicked, remove before emitting
-        nowPicked = this.picked.filter(p => p != soundId)
+        nowPicked = this.picked.filter(p => p !== soundId)
       } else if (!wasPicked && isPicked) {
         // not picked before, now picked, add before mitting
         nowPicked = this.picked.concat(soundId)
@@ -46,15 +46,19 @@ export default {
 
 <template>
   <article class="sound-picker">
-    <label class="stack"
-          v-for="(sound, soundId) in sounds"
-          :key="`select-${soundId}`">
+    <label
+      v-for="(sound, soundId) in sounds"
+      :key="`select-${soundId}`"
+      class="stack"
+    >
 
-      <input name="sound-picker-sounds"
-             type="checkbox"
-             v-bind:checked="isPicked(soundId)"
-             @change="setPicked(soundId, $event.target.checked)">
-      <span class="button toggle">{{sound.name}}</span>
+      <input
+        name="sound-picker-sounds"
+        type="checkbox"
+        :checked="isPicked(soundId)"
+        @change="setPicked(soundId, $event.target.checked)"
+      >
+      <span class="button toggle">{{ sound.name }}</span>
     </label>
   </article>
 </template>

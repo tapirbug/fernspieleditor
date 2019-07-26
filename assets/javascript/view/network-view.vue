@@ -1,5 +1,5 @@
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
 import { translate, delta } from '../util/geom/points.js'
@@ -62,15 +62,15 @@ export default {
           arrow => {
             const fromPos = this.palmId === arrow.from ? this.movedPos : this.findNetwork(arrow.from).position
             const toPos = arrow.isToSelf ? fromPos : (this.palmId === arrow.to ? this.movedPos : this.findNetwork(arrow.to).position)
-            const xOffset = 280;
-            const yOffset = 150;
+            const xOffset = 280
+            const yOffset = 150
             return {
               ...arrow,
               fromPos: arrow.isToSelf
-                ? { x: fromPos.x - xOffset/2, y: fromPos.y - yOffset/2 }
+                ? { x: fromPos.x - xOffset / 2, y: fromPos.y - yOffset / 2 }
                 : fromPos,
               toPos: arrow.isToSelf
-                ? { x: toPos.x + xOffset/2, y: toPos.y + yOffset/2 }
+                ? { x: toPos.x + xOffset / 2, y: toPos.y + yOffset / 2 }
                 : toPos,
               offset: arrow.isToSelf ? '-3.3em' : (arrow.hasInverse ? '-0.3em' : '0')
             }

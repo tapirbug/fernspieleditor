@@ -2,7 +2,7 @@ import uuid from '../../util/random/uuid.js'
 import random from '../../util/random/text.js'
 import defaultSound from './default-sound.js'
 
-export default function startupPhonebook() {
+export default function startupPhonebook () {
   const ringAgainLaterStateId = uuid()
   const ringingStateId = uuid()
   const speakingStateId = uuid()

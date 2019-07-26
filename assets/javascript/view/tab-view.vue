@@ -8,7 +8,7 @@ export default {
     labels: {
       type: Array,
       required: true,
-      default: () => {},
+      default: () => {}
     }
   },
   data () {
@@ -27,7 +27,7 @@ export default {
       return {
         width: `${100 / Math.max(1, this.labels.length)}%`
       }
-    },
+    }
   },
   methods: {
   }
@@ -37,17 +37,38 @@ export default {
 <template>
   <section class="tab-view">
     <header class="tab-view-selects">
-      <label v-for="(label, index) in labels" :key="`label-${index}-${label.id}`">
-        <input type="radio" name="tab-view-select" v-bind:value="index" v-model="selected" checked>
-        <span class="toggle pseudo button" v-text="label.title"></span>
+      <label
+        v-for="(label, index) in labels"
+        :key="`label-${index}-${label.id}`"
+      >
+        <input
+          v-model="selected"
+          type="radio"
+          name="tab-view-select"
+          :value="index"
+          checked
+        >
+        <span
+          class="toggle pseudo button"
+          v-text="label.title"
+        ></span>
       </label>
     </header>
 
     <div class="tab-view-contents">
-      <div class="tab-view-contents-inner" v-bind:style="contentContainerStyle">
-        <div class="tab-view-content" v-for="(label, index) in labels" :key="`content-${index}-${label.id}`"
-          v-bind:style="contentElementStyle">
-          <slot v-bind:name="label.id">Content of {{label.title}}.</slot>
+      <div
+        class="tab-view-contents-inner"
+        :style="contentContainerStyle"
+      >
+        <div
+          v-for="(label, index) in labels"
+          :key="`content-${index}-${label.id}`"
+          class="tab-view-content"
+          :style="contentElementStyle"
+        >
+          <slot :name="label.id">
+            Content of {{ label.title }}.
+          </slot>
         </div>
       </div>
     </div>

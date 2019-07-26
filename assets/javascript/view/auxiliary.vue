@@ -11,7 +11,7 @@ export default {
   components: {
     'inspector': Inspector,
     'sound-editor': SoundEditor,
-    'tab-view': TabView,
+    'tab-view': TabView
   },
   data () {
     return {}
@@ -25,14 +25,15 @@ export default {
 
 <template>
   <section class="auxiliary">
-    <tab-view v-bind:labels="[{id: 'inspector', title: 'Inspector'}, {id: 'sounds', title: 'Sounds'}]">
+    <tab-view :labels="[{id: 'inspector', title: 'Inspector'}, {id: 'sounds', title: 'Sounds'}]">
       <template v-slot:inspector>
         <inspector></inspector>
       </template>
       <template v-slot:sounds>
         <sound-editor></sound-editor>
       </template>
-  </tab-view>
+    </tab-view>
+  </section>
 </template>
 
 <style lang="scss">

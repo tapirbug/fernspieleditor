@@ -1,7 +1,7 @@
 /**
  * A newly added, blank sound
  */
-export default function defaultSound() {
+export default function defaultSound () {
   return {
     name: 'New Sound',
     description: '',

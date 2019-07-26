@@ -1,8 +1,8 @@
 /**
  * Generates a v4 UUID.
- * 
+ *
  * Source: https://stackoverflow.com/a/2117523
- * 
+ *
  * @returns string Version 4 UUID as string of form `'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`
  */
 export default function uuidV4 () {

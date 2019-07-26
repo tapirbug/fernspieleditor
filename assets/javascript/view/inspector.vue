@@ -12,7 +12,7 @@ export default {
   name: 'Inspector',
   components: {
     'transition-dialog': TransitionDialog,
-    'sound-picker': SoundPicker,
+    'sound-picker': SoundPicker
   },
   data () {
     return {
@@ -30,7 +30,7 @@ export default {
     ]),
     nothingFocused () {
       return !this.focusedState
-    },
+    }
   },
   methods: {
     ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE]),
@@ -106,10 +106,13 @@ export default {
       </header>
 
       <div v-if="isAny(focusedStateId)">
-        {{focusedState.description}}
+        {{ focusedState.description }}
       </div>
 
-      <div class="inspector-properties" v-if="!isAny(focusedStateId)">
+      <div
+        v-if="!isAny(focusedStateId)"
+        class="inspector-properties"
+      >
         <h3>Properties</h3>
         <input
           class="stack"
@@ -245,7 +248,10 @@ export default {
 
       <h3>Sounds</h3>
       <article>
-        <sound-picker v-bind:picked="focusedState.sounds" @picked="change($event, focusedStateId, 'sounds')"></sound-picker>
+        <sound-picker
+          :picked="focusedState.sounds"
+          @picked="change($event, focusedStateId, 'sounds')"
+        ></sound-picker>
       </article>
 
       <article

@@ -103,7 +103,7 @@ function isPoint (obj) {
     class="arrow"
     :style="arrowStyle"
   >
-    <header v-bind:class="{'arrow-label-flipped': flip}">
+    <header :class="{'arrow-label-flipped': flip}">
       <slot></slot>
     </header>
   </article>

@@ -1,17 +1,17 @@
 const extsToMime = {
-  "wav": "audio/wav",
-  "wave": "audio/wav",
-  "mp3": "audio/mpeg",
-  "mp4": "audio/mp4"
-};
+  'wav': 'audio/wav',
+  'wave': 'audio/wav',
+  'mp3': 'audio/mpeg',
+  'mp4': 'audio/mp4'
+}
 
 /**
  * Tries to detect the mime type of the given audio
  * file.
- * 
+ *
  * If failing to detect, returns `false` instead.
- * 
- * @param {string} filename 
+ *
+ * @param {string} filename
  * @returns {string} detected MIME type
  */
 export function filenameToMime (filename) {
