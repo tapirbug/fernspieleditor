@@ -121,6 +121,10 @@ $arrow-height: 0.3em;
 
   header {
     text-align: center;
+    // Abbreviate the text if not enough space
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &:after {
