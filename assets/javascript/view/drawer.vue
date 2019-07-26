@@ -1,5 +1,5 @@
 <script>
-import { evtPosition } from './points.js'
+import { evtPosition } from '../util/geom/points.js'
 
 /**
  * An element sticking to the right side of the screen that can

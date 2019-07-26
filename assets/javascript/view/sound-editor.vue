@@ -1,7 +1,7 @@
 <script>
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
-import { ADD_SOUND, UPDATE_SOUND } from './mutation-types.js'
-import { isAudioFilename } from './sound-mimes.js'
+import { ADD_SOUND, UPDATE_SOUND } from '../store/mutation-types.js'
+import { isAudioFilename } from '../util/sound-mimes.js'
 
 /**
  * Menu bar.

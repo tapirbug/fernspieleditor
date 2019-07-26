@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import defaultVueState from './startup-phonebook.js'
-import defaultState from './default-state.js'
-import defaultSound from './default-sound.js'
-import uuid from './uuid.js'
+import defaultVueState from './fixtures/startup-phonebook.js'
+import defaultState from './fixtures/default-state.js'
+import defaultSound from './fixtures/default-sound.js'
+import uuid from '../util/random/uuid.js'
 import {
   CLEAR_PHONEBOOK,
   REPLACE_PHONEBOOK,
@@ -24,9 +24,9 @@ import {
 } from './action-types.js'
 import createLogger from 'vuex/dist/logger'
 import YAML from 'yaml'
-import { mapValues } from './map-obj.js'
-import { filenameToMime } from './sound-mimes.js'
-import startupPhonebook from './startup-phonebook.js';
+import { mapValues } from '../util/map-obj.js'
+import { filenameToMime } from '../util/sound-mimes.js'
+import startupPhonebook from './fixtures/startup-phonebook.js';
 
 Vue.use(Vuex)
 

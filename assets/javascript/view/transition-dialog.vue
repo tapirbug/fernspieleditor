@@ -1,6 +1,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { ADD_TRANSITION } from './mutation-types.js'
+import { ADD_TRANSITION } from '../store/mutation-types.js'
 
 /**
  * A floating dialog over a state to add transitions.

@@ -1,8 +1,8 @@
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { CONTINUE_UPDATE_STATE } from './action-types.js'
-import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from './mutation-types.js'
-import { translate, delta } from './points.js'
+import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
+import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
+import { translate, delta } from '../util/geom/points.js'
 import Arrow from './arrow.vue'
 
 /**

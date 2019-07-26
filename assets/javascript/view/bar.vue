@@ -1,7 +1,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { saveAs } from 'file-saver'
-import { LOAD_FILE } from './action-types.js'
+import { LOAD_FILE } from '../store/action-types.js'
 
 /**
  * Menu bar.
@@ -84,7 +84,7 @@ export default {
       >
         <img
           class="icon"
-          src="../images/file-download.svg"
+          src="../../images/file-download.svg"
           alt="Download"
           title="Download a copy of the current phonebook"
         >
@@ -95,7 +95,7 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../style/layout";
+@import "../../style/layout";
 
 .bar {
   height: $header-height;

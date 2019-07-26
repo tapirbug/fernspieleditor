@@ -1,5 +1,5 @@
 <script>
-import { length, delta } from './points.js'
+import { length, delta } from '../util/geom/points.js'
 
 /**
  * An arrow with a label connecting two points
