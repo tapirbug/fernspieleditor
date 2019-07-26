@@ -62,11 +62,15 @@ export default {
           arrow => {
             const fromPos = this.palmId === arrow.from ? this.movedPos : this.findNetwork(arrow.from).position
             const toPos = arrow.isToSelf ? fromPos : (this.palmId === arrow.to ? this.movedPos : this.findNetwork(arrow.to).position)
+            const xOffset = 280;
+            const yOffset = 150;
             return {
               ...arrow,
-              fromPos,
+              fromPos: arrow.isToSelf
+                ? { x: fromPos.x - xOffset/2, y: fromPos.y - yOffset/2 }
+                : fromPos,
               toPos: arrow.isToSelf
-                ? { x: toPos.x + 10, y: toPos.y + 5 }
+                ? { x: toPos.x + xOffset/2, y: toPos.y + yOffset/2 }
                 : toPos,
               offset: arrow.isToSelf ? '-3.3em' : (arrow.hasInverse ? '-0.3em' : '0')
             }

@@ -125,6 +125,7 @@ $arrow-height: 0.3em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 0.8em;
   }
 
   &:after {
