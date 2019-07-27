@@ -23,13 +23,14 @@ export default {
     ...mapState(['focusedStateId']),
     ...mapGetters([
       'focusedState',
+      'hasFocusedState',
       'isInitial',
       'isAny',
       'transitionSummariesFrom',
       'transitionSummariesTo'
     ]),
     nothingFocused () {
-      return !this.focusedState
+      return !this.hasFocusedState
     }
   },
   methods: {
@@ -246,13 +247,18 @@ export default {
         </button>
       </div>
 
-      <h3>Sounds</h3>
-      <article>
-        <sound-picker
-          :picked="focusedState.sounds"
-          @picked="change($event, focusedStateId, 'sounds')"
-        ></sound-picker>
-      </article>
+      <div
+        v-if="!isAny(focusedStateId)"
+        class="inspector-properties"
+      >
+        <h3>Sounds</h3>
+        <article>
+          <sound-picker
+            :picked="focusedState.sounds"
+            @picked="change($event, focusedStateId, 'sounds')"
+          ></sound-picker>
+        </article>
+      </div>
 
       <article
         v-if="!isAny(focusedStateId)"

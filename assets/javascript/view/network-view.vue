@@ -4,6 +4,7 @@ import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
 import { translate, delta } from '../util/geom/points.js'
 import Arrow from './arrow.vue'
+import uuid from '../util/random/uuid.js'
 
 /**
  * Visualizes the currently edited network.
@@ -27,7 +28,6 @@ export default {
       'findNetwork',
       'focusedState',
       'isFocused',
-      'stateNamed',
       'transitionSummariesFrom',
       'transitionSummariesTo'
     ]),
@@ -202,6 +202,7 @@ export default {
       position.y += insertionOffsetToPtr.y
 
       this[ADD_STATE]({
+        id: uuid(),
         state: {
           name: 'New state'
         },
