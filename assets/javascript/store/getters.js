@@ -68,12 +68,4 @@ export default {
       }
     }
   },
-  /// Finds network properties of state with ID
-  findNetwork: ({ vendor }) => id => {
-    if (typeof vendor.fernspieleditor[id] === 'undefined') {
-      return
-    }
-
-    return vendor.fernspieleditor[id].network
-  }
 }

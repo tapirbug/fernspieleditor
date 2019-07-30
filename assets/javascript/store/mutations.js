@@ -4,9 +4,7 @@ import defaultSound from './fixtures/default-sound.js'
 import uuid from '../util/random/uuid.js'
 import { cleanIfPresent } from '../util/sanitize.js'
 import {
-  ADD_STATE,
   REMOVE_STATE,
-  MOVE_STATE,
   FOCUS_STATE,
   CLEAR_PHONEBOOK,
   REPLACE_PHONEBOOK,
@@ -19,14 +17,6 @@ import statesGetters from './modules/states/states-getters.js'
 import { toStr, toBool, toFiniteFloat } from '../util/conv.js'
 
 export default {
-  [ADD_STATE] (vuexState, { id, position }) {
-    vuexState.vendor.fernspieleditor = {
-      ...vuexState.vendor.fernspieleditor,
-      [id]: {
-        network: { position }
-      }
-    }
-  },
   [REMOVE_STATE] (vuexState, id) {
     // If deleted state was focused, remove selection
     if (vuexState.focusedStateId === id) {
@@ -36,16 +26,6 @@ export default {
     // If was initial, an initial state is now missing
     if (vuexState.initial === id) {
       vuexState.initial = null
-    }
-
-    // Remove network positions
-    Vue.delete(vuexState.vendor.fernspieleditor, id)
-  },
-  [MOVE_STATE] (vuexState, { id, to }) {
-    const network = getters.findNetwork(vuexState)(id)
-
-    if (network) {
-      network.position = to
     }
   },
   [FOCUS_STATE] (vuexState, id) {

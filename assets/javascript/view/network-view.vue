@@ -74,7 +74,8 @@ export default {
                 : toPos,
               offset: arrow.isToSelf ? '-3.3em' : (arrow.hasInverse ? '-0.3em' : '0')
             }
-          }
+          },
+          this
         )
 
       return arrows
