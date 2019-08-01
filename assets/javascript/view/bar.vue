@@ -1,7 +1,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { saveAs } from 'file-saver'
-import { LOAD_FILE } from '../store/action-types.js'
+import { TO_YAML, LOAD_FILE } from '../store/action-types.js'
 
 /**
  * Menu bar.
@@ -12,20 +12,20 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['phonebookYaml', 'phonebookYamlBlockers']),
-    isBlocked () {
-      return this.phonebookYamlBlockers.length > 0
-    }
+    ...mapGetters(['canSave', 'saveBlockers']),
   },
   methods: {
-    ...mapActions([LOAD_FILE]),
+    ...mapActions({
+      toYaml: TO_YAML,
+      loadFile: LOAD_FILE
+    }),
     serialize () {
-      if (this.isBlocked) {
-        this.failSerialize(this.phonebookYamlBlockers)
+      if (!this.canSave) {
+        this.failSerialize(this.saveBlockers)
         return
       }
 
-      this.phonebookYaml.then(
+      this.toYaml().then(
         phonebookYaml => saveAs(
           new File(
             [phonebookYaml],
@@ -43,7 +43,7 @@ export default {
     },
     startLoadFile (evt) {
       const { files } = evt.target
-      this[LOAD_FILE]({ files })
+      this.loadFile({ files })
         .then(
           undefined,
           err => {
@@ -81,7 +81,7 @@ export default {
       <a
         href="#"
         class="button"
-        :disabled="isBlocked"
+        :disabled="!canSave"
         @click="serialize"
       >
         <img

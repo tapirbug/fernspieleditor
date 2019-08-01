@@ -1,22 +1,14 @@
 import YAML from 'yaml'
-import { toDataURL } from '../util/file/read.js'
+import { toDataURL } from '../../../util/file/read.js'
+import { TO_YAML } from '../../action-types.js'
 
 export default {
-  phonebookYamlBlockers: ({ initial }) => {
-    const blockers = []
-
-    if (!initial) {
-      blockers.push('Some state must be marked as the initial state')
+  [TO_YAML]: ({ getters, rootState }) => {
+    if (!getters.canSave) {
+      return Promise.reject(new Error('File is inconsistent and cannot be saved'))
     }
 
-    return blockers
-  },
-  phonebookYaml: (vuexState, getters) => {
-    if (getters.phonebookYamlBlockers.length > 0) {
-      return
-    }
-
-    const { initial, states, transitions, vendor, sounds } = vuexState
+    const { initial, states, transitions, vendor, sounds } = rootState
     return inlineFiles(sounds)
       .then(inlinedSounds =>
         YAML.stringify({
@@ -67,5 +59,5 @@ export default {
         })
       }
     }
-  },
+  }
 }

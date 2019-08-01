@@ -5,7 +5,6 @@ import createLogger from 'vuex/dist/logger'
 import modules from './modules/index.js'
 import actions from './actions.js'
 import mutations from './mutations.js'
-import getters from './getters.js'
 
 Vue.use(Vuex)
 
@@ -30,6 +29,5 @@ function createStore () {
     // root actions, mutations, getters
     actions,
     mutations,
-    getters
   })
 }
