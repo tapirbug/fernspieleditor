@@ -18,6 +18,7 @@ function createStore () {
   // delete the properties managed by sub-modules
   delete initialWithoutModuleState.states
   delete initialWithoutModuleState.transitions
+  delete initialWithoutModuleState.sounds
   delete initialWithoutModuleState.vendor
 
   return new Vuex.Store({

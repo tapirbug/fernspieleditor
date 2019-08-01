@@ -1,20 +1,13 @@
 import Vue from 'vue'
 import defaultVueState from './fixtures/startup-phonebook.js'
-import defaultSound from './fixtures/default-sound.js'
-import uuid from '../util/random/uuid.js'
-import { cleanIfPresent } from '../util/sanitize.js'
 import {
   REMOVE_STATE,
   FOCUS_STATE,
   CLEAR_PHONEBOOK,
   REPLACE_PHONEBOOK,
   MAKE_INITIAL_STATE,
-  ADD_SOUND,
-  UPDATE_SOUND
 } from './mutation-types.js'
-import getters from './getters.js'
 import statesGetters from './modules/states/states-getters.js'
-import { toStr, toBool, toFiniteFloat } from '../util/conv.js'
 
 export default {
   [REMOVE_STATE] (vuexState, id) {
@@ -48,32 +41,5 @@ export default {
       (statesGetters.findState(vuexState.states)(id))
         ? id
         : null
-  },
-  [UPDATE_SOUND] (state, { id, ...updatedProps }) {
-    const before = state.sounds[id] || defaultSound()
-    state.sounds[id] = {
-      ...before,
-      ...sanitizeSound(updatedProps)
-    }
-  },
-  [ADD_SOUND] (state, newSound) {
-    const id = (typeof newSound.id !== 'string') ? uuid() : newSound.id
-    newSound = {
-      ...defaultSound(),
-      ...sanitizeSound(newSound)
-    }
-    Vue.set(state.sounds, id, newSound)
   }
-}
-
-function sanitizeSound (sound) {
-  const sanitized = { ...sound }
-
-  cleanIfPresent(sanitized, 'name', toStr)
-  cleanIfPresent(sanitized, 'loop', toBool)
-  cleanIfPresent(sanitized, 'speech', toStr)
-  cleanIfPresent(sanitized, 'volume', toFiniteFloat)
-  cleanIfPresent(sanitized, 'backoff', toFiniteFloat)
-
-  return sanitized
 }
