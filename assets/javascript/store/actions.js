@@ -14,6 +14,8 @@ export default {
       .then(validateFilename)
       .then(loadFile)
       .then(YAML.parse)
+      .then(upgradeLegacyPhonebooks)
+      .then(ensureExpectedPropertiesPresent)
       .then(removeAnyProps)
       .then(autoName)
       .then(autoLayout)
@@ -59,6 +61,41 @@ export default {
     }
 
     /**
+     * Ensure the root properties `states`, `transitions`,
+     * `sounds`, and `vendor` are present.
+     * 
+     * If `vendor` is missing, the nested properties are
+     * also auto-generated.
+     * 
+     * Other, unknown properties are preserved.
+     */
+    function ensureExpectedPropertiesPresent (newState) {
+      const present = {
+        ...newState,
+        states: newState.states || {},
+        transitions: newState.transitions || {},
+        sounds: newState.sounds || {},
+        vendor: newState.vendor || {}
+      }
+      
+      if (!present.vendor.fernspieleditor) {
+        present.vendor.fernspieleditor = {
+          version: 1
+        }
+      }
+
+      if (!present.vendor.fernspieleditor.extensionProperties) {
+        present.vendor.fernspieleditor.extensionProperties = {}
+      }
+
+      if (!present.vendor.fernspieleditor.extensionProperties.states) {
+        present.vendor.fernspieleditor.extensionProperties.states = {}
+      }
+
+      return present
+    }
+
+    /**
      * If incoming phonebooks define properties on `any`,
      * remove the properties map.
      */
@@ -101,22 +138,33 @@ export default {
       return newState
     }
 
+    function upgradeLegacyPhonebooks (newState) {
+      if (newState && newState.vendor && newState.vendor.fernspieleditor && typeof newState.vendor.fernspieleditor.version === 'undefined') {
+        console.warn('upgrading legacy phonebook')
+
+        // old phonebooks only stored state extension properties and kept them at the root object,
+        // move it
+        newState.vendor.fernspieleditor = {
+          version: 1,
+          extensionProperties: {
+            states: { ...newState.vendor.fernspieleditor }
+          }
+        }
+      }
+
+      return newState
+    }
+
     function autoLayout (newState) {
-      if (!newState.vendor) {
-        newState.vendor = {}
-      }
-
-      if (!newState.vendor.fernspieleditor) {
-        newState.vendor.fernspieleditor = {}
-      }
-
+      const stateExt = newState.vendor.fernspieleditor.extensionProperties.states
+      
       let posX = 0
       let posY = 0
       Object.keys(newState.states)
         .concat('any')
         .forEach(id => {
-          if (!newState.vendor.fernspieleditor[id]) {
-            newState.vendor.fernspieleditor[id] = {
+          if (!stateExt[id]) {
+            stateExt[id] = {
               network: {
                 position: { x: (posX += 150), y: (posY += 50) }
               }
@@ -128,13 +176,28 @@ export default {
     }
 
     function autoSelect (newState) {
-      if (newState.focusedStateId) {
+      const focusPresent = newState
+          && newState.vendor
+          && newState.vendor.fernspieleditor
+          && newState.vendor.fernspieleditor.focusedStateId;
+
+      if (focusPresent) {
         return newState
       }
 
+      const focusedStateId = Object.entries(newState.states)[0]
+          // if has no states, select any, which is always present
+          || 'any'
+
       return {
-        focusedStateId: Object.entries(newState.states)[0] || 'any',
-        ...newState
+        ...newState,
+        vendor: {
+          ...(newState.vendor || {}),
+          fernspieleditor: {
+            ...(newState.vendor.fernspieleditor || {}),
+            focusedStateId
+          }
+        }
       }
     }
 

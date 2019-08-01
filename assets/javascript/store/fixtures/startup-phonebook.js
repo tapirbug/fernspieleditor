@@ -9,8 +9,6 @@ export default function startupPhonebook () {
   const greetingSoundId = uuid()
 
   return {
-    /// Name of the currently focused state or null if nothing selected.
-    focusedStateId: null,
     initial: ringingStateId,
     states: states(),
     transitions: transitions(),
@@ -89,35 +87,53 @@ export default function startupPhonebook () {
 
   function vendor () {
     return {
-      any: {
-        network: {
-          position: {
-            x: 100,
-            y: 100
-          }
-        }
-      },
-      [ringAgainLaterStateId]: {
-        network: {
-          position: {
-            x: 300,
-            y: 100
-          }
-        }
-      },
-      [ringingStateId]: {
-        network: {
-          position: {
-            x: 500,
-            y: 100
-          }
-        }
-      },
-      [speakingStateId]: {
-        network: {
-          position: {
-            x: 500,
-            y: 300
+      /**
+       * Increases when making breaking changes to the fernspieleditor-specific
+       * extensions to the core format.
+       */
+      version: 1,
+      /**
+       * Name of the currently focused state or null if nothing selected.
+       */
+      focusedStateId: null,
+      /**
+       * With the same structure as the root phonebook, holds additional
+       * properties for states and may later be extended for transitions
+       * and other stuff that may profit from editor-specific state.
+       */
+      extensionProperties: {
+        states: {
+          any: {
+            network: {
+              position: {
+                x: 100,
+                y: 100
+              }
+            }
+          },
+          [ringAgainLaterStateId]: {
+            network: {
+              position: {
+                x: 300,
+                y: 100
+              }
+            }
+          },
+          [ringingStateId]: {
+            network: {
+              position: {
+                x: 500,
+                y: 100
+              }
+            }
+          },
+          [speakingStateId]: {
+            network: {
+              position: {
+                x: 500,
+                y: 300
+              }
+            }
           }
         }
       }

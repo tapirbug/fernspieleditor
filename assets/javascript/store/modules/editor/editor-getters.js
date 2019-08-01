@@ -1,5 +1,9 @@
 export default {
-  findNetwork
+  findNetwork,
+  focusedState,
+  hasFocusedState,
+  isFocused,
+  focusedStateId: editor => editor.focusedStateId
 }
 
 function findNetwork (editor) {
@@ -15,10 +19,24 @@ function findNetwork (editor) {
    * @returns {any} network
    */
   return function (id) {
-    if (typeof editor[id] === 'undefined') {
-      return
+    if (typeof editor.extensionProperties.states[id] !== 'undefined') {
+      return editor.extensionProperties.states[id].network
+    } else {
+      return undefined
     }
+  }
+}
 
-    return editor[id].network
+function focusedState (editor, _getters, _rootState, rootGetters) {
+  return rootGetters.findState(editor.focusedStateId)
+}
+
+function hasFocusedState (editor) {
+  return !!editor.focusedStateId
+}
+
+function isFocused (editor) {
+  return function (id) {
+    return id === editor.focusedStateId
   }
 }

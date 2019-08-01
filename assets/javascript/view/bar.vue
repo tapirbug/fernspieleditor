@@ -34,7 +34,8 @@ export default {
               type: 'application/x-yaml' // No official MIME type :(
             }
           )
-        )
+        ),
+        console.error
       )
     },
     failSerialize (blockers) {
@@ -46,6 +47,7 @@ export default {
         .then(
           undefined,
           err => {
+            console.error(err)
             alert(err)
           }
         )

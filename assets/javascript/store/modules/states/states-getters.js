@@ -22,10 +22,4 @@ export default {
     rootState.initial === id,
   isAny: _ => id =>
     id === anyId,
-  focusedState: (_state, getters, rootState) =>
-    getters.findState(rootState.focusedStateId),
-  hasFocusedState: (states, _getters, rootState) =>
-    !!rootState.focusedStateId,
-  isFocused: (_states, _getters, rootState) => id =>
-    id === rootState.focusedStateId
 }

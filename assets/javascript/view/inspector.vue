@@ -20,8 +20,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['focusedStateId']),
     ...mapGetters([
+      'focusedStateId',
       'focusedState',
       'hasFocusedState',
       'isInitial',
