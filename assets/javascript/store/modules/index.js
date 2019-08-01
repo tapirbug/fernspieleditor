@@ -1,3 +1,4 @@
+import deserialize from './deserialize/index.js'
 import editor from './editor/index.js'
 import serialize from './serialize/index.js'
 import sounds from './sounds/index.js'
@@ -15,6 +16,7 @@ import transitions from './transitions/index.js'
  * 
  * And these stateless modules:
  * * `serialize`
+ * * `deserialize`
  *
  * @param {object} phonebook Initial root state, to initialize the submodules with initial data
  * @returns {object} `vuex` module for states
@@ -25,6 +27,7 @@ export default function createModules (phonebook) {
     : {}
 
   return {
+    deserialize: deserialize(),
     states: states(phonebook.states || {}),
     transitions: transitions(phonebook.transitions || {}),
     sounds: sounds(phonebook.sounds || {}),

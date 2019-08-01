@@ -1,12 +1,12 @@
 import {
   REPLACE_PHONEBOOK
-} from './mutation-types.js'
+} from '../../mutation-types.js'
 import {
   LOAD_FILE
-} from './action-types.js'
+} from '../../action-types.js'
+import defaultState from '../../fixtures/default-state.js'
 import YAML from 'yaml'
-import { mapValues } from '../util/map-obj.js'
-import defaultState from './fixtures/default-state.js'
+import { mapValues } from '../../../util/map-obj.js'
 
 export default {
   [LOAD_FILE] ({ commit }, { files }) {
@@ -241,8 +241,8 @@ export default {
     }
 
     function replaceState (newPhonebook) {
-      // commit(CLEAR_PHONEBOOK)
-      commit(REPLACE_PHONEBOOK, newPhonebook)
+      // commit(CLEAR_PHONEBOOK, null, {root: true})
+      commit(REPLACE_PHONEBOOK, newPhonebook, { root: true })
       return `Loading OK`
     }
   }

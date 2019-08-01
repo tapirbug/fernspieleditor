@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import defaultVueState from './fixtures/startup-phonebook.js'
 import createLogger from 'vuex/dist/logger'
 import modules from './modules/index.js'
-import actions from './actions.js'
 import mutations from './mutations.js'
 
 Vue.use(Vuex)
@@ -26,8 +25,7 @@ function createStore () {
     // `states` and other store modules
     modules: modules(initialState),
     plugins: [createLogger()],
-    // root actions, mutations, getters
-    actions,
+    // root mutations
     mutations,
   })
 }
