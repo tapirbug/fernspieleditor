@@ -11,7 +11,7 @@ import mutations from './editor-mutations.js'
  * @param {object} editor initial edit state, e.g. from `vendor.fernspieleditor` in a phonebook
  * @returns {object} `vuex` module for editor state
  */
-export default function createEditorModule(editor) {
+export default function createEditorModule (editor) {
   return {
     state: editor,
     actions,

@@ -5,9 +5,9 @@ import actions from './deserialize-actions.js'
  *
  * @returns {object} `vuex` module for YAML import
  */
-export default function createDeserializeModule() {
+export default function createDeserializeModule () {
   return {
     state: {},
-    actions,
+    actions
   }
 }

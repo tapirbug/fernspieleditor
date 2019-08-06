@@ -13,7 +13,7 @@ import mutations from './initial-mutations.js'
  * @param {object} initialState ID of the initial state, e.g. from `initial` in a phonebook
  * @returns {object} `vuex` module for editor state
  */
-export default function createInitialModule(initialState) {
+export default function createInitialModule (initialState) {
   // accept vuex style (nested in object) and real phonebook format (flattened)
   const initialStateId = (() => {
     if (typeof initialState === 'string') {

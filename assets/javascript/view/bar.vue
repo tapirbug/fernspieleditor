@@ -12,7 +12,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['canSave', 'saveBlockers']),
+    ...mapGetters(['canSave', 'saveBlockers'])
   },
   methods: {
     ...mapActions({

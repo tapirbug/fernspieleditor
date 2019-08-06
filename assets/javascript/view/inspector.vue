@@ -1,7 +1,7 @@
 <script>
 import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE } from '../store/mutation-types.js'
-import { mapGetters, mapActions, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import TransitionDialog from './transition-dialog.vue'
 import SoundPicker from './sound-picker.vue'
 
@@ -27,7 +27,7 @@ export default {
       'isAny',
       'transitionSummariesFrom',
       'transitionSummariesTo',
-      'isInitial',
+      'isInitial'
     ]),
     nothingFocused () {
       return !this.hasFocusedState

@@ -13,6 +13,6 @@ function createStore () {
   return new Vuex.Store({
     // `states` and other store modules
     modules: modules(state),
-    plugins: [createLogger()],
+    plugins: [createLogger()]
   })
 }

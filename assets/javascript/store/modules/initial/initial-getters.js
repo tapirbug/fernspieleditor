@@ -4,5 +4,5 @@ export default {
    */
   initial: initialState => initialState.initial,
   isInitial: initialState => id =>
-    initialState.initial === id,
+    initialState.initial === id
 }

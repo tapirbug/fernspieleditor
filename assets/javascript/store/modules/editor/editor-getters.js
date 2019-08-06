@@ -7,7 +7,6 @@ export default {
 }
 
 function findNetwork (editor) {
-
   /**
    * Finds the network properties (position, etc.) of the
    * state with the given ID.

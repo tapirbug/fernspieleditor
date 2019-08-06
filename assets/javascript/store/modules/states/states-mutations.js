@@ -39,7 +39,7 @@ export default {
     // clear existing states
     Object.keys(states)
       .forEach(key => Vue.delete(states, key))
-    
+
     // and set the new ones
     if (typeof phonebook === 'object' && typeof phonebook.states === 'object') {
       Object.entries(phonebook.states)

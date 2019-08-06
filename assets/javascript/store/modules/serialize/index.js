@@ -6,9 +6,9 @@ import getters from './serialize-getters.js'
  *
  * @returns {object} `vuex` module for YAML export
  */
-export default function createSerializeModule() {
+export default function createSerializeModule () {
   return {
     actions,
-    getters,
+    getters
   }
 }

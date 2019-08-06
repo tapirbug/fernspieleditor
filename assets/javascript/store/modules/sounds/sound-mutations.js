@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import defaultSound from '../../fixtures/default-sound.js'
 import uuid from '../../../util/random/uuid.js'
-import { cleanIfPresent } from '../../../util/sanitize.js'
 import { toStr, toBool, toFiniteFloat } from '../../../util/conv.js'
 import {
   ADD_SOUND,
@@ -32,7 +31,7 @@ export default {
     // clear existing sounds
     Object.keys(sounds)
       .forEach(key => Vue.delete(sounds, key))
-    
+
     // and set the new ones
     if (typeof phonebook === 'object' && typeof phonebook.sounds === 'object') {
       Object.entries(phonebook.sounds)

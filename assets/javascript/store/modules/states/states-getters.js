@@ -19,5 +19,5 @@ export default {
       ? any
       : states[id],
   isAny: _ => id =>
-    id === anyId,
+    id === anyId
 }

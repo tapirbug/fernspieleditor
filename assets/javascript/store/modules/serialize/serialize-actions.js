@@ -15,7 +15,7 @@ export default {
       sounds,
       // The `vuex` store manages initial in an object, but the phonebook
       // format expects it as a string, flatten the structure
-      initial: { initial },
+      initial: { initial }
     } = rootState
     return inlineFiles(sounds)
       .then(inlinedSounds =>

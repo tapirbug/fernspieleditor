@@ -32,7 +32,7 @@ export default {
     // clear existing transitions
     Object.keys(transitions)
       .forEach(key => Vue.delete(transitions, key))
-    
+
     // and set the new ones
     if (typeof phonebook === 'object' && typeof phonebook.transitions === 'object') {
       Object.entries(phonebook.transitions)

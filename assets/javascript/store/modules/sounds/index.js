@@ -7,7 +7,7 @@ import mutations from './sound-mutations.js'
  * @param {object} sounds initial map of UUIDs against sound objects
  * @returns {object} `vuex` module for sounds
  */
-export default function createSoundModule(sounds) {
+export default function createSoundModule (sounds) {
   return {
     state: sounds,
     getters,

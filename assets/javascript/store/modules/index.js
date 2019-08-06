@@ -15,7 +15,7 @@ import transitions from './transitions/index.js'
  * * `store.transitions` (Transitions between states)
  * * `store.sounds` (Speech and sound files)
  * * `store.vendor.fernspieleditor` (Editor-specific data, e.g. state positions in the editor)
- * 
+ *
  * And these stateless modules:
  * * `serialize`
  * * `deserialize`
@@ -40,8 +40,8 @@ export default function createModules (phonebook) {
       actions: {},
       mutations: {},
       modules: {
-        fernspieleditor: editor(editorState),
-      },
+        fernspieleditor: editor(editorState)
+      }
     },
     serialize: serialize()
   }

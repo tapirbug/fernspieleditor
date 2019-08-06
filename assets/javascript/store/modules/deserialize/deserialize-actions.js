@@ -63,10 +63,10 @@ export default {
     /**
      * Ensure the root properties `states`, `transitions`,
      * `sounds`, and `vendor` are present.
-     * 
+     *
      * If `vendor` is missing, the nested properties are
      * also auto-generated.
-     * 
+     *
      * Other, unknown properties are preserved.
      */
     function ensureExpectedPropertiesPresent (newState) {
@@ -77,7 +77,7 @@ export default {
         sounds: newState.sounds || {},
         vendor: newState.vendor || {}
       }
-      
+
       if (!present.vendor.fernspieleditor) {
         present.vendor.fernspieleditor = {
           version: 1
@@ -157,7 +157,7 @@ export default {
 
     function autoLayout (newState) {
       const stateExt = newState.vendor.fernspieleditor.extensionProperties.states
-      
+
       let posX = 0
       let posY = 0
       Object.keys(newState.states)
@@ -176,18 +176,18 @@ export default {
     }
 
     function autoSelect (newState) {
-      const focusPresent = newState
-          && newState.vendor
-          && newState.vendor.fernspieleditor
-          && newState.vendor.fernspieleditor.focusedStateId;
+      const focusPresent = newState &&
+          newState.vendor &&
+          newState.vendor.fernspieleditor &&
+          newState.vendor.fernspieleditor.focusedStateId
 
       if (focusPresent) {
         return newState
       }
 
-      const focusedStateId = Object.entries(newState.states)[0]
+      const focusedStateId = Object.entries(newState.states)[0] ||
           // if has no states, select any, which is always present
-          || 'any'
+          'any'
 
       return {
         ...newState,
