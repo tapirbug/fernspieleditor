@@ -1,5 +1,4 @@
 // File loading
-export const CLEAR_PHONEBOOK = 'CLEAR_PHONEBOOK'
 export const REPLACE_PHONEBOOK = 'REPLACE_PHONEBOOK'
 
 // State mutations

@@ -241,7 +241,6 @@ export default {
     }
 
     function replaceState (newPhonebook) {
-      // commit(CLEAR_PHONEBOOK, null, {root: true})
       commit(REPLACE_PHONEBOOK, newPhonebook, { root: true })
       return `Loading OK`
     }
