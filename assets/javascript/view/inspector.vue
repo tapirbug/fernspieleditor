@@ -24,10 +24,10 @@ export default {
       'focusedStateId',
       'focusedState',
       'hasFocusedState',
-      'isInitial',
       'isAny',
       'transitionSummariesFrom',
-      'transitionSummariesTo'
+      'transitionSummariesTo',
+      'isInitial',
     ]),
     nothingFocused () {
       return !this.hasFocusedState

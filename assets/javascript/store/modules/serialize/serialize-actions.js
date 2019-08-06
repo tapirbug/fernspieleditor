@@ -8,7 +8,15 @@ export default {
       return Promise.reject(new Error('File is inconsistent and cannot be saved'))
     }
 
-    const { initial, states, transitions, vendor, sounds } = rootState
+    const {
+      states,
+      transitions,
+      vendor,
+      sounds,
+      // The `vuex` store manages initial in an object, but the phonebook
+      // format expects it as a string, flatten the structure
+      initial: { initial },
+    } = rootState
     return inlineFiles(sounds)
       .then(inlinedSounds =>
         YAML.stringify({

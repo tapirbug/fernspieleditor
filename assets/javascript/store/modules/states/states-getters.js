@@ -18,8 +18,6 @@ export default {
     (id === anyId)
       ? any
       : states[id],
-  isInitial: (_states, _getters, rootState) => id =>
-    rootState.initial === id,
   isAny: _ => id =>
     id === anyId,
 }
