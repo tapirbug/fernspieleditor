@@ -2,7 +2,8 @@ import {
   ADD_TRANSITION,
   REMOVE_TRANSITION,
   ADD_STATE,
-  REMOVE_STATE
+  REMOVE_STATE,
+  REPLACE_PHONEBOOK
 } from '../../mutation-types.js'
 import Vue from 'vue'
 import getters from './transitions-getters.js'
@@ -26,6 +27,17 @@ export default {
     )
     transitionEdgesTo(stateId)
       .forEach(summary => removeTransition(transitions, summary))
+  },
+  [REPLACE_PHONEBOOK] (transitions, phonebook) {
+    // clear existing transitions
+    Object.keys(transitions)
+      .forEach(key => Vue.delete(transitions, key))
+    
+    // and set the new ones
+    if (typeof phonebook === 'object' && typeof phonebook.transitions === 'object') {
+      Object.entries(phonebook.transitions)
+        .forEach(([id, state]) => Vue.set(transitions, id, state))
+    }
   }
 }
 

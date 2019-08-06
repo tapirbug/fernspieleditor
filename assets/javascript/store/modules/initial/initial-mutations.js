@@ -1,4 +1,8 @@
-import { REMOVE_STATE, MAKE_INITIAL_STATE } from '../../mutation-types.js'
+import {
+  REMOVE_STATE,
+  MAKE_INITIAL_STATE,
+  REPLACE_PHONEBOOK
+} from '../../mutation-types.js'
 
 export default {
  [REMOVE_STATE] (initialState, id) {
@@ -9,5 +13,8 @@ export default {
   },
   [MAKE_INITIAL_STATE] (initialState, id) {
     initialState.initial = id
+  },
+  [REPLACE_PHONEBOOK] (initialState, phonebook) {
+    initialState.initial = phonebook.initial || null
   }
 }

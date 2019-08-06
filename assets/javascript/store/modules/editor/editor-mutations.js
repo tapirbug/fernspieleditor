@@ -3,7 +3,8 @@ import {
   ADD_STATE,
   REMOVE_STATE,
   MOVE_STATE,
-  FOCUS_STATE
+  FOCUS_STATE,
+  REPLACE_PHONEBOOK
 } from '../../mutation-types.js'
 
 export default {
@@ -34,4 +35,9 @@ export default {
   [FOCUS_STATE] (editor, id) {
     editor.focusedStateId = id || null
   },
+  [REPLACE_PHONEBOOK] (editor, phonebook) {
+    editor.extensionProperties = (phonebook && phonebook.vendor && phonebook.vendor.fernspieleditor && phonebook.vendor.fernspieleditor.extensionProperties)
+      ? phonebook.vendor.fernspieleditor.extensionProperties
+      : {}
+  }
 }

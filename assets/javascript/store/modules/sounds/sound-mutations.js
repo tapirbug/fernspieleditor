@@ -5,7 +5,8 @@ import { cleanIfPresent } from '../../../util/sanitize.js'
 import { toStr, toBool, toFiniteFloat } from '../../../util/conv.js'
 import {
   ADD_SOUND,
-  UPDATE_SOUND
+  UPDATE_SOUND,
+  REPLACE_PHONEBOOK
 } from '../../mutation-types.js'
 
 export default {
@@ -26,6 +27,17 @@ export default {
       ...sanitizeSound(newSound)
     }
     Vue.set(sounds, id, newSound)
+  },
+  [REPLACE_PHONEBOOK] (sounds, phonebook) {
+    // clear existing sounds
+    Object.keys(sounds)
+      .forEach(key => Vue.delete(sounds, key))
+    
+    // and set the new ones
+    if (typeof phonebook === 'object' && typeof phonebook.sounds === 'object') {
+      Object.entries(phonebook.sounds)
+        .forEach(([id, sound]) => Vue.set(sounds, id, sound))
+    }
   }
 }
 

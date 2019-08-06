@@ -8,7 +8,6 @@ import getters from './serialize-getters.js'
  */
 export default function createSerializeModule() {
   return {
-    state: {},
     actions,
     getters,
   }

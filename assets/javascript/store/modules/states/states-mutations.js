@@ -1,7 +1,8 @@
 import {
   ADD_STATE,
   UPDATE_STATE,
-  REMOVE_STATE
+  REMOVE_STATE,
+  REPLACE_PHONEBOOK
 } from '../../mutation-types.js'
 import { toStr, toFiniteFloat, toBool } from '../../../util/conv.js'
 import { cleanIfPresent } from '../../../util/sanitize.js'
@@ -33,6 +34,17 @@ export default {
   },
   [REMOVE_STATE] (states, id) {
     Vue.delete(states, id)
+  },
+  [REPLACE_PHONEBOOK] (states, phonebook) {
+    // clear existing states
+    Object.keys(states)
+      .forEach(key => Vue.delete(states, key))
+    
+    // and set the new ones
+    if (typeof phonebook === 'object' && typeof phonebook.states === 'object') {
+      Object.entries(phonebook.states)
+        .forEach(([id, state]) => Vue.set(states, id, state))
+    }
   }
 }
 
