@@ -1,0 +1,6 @@
+@import "../variables/layout.scss";
+
+/* Styles shared by inspector and sounds editor */
+.auxiliary-editor {
+    padding: $auxiliary-editor-padding;
+}

@@ -28,6 +28,7 @@ export default {
       'findNetwork',
       'focusedState',
       'isFocused',
+      'isAny',
       'transitionSummariesFrom',
       'transitionSummariesTo'
     ]),
@@ -240,7 +241,7 @@ export default {
       v-for="(state, id) in states"
       :key="id"
       class="network-view-state"
-      :class="{ 'is-focused': isFocused(id) }"
+      :class="{ 'is-focused': isFocused(id), 'is-any': isAny(id) }"
       :style="stateStyle(id)"
       :tabindex="0"
       :autofocus="isFocused(id) ? 'autofocus' : ''"
@@ -272,6 +273,8 @@ export default {
 </template>
 
 <style lang="scss">
+@import "../../style/variables";
+
 $state-border: 0.07em solid black;
 $state-bg: #fafafa;
 
@@ -299,8 +302,16 @@ $state-bg: #fafafa;
 
   transform: translate(-50%, -50%);
 
+  color: $color-network-unselected-text;
+
   &.is-focused .network-view-state-name {
-    font-style: italic;
+    //font-style: italic;
+    color: $color-network-selected-text;
+    text-shadow: lighten($color-network-selected-text, 0%) 1px 1px 10px;
+  }
+
+  &.is-any {
+    background-color: $color-network-any-state;
   }
 }
 </style>

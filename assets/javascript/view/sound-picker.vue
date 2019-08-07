@@ -64,8 +64,7 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../../style/global";
-@import "../../style/layout";
+@import "../../style/variables";
 @import 'picnic/picnic.min.css';
 
 main {

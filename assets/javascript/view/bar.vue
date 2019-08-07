@@ -97,7 +97,7 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../../style/layout";
+@import "../../style/variables";
 
 .bar {
   height: $header-height;

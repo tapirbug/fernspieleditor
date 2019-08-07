@@ -1,2 +1,4 @@
-@import "auxiliary-editor.scss";
-@import "./icons.scss";
+/* Styles that are relevant for all views and shared among them */
+
+@import "./modules/auxiliary-editor.scss";
+@import "./modules/icons.scss";

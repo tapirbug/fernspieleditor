@@ -1,0 +1,23 @@
+/* Raw colors without presumed meaning */
+$color-mint: #00CF96;
+$color-bright-green: #48E609;
+$color-ocher: #CFB92D;
+$color-orange: #E68627;
+$color-red: #DB2725;
+
+$color-gray-dark: #222222;
+$color-gray: lighten($color-gray-dark, 10%);
+$color-gray-bright: lighten($color-gray-dark, 30%);
+
+/* Colors by abstract purpose */
+$color-brand: $color-mint;
+$color-focus: $color-ocher;
+
+$color-text-heading: $color-gray-dark;
+$color-text-aside: $color-gray-bright;
+$color-text-running: $color-gray;
+
+/* Colors by application */
+$color-network-any-state: rgba($color-brand, 0.2);
+$color-network-unselected-text: $color-text-running;
+$color-network-selected-text: $color-text-heading;
