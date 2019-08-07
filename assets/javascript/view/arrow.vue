@@ -110,16 +110,27 @@ function isPoint (obj) {
 </template>
 
 <style lang="scss">
+@import "../../style/variables";
+
 $arrow-thickness: 0.1em;
 $arrow-color: black;
 $arrow-width: 0.6em;
 $arrow-height: 0.3em;
 
 .arrow {
+  z-index: $z-index-arrows;
   position: absolute;
   top: 0;
   left: 0;
-  border-bottom: $arrow-thickness solid $arrow-color;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: $arrow-width;
+    border-top: $arrow-thickness solid $arrow-color;
+    bottom: -$arrow-thickness/2;
+  }
 
   header {
     text-align: center;
@@ -127,7 +138,7 @@ $arrow-height: 0.3em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.8em;
+    font-size: 0.65em;
   }
 
   &:after {
@@ -140,6 +151,7 @@ $arrow-height: 0.3em;
     border-top: $arrow-height solid transparent;
     border-bottom: $arrow-height solid transparent;
     border-left: $arrow-width solid $arrow-color;
+    transform: translateX(-100%)
   }
 }
 

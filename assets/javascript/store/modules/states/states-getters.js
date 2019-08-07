@@ -14,6 +14,7 @@ export default {
       any
     }
   },
+  stateIds: states => Object.keys(states),
   findState: states => id =>
     (id === anyId)
       ? any

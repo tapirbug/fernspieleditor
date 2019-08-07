@@ -2,9 +2,17 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
-import { translate, delta } from '../util/geom/points.js'
+import {
+  translate,
+  delta,
+  distance2,
+  direction,
+  intersectRayWithEllipse,
+  invert
+} from '../util/geom/points.js'
 import Arrow from './arrow.vue'
 import uuid from '../util/random/uuid.js'
+import { mapValues } from '../util/map-obj.js'
 
 /**
  * Visualizes the currently edited network.
@@ -19,12 +27,14 @@ export default {
       palmId: null,
       palmEl: null,
       firstGrabPosition: null,
-      lastGrabPosition: null
+      lastGrabPosition: null,
+      stateSizes: {}
     }
   },
   computed: {
     ...mapGetters([
       'states',
+      'stateIds',
       'findNetwork',
       'focusedState',
       'isFocused',
@@ -50,6 +60,8 @@ export default {
       return movedPos
     },
     arrows () {
+      this.updateStateSizes()
+
       const transitionEdges = Object.keys(this.states)
         .map(this.transitionSummariesFrom)
         .reduce((a, b) => { a.push(...b); return a }, []) // flatten
@@ -63,17 +75,74 @@ export default {
           arrow => {
             const fromPos = this.palmId === arrow.from ? this.movedPos : this.findNetwork(arrow.from).position
             const toPos = arrow.isToSelf ? fromPos : (this.palmId === arrow.to ? this.movedPos : this.findNetwork(arrow.to).position)
-            const xOffset = 280
-            const yOffset = 150
+            const fromSize = this.stateSize(arrow.from)
+
+            const positions = (() => {
+              if (arrow.isToSelf) {
+                const slope = 0.01
+                const through = translate(fromPos, { x: 0, y: -0.25 })
+                const left = intersectRayWithEllipse(
+                  through,
+                  {
+                    x: -1,
+                    y: -slope
+                  },
+                  {
+                    ...fromPos,
+                    ...fromSize
+                  }
+                )
+
+                const right = intersectRayWithEllipse(
+                  through,
+                  {
+                    x: 1,
+                    y: slope
+                  },
+                  {
+                    ...fromPos,
+                    ...fromSize
+                  }
+                )
+
+                return {
+                  fromPos: left,
+                  toPos: right
+                }
+              } else if (distance2(fromPos, toPos) < 0 * 0) {
+                // Very small arrow, do not extend to border
+                return { fromPos, toPos }
+              } else {
+                const toSize = this.stateSize(arrow.to)
+                const directionFromTo = direction(delta(fromPos, toPos))
+                const directionToFrom = invert(directionFromTo)
+
+                // start arrow at the border
+                return {
+                  fromPos: intersectRayWithEllipse(
+                    toPos,
+                    directionToFrom,
+                    {
+                      ...fromPos,
+                      ...fromSize
+                    }
+                  ),
+                  toPos: intersectRayWithEllipse(
+                    fromPos,
+                    directionFromTo,
+                    {
+                      ...toPos,
+                      ...toSize
+                    }
+                  )
+                }
+              }
+            })()
+
             return {
               ...arrow,
-              fromPos: arrow.isToSelf
-                ? { x: fromPos.x - xOffset / 2, y: fromPos.y - yOffset / 2 }
-                : fromPos,
-              toPos: arrow.isToSelf
-                ? { x: toPos.x + xOffset / 2, y: toPos.y + yOffset / 2 }
-                : toPos,
-              offset: arrow.isToSelf ? '-3.3em' : (arrow.hasInverse ? '-0.3em' : '0')
+              ...positions
+              // offset: arrow.isToSelf ? '-3.3em' : (arrow.hasInverse ? '-0.3em' : '0')
             }
           },
           this
@@ -119,9 +188,50 @@ export default {
       }
     }
   },
+  mounted () {
+    console.log('updated')
+    this.updateStateSizes()
+  },
   methods: {
     ...mapMutations([ ADD_STATE, FOCUS_STATE, MOVE_STATE ]),
     ...mapActions([ CONTINUE_UPDATE_STATE ]),
+    /**
+     * State IDs mapped against their sizes in pixels.
+     */
+    updateStateSizes () {
+      /* if (!this.$refs.length) {
+        // not available yet
+        this.stateSizes = {}
+        // update later
+        console.log('registering update');
+        //this.$nextTick().then(() => {console.log('updating size'); this.updateStateSizes()})
+
+      } else { */
+      this.stateSizes = mapValues(
+        this.$refs,
+        child => {
+          return {
+            width: child[0].getBoundingClientRect().width || 0,
+            height: child[0].getBoundingClientRect().height || 0
+          }
+        },
+        {}
+      )
+      // }
+    },
+    stateSize (id) {
+      if (id in this.stateSizes) {
+        const size = this.stateSizes[id]
+        return size// { x: size.x, y: size.y }
+      } else {
+        // fallback size for the time until the first layout
+        // is available
+        return {
+          width: 109,
+          height: 109
+        }
+      }
+    },
     select (id) {
       this[FOCUS_STATE](id)
     },
@@ -240,6 +350,7 @@ export default {
     <article
       v-for="(state, id) in states"
       :key="id"
+      :ref="id"
       class="network-view-state"
       :class="{ 'is-focused': isFocused(id), 'is-any': isAny(id) }"
       :style="stateStyle(id)"
@@ -266,6 +377,7 @@ export default {
       :from="arrow.fromPos"
       :to="arrow.toPos"
       :normal-offset="arrow.offset"
+      :trim="0"
     >
       {{ arrow.label }}
     </arrow>
@@ -277,6 +389,7 @@ export default {
 
 $state-border: 0.07em solid black;
 $state-bg: #fafafa;
+$state-selected-z-index: 1000;
 
 .network-view {
   width: 100%;
@@ -301,13 +414,16 @@ $state-bg: #fafafa;
                                   supported by Chrome and Opera */
 
   transform: translate(-50%, -50%);
-
   color: $color-network-unselected-text;
+  // unselected states are below selected states
+  z-index: $z-index-unselected-state;
 
-  &.is-focused .network-view-state-name {
-    //font-style: italic;
-    color: $color-network-selected-text;
-    text-shadow: lighten($color-network-selected-text, 0%) 1px 1px 10px;
+  &.is-focused {
+    z-index: $z-index-selected-state;
+    .network-view-state-name {
+      color: $color-network-selected-text;
+      text-shadow: lighten($color-network-selected-text, 0%) 1px 1px 10px;
+    }
   }
 
   &.is-any {
