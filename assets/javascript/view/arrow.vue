@@ -70,7 +70,7 @@ export default {
       const signedSize = delta(from, to)
       const len = length(signedSize)
 
-      const angle = !signedSize.x ? 0 : Math.atan2(
+      const angle = Math.atan2(
         signedSize.y, signedSize.x
       )
       const moveToFrom = `translate(${from.x}px, ${from.y}px)`

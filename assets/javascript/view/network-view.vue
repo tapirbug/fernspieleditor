@@ -3,13 +3,13 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
 import {
-  translate,
   delta,
   distance2,
   direction,
-  intersectRayWithEllipse,
   invert
 } from '../util/geom/points.js'
+import { translate } from '../util/geom/transform.js'
+import { intersectRayWithEllipse, connectEllipses } from '../util/geom/ellipses.js'
 import Arrow from './arrow.vue'
 import uuid from '../util/random/uuid.js'
 import { mapValues } from '../util/map-obj.js'
@@ -79,70 +79,23 @@ export default {
 
             const positions = (() => {
               if (arrow.isToSelf) {
-                const slope = 0.01
-                const through = translate(fromPos, { x: 0, y: -0.25 })
-                const left = intersectRayWithEllipse(
-                  through,
-                  {
-                    x: -1,
-                    y: -slope
-                  },
-                  {
-                    ...fromPos,
-                    ...fromSize
-                  }
-                )
-
-                const right = intersectRayWithEllipse(
-                  through,
-                  {
-                    x: 1,
-                    y: slope
-                  },
-                  {
-                    ...fromPos,
-                    ...fromSize
-                  }
-                )
-
-                return {
-                  fromPos: left,
-                  toPos: right
-                }
-              } else if (distance2(fromPos, toPos) < 0 * 0) {
-                // Very small arrow, do not extend to border
-                return { fromPos, toPos }
+                return arrowThroughSingleEllipse(fromPos, fromSize)
               } else {
                 const toSize = this.stateSize(arrow.to)
-                const directionFromTo = direction(delta(fromPos, toPos))
-                const directionToFrom = invert(directionFromTo)
-
-                // start arrow at the border
-                return {
-                  fromPos: intersectRayWithEllipse(
-                    toPos,
-                    directionToFrom,
-                    {
-                      ...fromPos,
-                      ...fromSize
-                    }
-                  ),
-                  toPos: intersectRayWithEllipse(
-                    fromPos,
-                    directionFromTo,
-                    {
-                      ...toPos,
-                      ...toSize
-                    }
-                  )
+                const { from, to } = connectEllipses(
+                  { ...fromPos, ...fromSize },
+                  { ...toPos, ...toSize},
+                )
+                if (from === null || to === null) {
+                  throw new Error(`from = ${from}, to = ${to}`)
                 }
+                return { fromPos: from, toPos: to }
               }
             })()
 
             return {
               ...arrow,
               ...positions
-              // offset: arrow.isToSelf ? '-3.3em' : (arrow.hasInverse ? '-0.3em' : '0')
             }
           },
           this
@@ -186,10 +139,42 @@ export default {
 
         return arrows
       }
+
+      function arrowThroughSingleEllipse (fromPos, fromSize) {
+        const slope = 0.03
+        const through = translate(fromPos, { x: 0, y: -fromSize.height * 0.25 })
+        const left = intersectRayWithEllipse(
+          through,
+          {
+            x: -1,
+            y: -slope
+          },
+          {
+            ...fromPos,
+            ...fromSize
+          }
+        )
+
+        const right = intersectRayWithEllipse(
+          through,
+          {
+            x: 1,
+            y: slope
+          },
+          {
+            ...fromPos,
+            ...fromSize
+          }
+        )
+
+        return {
+          fromPos: left,
+          toPos: right
+        }
+      }
     }
   },
   mounted () {
-    console.log('updated')
     this.updateStateSizes()
   },
   methods: {
@@ -199,14 +184,6 @@ export default {
      * State IDs mapped against their sizes in pixels.
      */
     updateStateSizes () {
-      /* if (!this.$refs.length) {
-        // not available yet
-        this.stateSizes = {}
-        // update later
-        console.log('registering update');
-        //this.$nextTick().then(() => {console.log('updating size'); this.updateStateSizes()})
-
-      } else { */
       this.stateSizes = mapValues(
         this.$refs,
         child => {
@@ -217,12 +194,10 @@ export default {
         },
         {}
       )
-      // }
     },
     stateSize (id) {
       if (id in this.stateSizes) {
-        const size = this.stateSizes[id]
-        return size// { x: size.x, y: size.y }
+        return this.stateSizes[id]
       } else {
         // fallback size for the time until the first layout
         // is available

@@ -83,9 +83,6 @@ export default {
           ? this.focusedStateId
           : null
       )
-    },
-    setSounds (sounds) {
-      console.log(sounds)
     }
   }
 }
