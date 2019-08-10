@@ -397,7 +397,7 @@ $state-selected-z-index: 1000;
     z-index: $z-index-selected-state;
     .network-view-state-name {
       color: $color-network-selected-text;
-      text-shadow: lighten($color-network-selected-text, 0%) 1px 1px 10px;
+      text-shadow: lighten($color-network-selected-text, 44%) 1px 1px 10px;
     }
   }
 
