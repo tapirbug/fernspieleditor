@@ -3,10 +3,7 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
 import {
-  delta,
-  distance2,
-  direction,
-  invert
+  delta
 } from '../util/geom/points.js'
 import { translate } from '../util/geom/transform.js'
 import { intersectRayWithEllipse, connectEllipses } from '../util/geom/ellipses.js'
@@ -40,7 +37,8 @@ export default {
       'isFocused',
       'isAny',
       'transitionSummariesFrom',
-      'transitionSummariesTo'
+      'transitionSummariesTo',
+      'isStateActiveOnRemote'
     ]),
     movedPos () {
       if (!this.firstGrabPosition || !this.palmId || !this.findNetwork(this.palmId)) {
@@ -84,7 +82,7 @@ export default {
                 const toSize = this.stateSize(arrow.to)
                 const { from, to } = connectEllipses(
                   { ...fromPos, ...fromSize },
-                  { ...toPos, ...toSize},
+                  { ...toPos, ...toSize }
                 )
                 if (from === null || to === null) {
                   throw new Error(`from = ${from}, to = ${to}`)
@@ -310,6 +308,13 @@ export default {
         left: position.x,
         top: position.y
       }
+    },
+    stateClasses (id) {
+      return {
+        'is-focused': this.isFocused(id),
+        'is-any': this.isAny(id),
+        'is-active-on-connected': this.isStateActiveOnRemote(id)
+      }
     }
   }
 }
@@ -327,7 +332,7 @@ export default {
       :key="id"
       :ref="id"
       class="network-view-state"
-      :class="{ 'is-focused': isFocused(id), 'is-any': isAny(id) }"
+      :class="stateClasses(id)"
       :style="stateStyle(id)"
       :tabindex="0"
       :autofocus="isFocused(id) ? 'autofocus' : ''"
@@ -365,6 +370,11 @@ export default {
 $state-border: 0.07em solid black;
 $state-bg: #fafafa;
 $state-selected-z-index: 1000;
+
+// state is not active on remote
+$active-shadow-inactive: 0 0 0 $color-network-active-state;
+$active-shadow-active-minimum: 0 0 0.6em $color-network-active-state;
+$active-shadow-active-maximum: 0 0 1.4em $color-network-active-state;
 
 .network-view {
   width: 100%;
@@ -404,5 +414,16 @@ $state-selected-z-index: 1000;
   &.is-any {
     background-color: $color-network-any-state;
   }
+
+  &.is-active-on-connected {
+    box-shadow: $active-shadow-inactive;
+    animation: pulsate 1.15s ease-out infinite;
+  }
+}
+
+@keyframes pulsate {
+  0%   { box-shadow: $active-shadow-active-minimum; }
+  50%  { box-shadow: $active-shadow-active-maximum; }
+  100% { box-shadow: $active-shadow-active-minimum; }
 }
 </style>

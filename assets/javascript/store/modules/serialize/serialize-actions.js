@@ -1,9 +1,10 @@
 import YAML from 'yaml'
 import { toDataURL } from '../../../util/file/read.js'
-import { TO_YAML } from '../../action-types.js'
+import { TO_YAML, SERIALIZE } from '../../action-types.js'
 
 export default {
-  [TO_YAML]: ({ getters, rootState }) => {
+  [TO_YAML]: ({ dispatch }) => dispatch(SERIALIZE).then(YAML.stringify),
+  [SERIALIZE]: ({ getters, rootState }) => {
     if (!getters.canSave) {
       return Promise.reject(new Error('File is inconsistent and cannot be saved'))
     }
@@ -18,15 +19,15 @@ export default {
       initial: { initial }
     } = rootState
     return inlineFiles(sounds)
-      .then(inlinedSounds =>
-        YAML.stringify({
+      .then(inlinedSounds => {
+        return {
           initial,
           states,
           transitions,
           vendor,
           sounds: inlinedSounds
-        })
-      )
+        }
+      })
 
     /**
      * Converts contained file handles to data URIs, embedding

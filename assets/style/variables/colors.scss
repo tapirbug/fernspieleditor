@@ -12,12 +12,17 @@ $color-gray-bright: lighten($color-gray-dark, 30%);
 /* Colors by abstract purpose */
 $color-brand: $color-mint;
 $color-focus: $color-ocher;
+$color-run: $color-mint;
+$color-connect: $color-orange;
+$color-error: $color-red;
 
 $color-text-heading: $color-gray-dark;
 $color-text-aside: $color-gray-bright;
 $color-text-running: $color-gray;
+$color-text-button-inverse: white;
 
 /* Colors by application */
 $color-network-any-state: rgba($color-brand, 0.2);
+$color-network-active-state: $color-orange;
 $color-network-unselected-text: $color-text-running;
 $color-network-selected-text: $color-text-heading;

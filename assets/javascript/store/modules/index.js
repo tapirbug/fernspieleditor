@@ -1,6 +1,7 @@
 import deserialize from './deserialize/index.js'
 import editor from './editor/index.js'
 import initial from './initial/index.js'
+import remote from './remote/index.js'
 import serialize from './serialize/index.js'
 import sounds from './sounds/index.js'
 import states from './states/index.js'
@@ -43,6 +44,7 @@ export default function createModules (phonebook) {
         fernspieleditor: editor(editorState)
       }
     },
-    serialize: serialize()
+    serialize: serialize(),
+    remote: remote()
   }
 }

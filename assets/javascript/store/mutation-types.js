@@ -1,6 +1,12 @@
 // File loading
 export const REPLACE_PHONEBOOK = 'REPLACE_PHONEBOOK'
 
+// Remote control
+export const ADD_CONNECTION = 'ADD_CONNECTION'
+export const SELECT_CONNECTION = 'SELECT_CONNECTION'
+export const ENTER_REMOTE = 'ENTER_REMOTE'
+export const RELEASE_SOCKET = 'RELEASE_SOCKET'
+
 // State mutations
 export const UPDATE_STATE = 'UPDATE_STATE'
 export const ADD_STATE = 'ADD_STATE'

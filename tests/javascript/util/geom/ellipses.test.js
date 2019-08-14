@@ -418,21 +418,21 @@ describe('connect non-overlapping ellipses in horizontal direction', () => {
     height: 109,
     width: 109,
     x: 100,
-    y: 100,
+    y: 100
   }
   const leftEllipseRight = {
-    x: leftEllipse.x + leftEllipse.width/2,
-    y: leftEllipse.y,
+    x: leftEllipse.x + leftEllipse.width / 2,
+    y: leftEllipse.y
   }
   const rightEllipse = {
     height: 109,
     width: 109,
     x: 300,
-    y: 100,
+    y: 100
   }
   const rightEllipseLeft = {
-    x: rightEllipse.x - rightEllipse.width/2,
-    y: rightEllipse.y,
+    x: rightEllipse.x - rightEllipse.width / 2,
+    y: rightEllipse.y
   }
 
   test('connect down has correct order', () => {
@@ -466,7 +466,7 @@ describe('connect non-overlapping ellipses diagonally', () => {
 
   test('top left to bottom right', () => {
     const { from, to } = connectEllipses(ellipse1, ellipse2)
-    
+
     expect(from.x)
       .toBeGreaterThan(ellipse1.x)
     expect(from.x)
