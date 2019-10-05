@@ -19,6 +19,8 @@ export default {
       newEndpoint: '',
       newEndpointFailureMessage: '',
       newEndpointConnecting: false,
+      runFailureMessage: '',
+      lastConnectAttemptEndpoint: '127.0.0.1'
     }
   },
   computed: {
@@ -51,7 +53,7 @@ export default {
       // and open the adding modal
       this.$refs.addEndpointModal.checked = true
     },
-    handleConnect (evt) {
+    handleConnect (evt, retryUrl) {
       // do not go to #
       evt.preventDefault()
 
@@ -60,6 +62,7 @@ export default {
       this.newEndpointConnecting = true
 
       const endpoint = this.newEndpoint
+      this.lastConnectAttemptEndpoint = endpoint
 
       this.connect({ host: endpoint, name: endpoint })
         .then(
@@ -69,6 +72,8 @@ export default {
             this.endpoint = endpoint
             // and close modal
             this.$refs.addEndpointModal.checked = false
+            // also close error modal when retrying
+            this.$refs.runEndpointErrorModal.checked = false
           },
           error => {
             this.newEndpointFailureMessage = `${error}`
@@ -81,10 +86,18 @@ export default {
     handleRun () {
       const endpoint = this.endpoint
       if (endpoint) {
+        this.lastConnectAttemptEndpoint = endpoint
         this.deploy({ host: this.endpoint, name: this.endpoint })
           .then(
             socket => console.log('deployed', socket),
-            error => console.error('deploy failed', error)
+            error => {
+              this.$refs.run
+              this.$refs.runEndpointErrorModal.checked = true
+              this.runFailureMessage = error.message
+              // set retry address for retry button
+              this.newEndpoint = endpoint
+              console.error('deploy failed', error)
+            }
           )
       }
     },
@@ -227,6 +240,51 @@ export default {
           </button>
           <label
             for="bar-add-endpoint-model"
+            class="button dangerous"
+          >
+            Cancel
+          </label>
+        </footer>
+      </article>
+    </div>
+    <div class="modal">
+      <input
+        id="bar-run-error"
+        ref="runEndpointErrorModal"
+        type="checkbox"
+      />
+      <label
+        for="bar-run-error"
+        class="overlay"
+      ></label>
+      <article>
+        <header>
+          <h3>Run Error</h3>
+          <label
+            for="bar-run-error"
+            class="close"
+          >&times;</label>
+        </header>
+        <section class="content">
+          Sorry, we could not run the phonebook on the selected fernspielapparat.
+          There seems to be a problem with your connection.
+          <div
+            class="bar-add-endpoint-error"
+            v-if="runFailureMessage"
+            v-text="runFailureMessage"
+          ></div>
+        </section>
+        <footer>
+          <button
+            class="button"
+            @click="handleConnect"
+            v-bind:disabled="newEndpointConnecting"
+          >
+            <span v-if="newEndpointConnecting">Connecting...</span>
+            <span v-if="!newEndpointConnecting">Reconnect</span>
+          </button>
+          <label
+            for="bar-run-error"
             class="button dangerous"
           >
             Cancel

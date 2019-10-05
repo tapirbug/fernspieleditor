@@ -19,6 +19,7 @@ export default {
   [CONNECT] ({ commit, dispatch }, { host, name }) {
     return new Promise((resolve, reject) => {
       const uri = wsUriToHost(host)
+      console.log(`connecting to ${uri}`)
       const socket = new window.WebSocket(uri, protocol)
       let determined = false
       socket.onopen = _evt => {
@@ -76,7 +77,7 @@ export default {
       ? Promise.resolve(getters.findConnection(host))
       : dispatch(CONNECT, { host, name })
 
-    Promise.all([phonebook, connection])
+    return Promise.all([phonebook, connection])
       .then(([phonebook, { socket }]) => {
         const command = YAML.stringify({
           invoke: 'run',
