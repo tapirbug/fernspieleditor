@@ -70,10 +70,14 @@ export default {
             // select new endpoint
             this.endpointModel = endpoint
             this.endpoint = endpoint
-            // and close modal
+            // and close add endpoint modal
             this.$refs.addEndpointModal.checked = false
             // also close error modal when retrying
-            this.$refs.runEndpointErrorModal.checked = false
+            if (this.$refs.runEndpointErrorModal.checked) {
+              this.$refs.runEndpointErrorModal.checked = false
+              // and retry the run
+              this.handleRun()
+            }
           },
           error => {
             this.newEndpointFailureMessage = `${error}`
