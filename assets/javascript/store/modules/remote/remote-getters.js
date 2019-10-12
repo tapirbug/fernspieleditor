@@ -20,7 +20,7 @@ export default {
   isStateActiveOnRemote: ({ activeConnection, activeStates }) => stateID => activeStates[activeConnection] === stateID,
   knownHosts: ({ connections }) => {
     const userDefinedAddresses = Object.keys(connections)
-      .filter(connectedHost => !alwaysKnownHosts.includes(({ address }) => connectedHost === address))
+      .filter(connectedHost => !alwaysKnownHosts.some(({ address }) => connectedHost === address))
       .map(host => {
         const conn = connections[host]
         return {

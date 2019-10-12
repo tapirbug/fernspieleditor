@@ -88,6 +88,7 @@ export default {
         // the active state on the other side is
         // highlighted in the network view now.
         commit(SELECT_CONNECTION, host)
+        return { host, name }
       })
   }
 }
