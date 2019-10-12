@@ -7,6 +7,8 @@ import {
 import defaultState from '../../fixtures/default-state.js'
 import YAML from 'yaml'
 import { mapValues } from '../../../util/map-obj.js'
+import uuid from '../../../util/random/uuid.js'
+import defaultSound from '../../fixtures/default-sound.js'
 
 export default {
   [LOAD_FILE] ({ commit }, { files }) {
@@ -148,6 +150,35 @@ export default {
           version: 1,
           extensionProperties: {
             states: { ...newState.vendor.fernspieleditor }
+          }
+        }
+
+        if (!newState.sounds) {
+          newState.sounds = {}
+        }
+  
+        // state-based sounds cannot be edited anymore, make them into a proper sound
+        if (newState && newState.states) {
+          for(let [_, state] of Object.entries(newState.states)) {
+            if (!state.sounds) {
+              state.sounds = []
+            }
+  
+            if (state.id) {
+              // no duplicated ID property in new phonebooks
+              delete state.id
+            }
+  
+            if (state.speech) {
+              const speech = state.speech
+              delete state.speech
+              const soundId = uuid()
+              state.sounds.push(soundId)
+              newState.sounds[soundId] = {
+                ...defaultSound(),
+                speech
+              }
+            }
           }
         }
       }
