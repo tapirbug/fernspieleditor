@@ -3,7 +3,6 @@
  */
 export default function defaultState () {
   return {
-    id: '<uninitialized ID>',
     name: 'New State',
     description: '',
     sounds: [],
