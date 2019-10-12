@@ -91,7 +91,6 @@ export default {
           .then(
             socket => console.log('deployed', socket),
             error => {
-              this.$refs.run
               this.$refs.runEndpointErrorModal.checked = true
               this.runFailureMessage = error.message
               // set retry address for retry button
@@ -224,16 +223,16 @@ export default {
             >
           </label>
           <div
-            class="bar-add-endpoint-error"
             v-if="newEndpointFailureMessage"
+            class="bar-add-endpoint-error"
             v-text="newEndpointFailureMessage"
           ></div>
         </section>
         <footer>
           <button
             class="button"
+            :disabled="newEndpointConnecting"
             @click="handleConnect"
-            v-bind:disabled="newEndpointConnecting"
           >
             <span v-if="newEndpointConnecting">Connecting...</span>
             <span v-if="!newEndpointConnecting">Connect</span>
@@ -269,16 +268,16 @@ export default {
           Sorry, we could not run the phonebook on the selected fernspielapparat.
           There seems to be a problem with your connection.
           <div
-            class="bar-add-endpoint-error"
             v-if="runFailureMessage"
+            class="bar-add-endpoint-error"
             v-text="runFailureMessage"
           ></div>
         </section>
         <footer>
           <button
             class="button"
+            :disabled="newEndpointConnecting"
             @click="handleConnect"
-            v-bind:disabled="newEndpointConnecting"
           >
             <span v-if="newEndpointConnecting">Connecting...</span>
             <span v-if="!newEndpointConnecting">Reconnect</span>
