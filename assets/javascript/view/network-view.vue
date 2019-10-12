@@ -185,9 +185,16 @@ export default {
       this.stateSizes = mapValues(
         this.$refs,
         child => {
-          return {
-            width: child[0].getBoundingClientRect().width || 0,
-            height: child[0].getBoundingClientRect().height || 0
+          if (!child || child.length === 0) {
+            return {
+              width: 0,
+              height: 0
+            }
+          } else {
+            return {
+              width: child[0].getBoundingClientRect().width || 0,
+              height: child[0].getBoundingClientRect().height || 0
+            }
           }
         },
         {}
