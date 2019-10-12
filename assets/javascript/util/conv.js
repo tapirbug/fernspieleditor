@@ -1,4 +1,7 @@
 export function toStr (orig) {
+  if (typeof orig === 'undefined' || orig === null) {
+    return ''
+  }
   return '' + orig
 }
 
