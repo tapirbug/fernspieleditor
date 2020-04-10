@@ -308,6 +308,8 @@ export default {
   align-items: center;
   box-shadow: 0 0 .2em rgba(17,17,17,.2);
   padding: $bar-padding;
+  position: relative;
+  z-index: $z-index-bar;
 }
 
 .brand-name {
