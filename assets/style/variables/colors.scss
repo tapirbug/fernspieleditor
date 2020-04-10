@@ -7,7 +7,7 @@ $color-red: #DB2725;
 
 $color-gray-dark: #222222;
 $color-gray: lighten($color-gray-dark, 10%);
-$color-gray-bright: lighten($color-gray-dark, 30%);
+$color-gray-light: #dddddd;
 
 /* Colors by abstract purpose */
 $color-brand: $color-mint;
@@ -17,7 +17,7 @@ $color-connect: $color-orange;
 $color-error: $color-red;
 
 $color-text-heading: $color-gray-dark;
-$color-text-aside: $color-gray-bright;
+$color-text-aside: $color-gray-light;
 $color-text-running: $color-gray;
 $color-text-button-inverse: white;
 

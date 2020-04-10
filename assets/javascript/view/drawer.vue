@@ -108,13 +108,16 @@ export default {
 </template>
 
 <style lang="scss">
+@import "../../style/variables";
+
 $drawer-grabbing-area-width: 1em;
 
 .drawer {
   position: relative;
   background-color: #f0f0f0;
-  box-shadow: -2px 0px 9px 1px #aaa;
   overflow: auto;
+  border-left: $border-component;
+
   &:after {
     content: "";
     display: table;
