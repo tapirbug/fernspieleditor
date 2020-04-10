@@ -1,0 +1,38 @@
+/* Raw colors without presumed meaning */
+$mint: #00CF96;
+$dark-green: #22a532;
+$green: #2ecc40;
+$bright-green: #48E609;
+$ocher: #CFB92D;
+$orange: #E68627;
+$orange-red: #ff4136;
+$red: #DB2725;
+
+$gray-dark: #222222;
+$gray: #555555;
+$gray-light: #dddddd;
+
+/* Colors by abstract purpose */
+$brand: $mint;
+$focus: $ocher;
+$run: $mint;
+$connect: $orange;
+$error: $red;
+$active: $dark-green;
+$active-alternate: $orange;
+$inactive: $gray;
+$danger: $orange-red;
+
+$background-inactive: $gray-light;
+
+$text-heading: $gray-dark;
+$text-aside: $gray-light;
+$text-running: $gray;
+$text-button-inverse: white;
+$text-passive: #777;
+
+/* Colors by application */
+$network-any-state: rgba($brand, 0.2);
+$network-active-state: $orange;
+$network-unselected-text: $text-running;
+$network-selected-text: $text-heading;

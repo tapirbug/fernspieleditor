@@ -110,7 +110,7 @@ function isPoint (obj) {
 </template>
 
 <style lang="scss">
-@import "../../style/variables";
+@use "../../style/variables/layers";
 
 $arrow-thickness: 0.1em;
 $arrow-color: black;
@@ -118,7 +118,7 @@ $arrow-width: 0.6em;
 $arrow-height: 0.3em;
 
 .arrow {
-  z-index: $z-index-arrows;
+  z-index: layers.$arrows;
   position: absolute;
   top: 0;
   left: 0;

@@ -372,16 +372,16 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../../style/variables";
+@use "../../style/variables/colors";
+@use "../../style/variables/layers";
 
 $state-border: 0.07em solid black;
 $state-bg: #fafafa;
-$state-selected-z-index: 1000;
 
 // state is not active on remote
-$active-shadow-inactive: 0 0 0 $color-network-active-state;
-$active-shadow-active-minimum: 0 0 0.6em $color-network-active-state;
-$active-shadow-active-maximum: 0 0 1.4em $color-network-active-state;
+$active-shadow-inactive: 0 0 0 colors.$network-active-state;
+$active-shadow-active-minimum: 0 0 0.6em colors.$network-active-state;
+$active-shadow-active-maximum: 0 0 1.4em colors.$network-active-state;
 
 .network-view {
   width: 100%;
@@ -406,20 +406,20 @@ $active-shadow-active-maximum: 0 0 1.4em $color-network-active-state;
                                   supported by Chrome and Opera */
 
   transform: translate(-50%, -50%);
-  color: $color-network-unselected-text;
+  color: colors.$network-unselected-text;
   // unselected states are below selected states
-  z-index: $z-index-unselected-state;
+  z-index: layers.$unselected-state;
 
   &.is-focused {
-    z-index: $z-index-selected-state;
+    z-index: layers.$selected-state;
     .network-view-state-name {
-      color: $color-network-selected-text;
-      text-shadow: lighten($color-network-selected-text, 44%) 1px 1px 10px;
+      color: colors.$network-selected-text;
+      text-shadow: lighten(colors.$network-selected-text, 44%) 1px 1px 10px;
     }
   }
 
   &.is-any {
-    background-color: $color-network-any-state;
+    background-color: colors.$network-any-state;
   }
 
   &.is-active-on-connected {

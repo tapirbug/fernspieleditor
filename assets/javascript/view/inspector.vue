@@ -276,13 +276,16 @@ export default {
 </template>
 
 <style lang="scss">
-$inspector-passive-msg-color: #777;
-$danger-color: #ff4136;
+@use "../../style/variables/colors";
+
+$default-color: #0074d9;
+$success-green: #2ecc40;
+$error-red: #ff4136;
 
 .inspector-passive-msg {
   margin-top: 4em;
   text-align: center;
-  color: $inspector-passive-msg-color;
+  color: colors.$text-passive;
 }
 
 .inspector-add-transition-btns {
@@ -311,7 +314,7 @@ $danger-color: #ff4136;
 
 .inspector-actions {
   .dangerous {
-    background-color: $danger-color;
+    background-color: colors.$danger;
   }
 
   footer {
@@ -328,26 +331,22 @@ $danger-color: #ff4136;
   max-height: 0;
 }
 
-$default-color: #0074d9;
-$success-green: #2ecc40;
-$error-red: #ff4136;
-
 .inspector-initial-button,
 .inspector-terminal-button {
   &.is-inactive {
-    background-color: desaturate($default-color, 90%);
+    background-color: colors.$inactive;
   }
 }
 
 .inspector-initial-button {
   &.is-active {
-    background-color: desaturate($success-green, 30%);
+    background-color: colors.$active;
   }
 }
 
 .inspector-terminal-button {
   &.is-active {
-    background-color: desaturate($error-red, 30%);
+    background-color: colors.$active-alternate;
   }
 }
 </style>

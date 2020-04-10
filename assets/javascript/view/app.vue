@@ -39,7 +39,8 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../../style/global";
+@use "../../style/global";
+@use "../../style/variables/layout";
 @import 'picnic/picnic.min.css';
 
 main {
@@ -52,7 +53,7 @@ main {
 
 .main-content {
   position: absolute;
-  top: $header-height;
+  top: layout.$header-height;
   left: 0;
   right: 0;
   bottom: 0;

@@ -299,17 +299,19 @@ export default {
 </template>
 
 <style lang="scss">
-@import "../../style/variables";
+@use "../../style/variables/colors";
+@use "../../style/variables/layers";
+@use "../../style/variables/layout";
 
 .bar {
-  height: $header-height;
+  height: layout.$header-height;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 .2em rgba(17,17,17,.2);
-  padding: $bar-padding;
+  padding: layout.$bar-padding;
   position: relative;
-  z-index: $z-index-bar;
+  z-index: layers.$bar;
 }
 
 .brand-name {
@@ -317,7 +319,7 @@ export default {
   flex-grow: 10;
 
   a {
-    color: $color-text-heading;
+    color: colors.$text-heading;
     font-weight: 700;
     font-size: 0.4em;
   }
@@ -349,15 +351,15 @@ export default {
 .menu-remote {
   &.is-run {
     /* override picnicss */
-    background-color: $color-run !important;
-    color: $color-text-button-inverse !important;
+    background-color: colors.$run !important;
+    color: colors.$text-button-inverse !important;
   }
 }
 
 .bar-add-endpoint-error {
   border-radius: 0.2em;
-  border: 0.05em solid $color-error;
-  color: $color-error;
+  border: 0.05em solid colors.$error;
+  color: colors.$error;
   padding: 0.2em 0.8em;
   margin-top: 0.7em;
 }

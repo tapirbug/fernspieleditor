@@ -196,7 +196,7 @@ export default {
 </template>
 
 <style lang="scss">
-$dialog-height: 10em;
+@use "../../style/variables/layout";
 
 .transition-dialog {
   &-condition > div {
@@ -207,7 +207,7 @@ $dialog-height: 10em;
   &-state-selection {
     margin: 0 !important; /* override picnic CSS selector with higher specificity */
     padding-bottom: 0.6em !important; /* override picnic CSS selector with higher specificity */
-    max-height: $dialog-height;
+    max-height: layout.$dialog-height;
     overflow: auto !important; /* override picnic CSS selector with higher specificity */
   }
 
