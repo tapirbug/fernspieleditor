@@ -156,19 +156,19 @@ export default {
         if (!newState.sounds) {
           newState.sounds = {}
         }
-  
+
         // state-based sounds cannot be edited anymore, make them into a proper sound
         if (newState && newState.states) {
-          for(let [_, state] of Object.entries(newState.states)) {
+          for (let [, state] of Object.entries(newState.states)) {
             if (!state.sounds) {
               state.sounds = []
             }
-  
+
             if (state.id) {
               // no duplicated ID property in new phonebooks
               delete state.id
             }
-  
+
             if (state.speech) {
               const speech = state.speech
               delete state.speech
