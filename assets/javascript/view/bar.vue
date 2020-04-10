@@ -302,13 +302,12 @@ export default {
 @import "../../style/variables";
 
 .bar {
-  position: static;
-  transform: none;
   height: $header-height;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 .2em rgba(17,17,17,.2);
+  padding: $bar-padding;
 }
 
 .brand-name {
