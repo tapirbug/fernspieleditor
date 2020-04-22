@@ -37,4 +37,7 @@ export default {
 </template>
 
 <style lang="scss">
+.auxiliary {
+  padding-top: 0.25em;
+}
 </style>
