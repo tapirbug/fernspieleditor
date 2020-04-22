@@ -1,7 +1,7 @@
 const anyId = 'any'
 const any = {
   name: 'Any',
-  description: 'Transitions from any are used when the current state has no transition defined for an event'
+  description: 'Transitions from any are used when the current state has no transition defined for an event.'
 }
 
 /**
