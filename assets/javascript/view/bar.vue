@@ -315,7 +315,6 @@ export default {
 }
 
 .brand-name {
-  flex-basis: 50%;
   flex-grow: 10;
 
   a {
@@ -330,6 +329,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 29em;
 
   .button {
     white-space: nowrap;
