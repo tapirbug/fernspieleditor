@@ -1,0 +1,5 @@
+// Opt-in to making something selectable with is-selectable
+// and keep textarea and input always default-selectable.
+*:not(.is-selectable):not(textarea):not(input) {
+    user-select: none;
+}

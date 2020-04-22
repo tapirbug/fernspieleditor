@@ -348,7 +348,7 @@ export default {
       @click="$event.stopPropagation()"
     >
       <header
-        class="network-view-state-name"
+        class="network-view-state-name is-selectable"
         contenteditable="true"
         @focus="select(id)"
         @blur="typed($event, id)"
