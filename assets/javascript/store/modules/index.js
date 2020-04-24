@@ -1,5 +1,6 @@
 import deserialize from './deserialize/index.js'
 import editor from './editor/index.js'
+import info from './info/index.js'
 import initial from './initial/index.js'
 import remote from './remote/index.js'
 import serialize from './serialize/index.js'
@@ -30,6 +31,7 @@ export default function createModules (phonebook) {
     : {}
 
   return {
+    info: info(phonebook.info || {}),
     initial: initial(phonebook),
     deserialize: deserialize(),
     states: states(phonebook.states || {}),

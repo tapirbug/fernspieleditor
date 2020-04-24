@@ -11,6 +11,8 @@ $red: #DB2725;
 $gray-dark: #222222;
 $gray: #555555;
 $gray-light: #dddddd;
+$gray-x-light: #eeeeee;
+$gray-xx-light: #efefef;
 
 /* Colors by abstract purpose */
 $brand: $mint;
@@ -36,3 +38,5 @@ $network-any-state: rgba($brand, 0.2);
 $network-active-state: $orange;
 $network-unselected-text: $text-running;
 $network-selected-text: $text-heading;
+
+$background-toolbar: $gray-x-light;

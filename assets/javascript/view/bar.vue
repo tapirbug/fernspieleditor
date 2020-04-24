@@ -1,7 +1,8 @@
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { saveAs } from 'file-saver'
 import { TO_YAML, LOAD_FILE, CONNECT, DEPLOY } from '../store/action-types.js'
+import { SET_PHONEBOOK_TITLE } from '../store/mutation-types.js'
 
 /**
  * Menu bar.
@@ -24,7 +25,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['canSave', 'saveBlockers', 'isConnected', 'knownHosts']),
+    ...mapGetters([
+      'canSave',
+      'isConnected',
+      'knownHosts',
+      'phonebookTitle',
+      'saveBlockers',
+      'filenameSuggestion'
+    ]),
     isSelectedEndpointConnected () {
       return this.isConnected(this.endpoint)
     }
@@ -33,6 +41,9 @@ export default {
     ...mapActions({
       connect: CONNECT,
       deploy: DEPLOY
+    }),
+    ...mapMutations({
+      setPhonebookTitle: SET_PHONEBOOK_TITLE
     }),
     // Run / deploy
     setEndpoint (newEndpoint) {
@@ -118,9 +129,11 @@ export default {
       this.toYaml().then(
         phonebookYaml =>
           saveAs(
-            new File([phonebookYaml], 'phonebook.yaml', {
-              type: 'application/x-yaml' // No official MIME type :(
-            })
+            new File(
+              [phonebookYaml],
+              this.filenameSuggestion, {
+                type: 'application/x-yaml' // No official MIME type :(
+              })
           ),
         console.error
       )
@@ -134,6 +147,10 @@ export default {
         console.error(err)
         alert(err)
       })
+    },
+    typedPhonebookTitle (evt) {
+      const newTitle = evt.target.innerText
+      this.setPhonebookTitle(newTitle)
     }
   }
 }
@@ -141,12 +158,21 @@ export default {
 
 <template>
   <article class="bar">
-    <header class="brand-name">
-      <a
-        href="#"
-      >
-        <h1>fernspieleditor</h1>
-      </a>
+    <header class="brand-name-and-phonebook-title-container">
+      <h1 class="brand-name-and-phonebook-title">
+        <span class="brand-name">
+          <a href="#">fernspieleditor</a>
+        </span>
+        <span class="brand-name-phonebook-title-separator"></span>
+        <span
+          class="phonebook-title is-selectable"
+          contenteditable="true"
+          @blur="typedPhonebookTitle($event)"
+          @focusout="typedPhonebookTitle($event)"
+          @keydown.tab="typedPhonebookTitle($event)"
+          v-text="phonebookTitle"
+        ></span>
+      </h1>
     </header>
     <div class="bar-actions">
       <select
@@ -312,16 +338,40 @@ export default {
   padding: layout.$bar-padding;
   position: relative;
   z-index: layers.$bar;
+  background-color: colors.$background-toolbar;
+}
+
+.brand-name-and-phonebook-title-container {
+  flex-grow: 10;
 }
 
 .brand-name {
-  flex-grow: 10;
+  font-weight: 700;
+}
 
-  a {
-    color: colors.$text-heading;
-    font-weight: 700;
-    font-size: 0.4em;
-  }
+.phonebook-title {
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 30vw;
+}
+
+.brand-name-and-phonebook-title {
+  display: flex;
+  font-size: 0.8em;
+  align-items: center;
+  justify-content: stretch;
+}
+
+.brand-name-phonebook-title-separator {
+  padding-right: 0.75em;
+}
+
+.brand-name a,
+.phonebook-title,
+.brand-name-phonebook-title-separator {
+  color: colors.$text-heading;
 }
 
 .bar-actions {

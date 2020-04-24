@@ -9,6 +9,7 @@ export default function startupPhonebook () {
   const greetingSoundId = uuid()
 
   return {
+    info: info(),
     initial: ringingStateId,
     states: states(),
     transitions: transitions(),
@@ -16,6 +17,14 @@ export default function startupPhonebook () {
     vendor: {
       // fernspieleditor additions to the core format
       fernspieleditor: vendor()
+    }
+  }
+
+  function info () {
+    return {
+      title: random.phonebookName(),
+      author: random.name(),
+      description: ''
     }
   }
 

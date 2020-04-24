@@ -7,6 +7,9 @@ export const SELECT_CONNECTION = 'SELECT_CONNECTION'
 export const ENTER_REMOTE = 'ENTER_REMOTE'
 export const RELEASE_SOCKET = 'RELEASE_SOCKET'
 
+// Phonebook Metadata
+export const SET_PHONEBOOK_TITLE = 'SET_PHONEBOOK_TITLE'
+
 // State mutations
 export const UPDATE_STATE = 'UPDATE_STATE'
 export const ADD_STATE = 'ADD_STATE'
