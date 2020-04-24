@@ -108,13 +108,14 @@ export default {
 </template>
 
 <style lang="scss">
+@use "../../style/variables/colors";
 @use "../../style/variables/borders";
 
 $drawer-grabbing-area-width: 1em;
 
 .drawer {
   position: relative;
-  background-color: #f0f0f0;
+  background-color: colors.$drawer-color;
   overflow: auto;
   border-left: borders.$component;
 
