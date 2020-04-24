@@ -9,6 +9,7 @@ export const RELEASE_SOCKET = 'RELEASE_SOCKET'
 
 // Phonebook Metadata
 export const SET_PHONEBOOK_TITLE = 'SET_PHONEBOOK_TITLE'
+export const BUMP_ITERATION = 'BUMP_ITERATION'
 
 // State mutations
 export const UPDATE_STATE = 'UPDATE_STATE'

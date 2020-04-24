@@ -24,7 +24,10 @@ export default function startupPhonebook () {
     return {
       title: random.phonebookName(),
       author: random.name(),
-      description: ''
+      description: '',
+      // monotonically increases when the phonebook can be oberserved to change
+      // from the outside (deploy or save)
+      iteration: 0
     }
   }
 

@@ -2,7 +2,7 @@
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { saveAs } from 'file-saver'
 import { TO_YAML, LOAD_FILE, CONNECT, DEPLOY } from '../store/action-types.js'
-import { SET_PHONEBOOK_TITLE } from '../store/mutation-types.js'
+import { SET_PHONEBOOK_TITLE, BUMP_ITERATION } from '../store/mutation-types.js'
 
 /**
  * Menu bar.
@@ -43,7 +43,8 @@ export default {
       deploy: DEPLOY
     }),
     ...mapMutations({
-      setPhonebookTitle: SET_PHONEBOOK_TITLE
+      setPhonebookTitle: SET_PHONEBOOK_TITLE,
+      bumpIteration: BUMP_ITERATION
     }),
     // Run / deploy
     setEndpoint (newEndpoint) {
@@ -67,6 +68,9 @@ export default {
     handleConnect (evt, retryUrl) {
       // do not go to #
       evt.preventDefault()
+
+      // bump iteration number on each deploy
+      this.bumpIteration()
 
       // clear previous errors
       this.newEndpointFailureMessage = ''
@@ -126,6 +130,8 @@ export default {
         return
       }
 
+      this.bumpIteration()
+console.log(this.filenameSuggestion)
       this.toYaml().then(
         phonebookYaml =>
           saveAs(
