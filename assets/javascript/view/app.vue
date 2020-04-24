@@ -3,6 +3,9 @@ import Auxiliary from './auxiliary.vue'
 import Bar from './bar.vue'
 import Drawer from './drawer.vue'
 import NetworkView from './network-view.vue'
+import { UNDO, REDO } from '../store/action-types.js'
+import { mapGetters, mapActions } from 'vuex'
+import GlobalEvents from 'vue-global-events'
 
 export default {
   name: 'App',
@@ -10,20 +13,37 @@ export default {
     'auxiliary': Auxiliary,
     'bar': Bar,
     'drawer': Drawer,
-    'network-view': NetworkView
+    'network-view': NetworkView,
+    'global-events': GlobalEvents
   },
   data: function () {
     return {}
   },
   computed: {
+    ...mapGetters(['canUndo', 'canRedo'])
   },
   methods: {
+    ...mapActions({
+      undo: UNDO,
+      redo: REDO
+    }),
+    detectAcceleratorKeys (evt) {
+      if (event.key === 'z' && this.canUndo) {
+        this.undo()
+      } else if ((event.key === 'y' || event.key === 'Z') && this.canRedo) {
+        this.redo()
+      }
+    }
   }
 }
 </script>
 
 <template>
   <main>
+    <global-events
+      @keydown.ctrl="detectAcceleratorKeys"
+      @keydown.meta="detectAcceleratorKeys"
+    ></global-events>
     <bar></bar>
     <section class="main-content">
       <div class="main-content-inner">

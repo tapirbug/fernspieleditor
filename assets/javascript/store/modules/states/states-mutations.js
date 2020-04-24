@@ -22,13 +22,13 @@ export default {
       }
     )
   },
-  [UPDATE_STATE] (vuexState, { id, ...payload }) {
+  [UPDATE_STATE] (vuexState, { id, change }) {
     const state = getters.findState(vuexState)(id)
 
     if (state) {
       Object.assign(
         state,
-        sanitizeState(payload)
+        sanitizeState(change)
       )
     }
   },

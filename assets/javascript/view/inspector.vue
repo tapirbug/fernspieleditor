@@ -27,6 +27,7 @@ export default {
       'isAny',
       'transitionSummariesFrom',
       'transitionSummariesTo',
+      'initial',
       'isInitial'
     ]),
     nothingFocused () {
@@ -60,10 +61,19 @@ export default {
         value = parseFloat(value)
       }
 
-      this[CONTINUE_UPDATE_STATE]({
-        id,
-        [prop]: value
-      })
+      const prevValue = this.focusedState[prop]
+
+      if (value !== prevValue) {
+        this[CONTINUE_UPDATE_STATE]({
+          id,
+          change: {
+            [prop]: value
+          },
+          changeBack: {
+            [prop]: prevValue
+          }
+        })
+      }
     },
     removeTransition (summary) {
       this[REMOVE_TRANSITION](summary)
@@ -79,9 +89,12 @@ export default {
     },
     setInitial (evt) {
       this[MAKE_INITIAL_STATE](
-        evt.target.checked
-          ? this.focusedStateId
-          : null
+        {
+          change: evt.target.checked
+            ? this.focusedStateId
+            : null,
+          changeBack: this.initial
+        }
       )
     }
   }

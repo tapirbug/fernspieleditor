@@ -154,8 +154,12 @@ export default {
       })
     },
     typedPhonebookTitle (evt) {
+      const oldTitle = this.phonebookTitle
       const newTitle = evt.target.innerText
-      this.setPhonebookTitle(newTitle)
+
+      if (oldTitle !== newTitle) {
+        this.setPhonebookTitle({ oldTitle, newTitle })
+      }
     }
   }
 }

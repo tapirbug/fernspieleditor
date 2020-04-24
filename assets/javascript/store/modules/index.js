@@ -7,6 +7,7 @@ import serialize from './serialize/index.js'
 import sounds from './sounds/index.js'
 import states from './states/index.js'
 import transitions from './transitions/index.js'
+import undo from './undo/index.js'
 
 /**
  * Initialize the `vuex` modules to be used in the store.
@@ -47,6 +48,7 @@ export default function createModules (phonebook) {
       }
     },
     serialize: serialize(),
-    remote: remote()
+    remote: remote(),
+    undo: undo()
   }
 }

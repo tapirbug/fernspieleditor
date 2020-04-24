@@ -11,7 +11,7 @@ export default {
       initialState.initial = null
     }
   },
-  [MAKE_INITIAL_STATE] (initialState, id) {
+  [MAKE_INITIAL_STATE] (initialState, { change: id }) {
     initialState.initial = id
   },
   [REPLACE_PHONEBOOK] (initialState, phonebook) {

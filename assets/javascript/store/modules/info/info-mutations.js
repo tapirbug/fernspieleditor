@@ -4,7 +4,7 @@ import {
 } from '../../mutation-types.js'
 
 export default {
-  [SET_PHONEBOOK_TITLE] (info, newTitle) {
+  [SET_PHONEBOOK_TITLE] (info, { newTitle }) {
     info.title = newTitle
   },
   [BUMP_ITERATION] (info) {

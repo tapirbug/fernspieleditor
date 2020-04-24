@@ -3,7 +3,8 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
 import { ADD_STATE, FOCUS_STATE, MOVE_STATE } from '../store/mutation-types.js'
 import {
-  delta
+  delta,
+  distance
 } from '../util/geom/points.js'
 import { translate } from '../util/geom/transform.js'
 import { intersectRayWithEllipse, connectEllipses } from '../util/geom/ellipses.js'
@@ -33,6 +34,7 @@ export default {
       'states',
       'stateIds',
       'findNetwork',
+      'findState',
       'focusedState',
       'isFocused',
       'isAny',
@@ -241,8 +243,20 @@ export default {
       }
     },
     endGrab () {
-      this.movePalm(this.movedPos)
-      this[MOVE_STATE]({ id: this.palmId, to: this.movedPos })
+      const from = this.findNetwork(this.palmId).position
+      const to = this.movedPos
+
+      const minimumMoveDistance = 3
+
+      if (distance(from, to) > minimumMoveDistance) {
+        // significant move, do it
+        this.movePalm(to)
+        this[MOVE_STATE]({ id: this.palmId, from, to })
+      } else {
+        // did scarcely move, undo it
+        this.movePalm(from)
+      }
+
       this.palmId = null
       this.palmEl = null
       this.firstGrabPosition = null
@@ -274,10 +288,15 @@ export default {
       this.select(id)
     },
     typed (evt, id) {
-      this[CONTINUE_UPDATE_STATE]({
-        id,
-        name: evt.target.innerText
-      })
+      const oldVal = this.findState(id).name
+      const newVal = evt.target.innerText
+      if (oldVal !== newVal) {
+        this[CONTINUE_UPDATE_STATE]({
+          id,
+          change: { name: newVal },
+          changeBack: { name: oldVal }
+        })
+      }
     },
     insert (evt) {
       if (!evt.target.classList.contains('network-view')) {

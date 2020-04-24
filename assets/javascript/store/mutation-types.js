@@ -1,6 +1,12 @@
 // File loading
 export const REPLACE_PHONEBOOK = 'REPLACE_PHONEBOOK'
 
+// Undo/redo
+export const START_UNDO = 'START_UNDO'
+export const FINISH_UNDO = 'FINISH_UNDO'
+export const START_REDO = 'START_REDO'
+export const FINISH_REDO = 'FINISH_REDO'
+
 // Remote control
 export const ADD_CONNECTION = 'ADD_CONNECTION'
 export const SELECT_CONNECTION = 'SELECT_CONNECTION'
