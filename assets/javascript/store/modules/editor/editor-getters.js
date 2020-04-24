@@ -3,6 +3,8 @@ export default {
   focusedState,
   hasFocusedState,
   isFocused,
+  isRemoved,
+  vendor,
   focusedStateId: editor => editor.focusedStateId
 }
 
@@ -37,5 +39,36 @@ function hasFocusedState (editor) {
 function isFocused (editor) {
   return function (id) {
     return id === editor.focusedStateId
+  }
+}
+
+function isRemoved (editor) {
+  return function (id) {
+    if (typeof editor.extensionProperties.states[id] !== 'undefined') {
+      return editor.extensionProperties.states[id].removed
+    } else {
+      return true
+    }
+  }
+}
+
+function vendor (editor) {
+  // generate vendor
+  return {
+    fernspieleditor: {
+      ...editor,
+      extensionProperties: {
+        ...editor.extensionProperties,
+        states: Object.entries(editor.extensionProperties.states)
+          .filter(([_, { removed }]) => !removed)
+          .reduce(
+            (acc, [key, val]) => {
+              const { removed, ...exceptRemoved } = val
+              acc[key] = exceptRemoved
+              return acc
+            }, {}
+          )
+      }
+    }
   }
 }

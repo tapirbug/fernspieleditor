@@ -5,10 +5,15 @@ import {
 } from '../../mutation-types.js'
 
 export default {
-  [REMOVE_STATE] (initialState, id) {
-    // If was initial, an initial state is now missing
-    if (initialState === id) {
-      initialState.initial = null
+  [REMOVE_STATE] (initialState, { id, wasInitial }) {
+    if (wasInitial) {
+      if (initialState.initial === id) {
+        // do
+        initialState.initial = null
+      } else {
+        // undo
+        initialState.initial = id
+      }
     }
   },
   [MAKE_INITIAL_STATE] (initialState, { change: id }) {

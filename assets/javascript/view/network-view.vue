@@ -31,6 +31,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'allStates',
       'states',
       'stateIds',
       'findNetwork',
@@ -38,6 +39,7 @@ export default {
       'focusedState',
       'isFocused',
       'isAny',
+      'isRemoved',
       'transitionSummariesFrom',
       'transitionSummariesTo',
       'isStateActiveOnRemote'
@@ -328,11 +330,13 @@ export default {
       }
     },
     stateStyle (id) {
+      const removed = this.isRemoved(id)
       const network = this.findNetwork(id)
       const position = network ? network.position : { x: 0, y: 0 }
       return {
         left: position.x,
-        top: position.y
+        top: position.y,
+        opacity: removed ? 0 : 1
       }
     },
     stateClasses (id) {
@@ -354,7 +358,7 @@ export default {
     @click="deselect"
   >
     <article
-      v-for="(state, id) in states"
+      v-for="(state, id) in allStates"
       :key="id"
       :ref="id"
       class="network-view-state"

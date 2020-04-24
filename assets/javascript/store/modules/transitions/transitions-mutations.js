@@ -15,19 +15,6 @@ export default {
     // Initially, the transition map for a new state is empty
     Vue.set(transitions, id, {})
   },
-  [REMOVE_STATE] (transitions, stateId) {
-    // Remove transitions originating from removed state
-    Vue.delete(transitions, stateId)
-
-    // And remove transitions with this state as a target
-    const transitionEdgesTo = getters.transitionEdgesTo(
-      transitions,
-      // hack: fabricating a fake getters object with only one getter (the required one)
-      { transitionEdgesFrom: getters.transitionEdgesFrom(transitions) }
-    )
-    transitionEdgesTo(stateId)
-      .forEach(summary => removeTransition(transitions, summary))
-  },
   [REPLACE_PHONEBOOK] (transitions, phonebook) {
     // clear existing transitions
     Object.keys(transitions)
@@ -61,9 +48,10 @@ function addTransition (existingTransitions, { transitionType, from, ...config }
 function removeTransition (transitions, summary) {
   if (summary.type === 'dial') {
     // Input transition, delete only the deleted number
-    Vue.delete(transitions[summary.from].dial, summary.num)
+    // TODO toggle some sort of deleted state
+    //Vue.delete(transitions[summary.from].dial, summary.num)
   } else {
     // timeout, pick up, hang up and others, remove the whole thing
-    Vue.delete(transitions[summary.from], summary.type)
+    //Vue.delete(transitions[summary.from], summary.type)
   }
 }

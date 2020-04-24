@@ -79,7 +79,10 @@ export default {
       this[REMOVE_TRANSITION](summary)
     },
     removeState () {
-      this[REMOVE_STATE](this.focusedStateId)
+      this[REMOVE_STATE]({
+        id: this.focusedStateId,
+        wasInitial: this.isInitial(this.focusedStateId)
+      })
     },
     toggleActiveClass (when) {
       return {

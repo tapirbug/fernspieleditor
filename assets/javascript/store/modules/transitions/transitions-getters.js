@@ -1,10 +1,52 @@
 
 export default {
+  transitions,
   transitionEdgesFrom,
   transitionSummariesFrom,
   transitionEdgesTo,
   transitionSummariesTo: (_transitions, getters, _rootState, rootGetters) => id =>
     nameFromAndTo(rootGetters)(getters.transitionEdgesTo(id))
+}
+
+function transitions (transitions, _getters, _rootState, rootGetters) {
+  const activeTransitions = Object.entries(transitions)
+    .filter(([sourceId]) => !rootGetters.isRemoved(sourceId))
+    .map(([sourceId, transitions]) => {
+      return [
+        sourceId,
+        Object.entries(transitions)
+        .reduce(
+          (acc, [type, options]) => {
+            if (type === 'dial') {
+              Object.entries(options)
+                .filter(([_, targetId]) => !rootGetters.isRemoved(targetId))
+                .forEach(([number, targetId]) => {
+                  acc[type] = acc[type] || {}
+                  acc[type][number] = targetId
+                })
+            } else if (type === 'timeout') {
+              const targetId = options.to
+              if (!rootGetters.isRemoved(targetId)) {
+                acc[type] = options
+              }
+            } else {
+              const targetId = options
+              if (!rootGetters.isRemoved(targetId)) {
+                acc[type] = options
+              }
+            }
+            return acc
+          },
+          {}
+        )
+      ]
+    })
+    .reduce((acc, [key, value]) => {
+      acc[key] = value
+      return acc
+    }, {})
+
+  return activeTransitions
 }
 
 function transitionSummariesFrom (_transitions, getters, _rootState, rootGetters) {
@@ -32,7 +74,8 @@ function transitionSummariesFrom (_transitions, getters, _rootState, rootGetters
 
 function nameFromAndTo (rootGetters) {
   return function nameFromAndTo (edges) {
-    return edges.map(desc => {
+    return edges
+    .map(desc => {
       const from = findState(desc.from)
       const to = findState(desc.to)
       return {
@@ -88,7 +131,7 @@ const describeTransition = {
   }
 }
 
-function transitionEdgesFrom (transitions) {
+function transitionEdgesFrom (transitions, getters, _rootState, rootGetters) {
   /**
    * Gets array of objects, each describing one transition and its
    * transition condition.
@@ -107,7 +150,7 @@ function transitionEdgesFrom (transitions) {
    * @returns {array} transition edge descriptions
    */
   return function transitionEdgesFrom (id) {
-    return Object.keys(transitions[id])
+    return Object.keys(getters.transitions[id])
       .sort()
       // replace originating IDs with nested arrays, describing outgoing transitions
       .map(type => {
@@ -128,9 +171,9 @@ function transitionEdgesFrom (transitions) {
   }
 }
 
-function transitionEdgesTo (transitions, getters) {
+function transitionEdgesTo (transitions, getters, _rootState, rootGetters) {
   return function transitionEdgesTo (id) {
-    return Object.keys(transitions)
+    return Object.keys(getters.transitions)
       .filter(idOrOther => idOrOther !== id)
       .map(id => getters.transitionEdgesFrom(id))
       .reduce((a, b) => { a.push(...b); return a }, [])

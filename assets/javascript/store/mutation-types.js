@@ -5,6 +5,7 @@ export const REPLACE_PHONEBOOK = 'REPLACE_PHONEBOOK'
 export const START_UNDO = 'START_UNDO'
 export const FINISH_UNDO = 'FINISH_UNDO'
 export const START_REDO = 'START_REDO'
+export const CONTRIBUTE_UNDO = 'CONTRIBUTE_UNDO'
 export const FINISH_REDO = 'FINISH_REDO'
 
 // Remote control

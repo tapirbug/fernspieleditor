@@ -223,7 +223,7 @@ export default {
       <a
         href="#"
         class="button"
-        :style="!canSave"
+        v-bind:disabled="!canSave"
         @click="serialize"
       >
         <img

@@ -13,12 +13,14 @@ export default {
       editor.extensionProperties.states,
       id,
       {
+        removed: false,
         network: { position }
       }
     )
   },
-  [REMOVE_STATE] (editor, id) {
-    Vue.delete(editor, id)
+  [REMOVE_STATE] (editor, { id }) {
+    const state = editor.extensionProperties.states[id]
+    state.removed = !state.removed
 
     // If deleted state was focused, remove selection
     if (editor.focusedStateId === id) {

@@ -116,6 +116,7 @@ export default function startupPhonebook () {
       extensionProperties: {
         states: {
           any: {
+            removed: false,
             network: {
               position: {
                 x: 100,
@@ -124,6 +125,7 @@ export default function startupPhonebook () {
             }
           },
           [ringAgainLaterStateId]: {
+            removed: false,
             network: {
               position: {
                 x: 300,
@@ -132,6 +134,7 @@ export default function startupPhonebook () {
             }
           },
           [ringingStateId]: {
+            removed: false,
             network: {
               position: {
                 x: 500,
@@ -140,6 +143,7 @@ export default function startupPhonebook () {
             }
           },
           [speakingStateId]: {
+            removed: false,
             network: {
               position: {
                 x: 500,

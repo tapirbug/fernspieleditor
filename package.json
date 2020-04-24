@@ -1,6 +1,6 @@
 {
   "name": "fernspieleditor",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Online editor for fernspielapparat phonebooks",
   "main": "index.js",
   "repository": "https://github.com/krachzack/fernspieleditor.git",

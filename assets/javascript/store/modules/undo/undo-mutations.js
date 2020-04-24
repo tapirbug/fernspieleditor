@@ -6,7 +6,8 @@ import {
   MOVE_STATE,
   UPDATE_STATE,
   SET_PHONEBOOK_TITLE,
-  MAKE_INITIAL_STATE
+  MAKE_INITIAL_STATE,
+  REMOVE_STATE
 } from '../../mutation-types.js'
 
 export default {
@@ -87,6 +88,17 @@ export default {
         mutation: MAKE_INITIAL_STATE,
         undoPayload,
         redoPayload
+      }
+    )
+  },
+  [REMOVE_STATE] (undo, payload) {
+    push(
+      undo,
+      'Delete state',
+      {
+        mutation: REMOVE_STATE, // removing a removed state revives it
+        undoPayload: payload,
+        redoPayload: payload
       }
     )
   }

@@ -1,7 +1,6 @@
 import {
   ADD_STATE,
   UPDATE_STATE,
-  REMOVE_STATE,
   REPLACE_PHONEBOOK
 } from '../../mutation-types.js'
 import { toStr, toFiniteFloat, toBool } from '../../../util/conv.js'
@@ -31,9 +30,6 @@ export default {
         sanitizeState(change)
       )
     }
-  },
-  [REMOVE_STATE] (states, id) {
-    Vue.delete(states, id)
   },
   [REPLACE_PHONEBOOK] (states, phonebook) {
     // clear existing states

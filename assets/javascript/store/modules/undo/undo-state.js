@@ -4,5 +4,6 @@
 export default {
   stack: [],
   nextUndoIdx: 0,
-  undoing: false
+  undoing: false,
+  firstContribution: false
 }

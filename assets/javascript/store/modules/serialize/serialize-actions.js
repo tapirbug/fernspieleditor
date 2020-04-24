@@ -4,15 +4,16 @@ import { TO_YAML, SERIALIZE } from '../../action-types.js'
 
 export default {
   [TO_YAML]: ({ dispatch }) => dispatch(SERIALIZE).then(YAML.stringify),
-  [SERIALIZE]: ({ getters, rootState }) => {
+  [SERIALIZE]: ({ getters, rootState, rootGetters }) => {
     if (!getters.canSave) {
       return Promise.reject(new Error('File is inconsistent and cannot be saved'))
     }
 
+    const states = { ...rootGetters.states } // do not serialize deleted states
+    delete states.any
+    const transitions = rootGetters.transitions // or deleted transitions or transitions involving delted states
+    const vendor = rootGetters.vendor // and no removed flag here
     const {
-      states,
-      transitions,
-      vendor,
       sounds,
       info,
       // The `vuex` store manages initial in an object, but the phonebook
