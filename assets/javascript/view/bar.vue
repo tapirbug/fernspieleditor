@@ -131,7 +131,6 @@ export default {
       }
 
       this.bumpIteration()
-console.log(this.filenameSuggestion)
       this.toYaml().then(
         phonebookYaml =>
           saveAs(
