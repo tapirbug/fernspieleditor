@@ -155,7 +155,7 @@ function titleCase (sentence) {
 /**
  * Words that should not be made lower-case for title case.
  */
-const titleCaseParticles = [ 'a', 'an', 'in', 'the', 'for' ]
+const titleCaseParticles = [ 'a', 'an', 'in', 'the', 'for', 'of' ]
 
 /**
  * Checks if a word would be capitalized if it occurred in
@@ -168,5 +168,5 @@ const titleCaseParticles = [ 'a', 'an', 'in', 'the', 'for' ]
 function isTitleCaseCapitalized (word, isFirstWord, isLastWord) {
   return isFirstWord ||
     isLastWord ||
-    titleCaseParticles.includes(titleCaseParticles)
+    !titleCaseParticles.includes(word)
 }
