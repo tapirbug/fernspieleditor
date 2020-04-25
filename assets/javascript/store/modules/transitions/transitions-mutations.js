@@ -2,11 +2,9 @@ import {
   ADD_TRANSITION,
   REMOVE_TRANSITION,
   ADD_STATE,
-  REMOVE_STATE,
   REPLACE_PHONEBOOK
 } from '../../mutation-types.js'
 import Vue from 'vue'
-import getters from './transitions-getters.js'
 
 export default {
   [ADD_TRANSITION]: addTransition,
@@ -49,9 +47,9 @@ function removeTransition (transitions, summary) {
   if (summary.type === 'dial') {
     // Input transition, delete only the deleted number
     // TODO toggle some sort of deleted state
-    //Vue.delete(transitions[summary.from].dial, summary.num)
+    // Vue.delete(transitions[summary.from].dial, summary.num)
   } else {
     // timeout, pick up, hang up and others, remove the whole thing
-    //Vue.delete(transitions[summary.from], summary.type)
+    // Vue.delete(transitions[summary.from], summary.type)
   }
 }

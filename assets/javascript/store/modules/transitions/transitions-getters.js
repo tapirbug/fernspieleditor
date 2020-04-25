@@ -15,30 +15,30 @@ function transitions (transitions, _getters, _rootState, rootGetters) {
       return [
         sourceId,
         Object.entries(transitions)
-        .reduce(
-          (acc, [type, options]) => {
-            if (type === 'dial') {
-              Object.entries(options)
-                .filter(([_, targetId]) => !rootGetters.isRemoved(targetId))
-                .forEach(([number, targetId]) => {
-                  acc[type] = acc[type] || {}
-                  acc[type][number] = targetId
-                })
-            } else if (type === 'timeout') {
-              const targetId = options.to
-              if (!rootGetters.isRemoved(targetId)) {
-                acc[type] = options
+          .reduce(
+            (acc, [type, options]) => {
+              if (type === 'dial') {
+                Object.entries(options)
+                  .filter(([_, targetId]) => !rootGetters.isRemoved(targetId))
+                  .forEach(([number, targetId]) => {
+                    acc[type] = acc[type] || {}
+                    acc[type][number] = targetId
+                  })
+              } else if (type === 'timeout') {
+                const targetId = options.to
+                if (!rootGetters.isRemoved(targetId)) {
+                  acc[type] = options
+                }
+              } else {
+                const targetId = options
+                if (!rootGetters.isRemoved(targetId)) {
+                  acc[type] = options
+                }
               }
-            } else {
-              const targetId = options
-              if (!rootGetters.isRemoved(targetId)) {
-                acc[type] = options
-              }
-            }
-            return acc
-          },
-          {}
-        )
+              return acc
+            },
+            {}
+          )
       ]
     })
     .reduce((acc, [key, value]) => {
@@ -75,16 +75,16 @@ function transitionSummariesFrom (_transitions, getters, _rootState, rootGetters
 function nameFromAndTo (rootGetters) {
   return function nameFromAndTo (edges) {
     return edges
-    .map(desc => {
-      const from = findState(desc.from)
-      const to = findState(desc.to)
-      return {
-        ...desc,
-        // Enrich with names obtained from root state
-        fromName: from ? from.name : 'undefined',
-        toName: to ? to.name : 'undefined'
-      }
-    })
+      .map(desc => {
+        const from = findState(desc.from)
+        const to = findState(desc.to)
+        return {
+          ...desc,
+          // Enrich with names obtained from root state
+          fromName: from ? from.name : 'undefined',
+          toName: to ? to.name : 'undefined'
+        }
+      })
   }
 
   function findState (id) {
