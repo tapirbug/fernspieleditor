@@ -7,7 +7,7 @@ import { toStr, toFiniteFloat, toBool } from '../../../util/conv.js'
 import { cleanIfPresent } from '../../../util/sanitize.js'
 import getters from './states-getters.js'
 import Vue from 'vue'
-import defaultState from '../../fixtures/default-state.js'
+import { defaultState } from '../../../phonebook/phonebook-states'
 
 export default {
   [ADD_STATE] (states, { id, state: newState }) {

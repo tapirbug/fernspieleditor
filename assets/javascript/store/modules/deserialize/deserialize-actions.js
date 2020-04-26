@@ -4,7 +4,7 @@ import {
 import {
   LOAD_FILE
 } from '../../action-types.js'
-import defaultState from '../../fixtures/default-state.js'
+import { defaultState } from '../../../phonebook/phonebook-states'
 import YAML from 'yaml'
 import { mapValues } from '../../../util/map-obj.js'
 import uuid from '../../../util/random/uuid.js'
