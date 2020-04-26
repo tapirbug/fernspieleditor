@@ -6,7 +6,7 @@ import remote from './remote/index.js'
 import serialize from './serialize/index.js'
 import sounds from './sounds/index.js'
 import states from './states/index.js'
-import transitions from './transitions/index.js'
+import transitions from './transitions/index'
 import undo from './undo/index.js'
 
 /**

@@ -1,5 +1,5 @@
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 import { ADD_TRANSITION } from '../store/mutation-types.js'
 
 /**
@@ -29,7 +29,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['states'])
+    ...mapGetters(['states'])
   },
   methods: {
     ...mapMutations([ADD_TRANSITION]),
@@ -58,7 +58,7 @@ export default {
 
           // Dialed number
           return {
-            [num]: this.transitionTargetId
+            pattern: ""+num
           }
         } else if (transitionType === 'timeout') {
           if (!this.timeoutSeconds) {
@@ -67,12 +67,11 @@ export default {
 
           // Timeout
           return {
-            to: this.transitionTargetId,
             after: parseFloat(this.timeoutSeconds)
           }
         } else {
           // pick up or hang up
-          return { to: this.transitionTargetId }
+          return {}
         }
       })()
 
@@ -81,8 +80,10 @@ export default {
       }
 
       return {
-        transitionType,
+        type: transitionType,
         from: this.from,
+        to: this.transitionTargetId,
+        removed: false,
         ...config
       }
     },

@@ -25,8 +25,7 @@ export default {
       'focusedState',
       'hasFocusedState',
       'isAny',
-      'transitionSummariesFrom',
-      'transitionSummariesTo',
+      'transitionSummariesWith',
       'initial',
       'isInitial'
     ]),
@@ -190,39 +189,20 @@ export default {
 
       <h3>Transitions</h3>
       <article
-        v-for="transition in transitionSummariesFrom(focusedStateId)"
-        :key="JSON.stringify(transition)"
+        v-for="transition in transitionSummariesWith(focusedStateId)"
+        :key="`from-or-to-${JSON.stringify(transition)}`"
         class="card"
       >
         <header>
           <div class="inspector-transition-summary flex two">
             <div class="inspector-transition-summary-text">
               <span v-text="transition.when"></span>
-              to
-              <span v-text="transition.toName"></span>
-            </div>
-            <div class="inspector-modify-transition-btns">
-              <button
-                class="dangerous"
-                @click="removeTransition(transition)"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </header>
-      </article>
-      <article
-        v-for="transition in transitionSummariesTo(focusedStateId)"
-        :key="JSON.stringify(transition)"
-        class="card"
-      >
-        <header>
-          <div class="inspector-transition-summary flex two">
-            <div class="inspector-transition-summary-text">
-              <span v-text="transition.when"></span>
-              from
-              <span v-text="transition.fromName"></span>
+              <span v-if="transition.from === focusedStateId">
+                to <span v-text="transition.toName"></span>
+              </span>
+              <span v-if="transition.to === focusedStateId">
+                from <span v-text="transition.fromName"></span>
+              </span>
             </div>
             <div class="inspector-modify-transition-btns">
               <button

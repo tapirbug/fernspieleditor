@@ -17,7 +17,7 @@ export default {
 
     commit(START_UNDO)
     const { steps } = getters.undoStep
-    steps.forEach(({ mutation, undoPayload }) => commit(mutation, undoPayload, { root: true }))
+    steps.forEach(({ undoMutation, undoPayload }) => commit(undoMutation, undoPayload, { root: true }))
     commit(FINISH_UNDO)
   },
   [REDO] ({ commit, getters }) {
@@ -27,7 +27,7 @@ export default {
 
     commit(START_REDO)
     const { steps } = getters.redoStep
-    steps.forEach(({ mutation, redoPayload }) => commit(mutation, redoPayload, { root: true }))
+    steps.forEach(({ redoMutation, redoPayload }) => commit(redoMutation, redoPayload, { root: true }))
     commit(FINISH_REDO)
   }
 }

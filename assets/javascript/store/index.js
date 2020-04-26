@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import defaultVueState from './fixtures/startup-phonebook.js'
+import defaultVueState from '../phonebook/phonebook-startup'
 import createLogger from 'vuex/dist/logger'
 import modules from './modules/index.js'
 
@@ -13,6 +13,8 @@ function createStore () {
   return new Vuex.Store({
     // `states` and other store modules
     modules: modules(state),
-    plugins: [createLogger()]
+    plugins: [
+      createLogger()
+    ]
   })
 }

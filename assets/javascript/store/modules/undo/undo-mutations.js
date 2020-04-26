@@ -7,7 +7,9 @@ import {
   UPDATE_STATE,
   SET_PHONEBOOK_TITLE,
   MAKE_INITIAL_STATE,
-  REMOVE_STATE
+  REMOVE_STATE,
+  ADD_TRANSITION,
+  REMOVE_TRANSITION
 } from '../../mutation-types.js'
 
 export default {
@@ -101,6 +103,28 @@ export default {
         redoPayload: payload
       }
     )
+  },
+  [ADD_TRANSITION] (undo, payload) {
+    push(
+      undo,
+      'Add transition',
+      {
+        redoMutation: ADD_TRANSITION,
+        undoMutation: REMOVE_TRANSITION,
+        payload
+      }
+    )
+  },
+  [REMOVE_TRANSITION] (undo, payload) {
+    push(
+      undo,
+      'Remove transition',
+      {
+        redoMutation: REMOVE_TRANSITION,
+        undoMutation: ADD_TRANSITION,
+        payload
+      }
+    )
   }
 }
 
@@ -109,7 +133,18 @@ function push (undo, title, step) {
     return
   }
 
-  const steps = typeof step.length === 'undefined' ? [ step ] : step
+  let steps = typeof step.length === 'undefined' ? [ step ] : step
+  steps = steps.map(step => {
+    const normalizedStep = {}
+    normalizedStep.redoMutation = step.redoMutation || step.mutation
+    normalizedStep.undoMutation = step.undoMutation || step.mutation
+    normalizedStep.redoPayload = step.redoPayload || step.payload || {}
+    normalizedStep.undoPayload = step.undoPayload || step.payload || {}
+    if (typeof normalizedStep.redoMutation === 'undefined' || typeof normalizedStep.undoMutation === 'undefined') {
+      throw new Error(`Mutation is missing: ${JSON.stringify(step)}`)
+    }
+    return normalizedStep
+  })
 
   // already undid, now doing something else, cannot redo anymore,
   // delete these redo steps

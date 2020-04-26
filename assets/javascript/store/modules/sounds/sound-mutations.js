@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import defaultSound from '../../fixtures/default-sound.js'
+import { defaultSound } from '../../../phonebook/phonebook-sound'
 import uuid from '../../../util/random/uuid.js'
 import { toStr, toBool, toFiniteFloat } from '../../../util/conv.js'
 import {
