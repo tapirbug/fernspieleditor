@@ -115,19 +115,19 @@ export default random
 /**
  * Picks a random element from a non-empty array.
  *
- * @param {Array} array pool to choose from
+ * @param array pool to choose from
  */
-function randomElement (array) {
+function randomElement<T> (array: T[]): T {
   return array[(Math.random() * array.length) | 0]
 }
 
 /**
  * Returns a new string with the first character made upper-case.
  *
- * @param {string} word word or sentence to make uppercase at the first char
+ * @param word word or sentence to make uppercase at the first char
  */
-function ucFirst (word) {
-  return (typeof word !== 'string' || word.length === 0)
+function ucFirst (word: string): string {
+  return word.length === 0
     ? ''
     : word.charAt(0).toUpperCase() + word.slice(1)
 }
@@ -138,9 +138,9 @@ function ucFirst (word) {
  * That is, most words will be made upper-case, except some
  * short particles such as "a" or "the".
  *
- * @param {*} sentence piece of text to convert to title case
+ * @param sentence piece of text to convert to title case
  */
-function titleCase (sentence) {
+function titleCase (sentence: string): string {
   const words = sentence.split(/\s+/)
   const lastWordIndex = sentence.length - 1
   return words.map(
@@ -155,17 +155,17 @@ function titleCase (sentence) {
 /**
  * Words that should not be made lower-case for title case.
  */
-const titleCaseParticles = [ 'a', 'an', 'in', 'the', 'for', 'of' ]
+const titleCaseParticles = ['a', 'an', 'in', 'the', 'for', 'of']
 
 /**
  * Checks if a word would be capitalized if it occurred in
  * a title.
  *
- * @param {string} word word to check if would be capitalized in a title
- * @param {boolean} isFirstWord if `true`, the word is the first word in a potential title
- * @param {boolean} isLastWord if `true`, the word is the last word in a potential title
+ * @param word word to check if would be capitalized in a title
+ * @param isFirstWord if `true`, the word is the first word in a potential title
+ * @param isLastWord if `true`, the word is the last word in a potential title
  */
-function isTitleCaseCapitalized (word, isFirstWord, isLastWord) {
+function isTitleCaseCapitalized (word: string, isFirstWord: boolean, isLastWord: boolean): boolean {
   return isFirstWord ||
     isLastWord ||
     !titleCaseParticles.includes(word)

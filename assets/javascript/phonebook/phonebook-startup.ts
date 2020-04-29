@@ -1,6 +1,6 @@
 import { Phonebook } from './phonebook'
 import uuid from '../util/random/uuid'
-import random from '../util/random/text.js'
+import random from '../util/random/text'
 import { defaultSound, PhonebookSounds } from './phonebook-sound'
 import { PhonebookInfo } from './phonebook-info'
 import { PhonebookStates } from './phonebook-states'
