@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { defaultSound } from '../../../phonebook/phonebook-sound'
-import uuid from '../../../util/random/uuid.js'
+import uuid from '../../../util/random/uuid'
 import { toStr, toBool, toFiniteFloat } from '../../../util/conv.js'
 import {
   ADD_SOUND,

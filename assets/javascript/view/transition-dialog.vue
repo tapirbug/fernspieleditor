@@ -58,7 +58,7 @@ export default {
 
           // Dialed number
           return {
-            pattern: ""+num
+            pattern: '' + num
           }
         } else if (transitionType === 'timeout') {
           if (!this.timeoutSeconds) {

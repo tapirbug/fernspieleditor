@@ -7,7 +7,7 @@ import {
 import { defaultState } from '../../../phonebook/phonebook-states'
 import YAML from 'yaml'
 import { mapValues } from '../../../util/map-obj.js'
-import uuid from '../../../util/random/uuid.js'
+import uuid from '../../../util/random/uuid'
 import { defaultSound } from '../../../phonebook/phonebook-sound'
 
 export default {

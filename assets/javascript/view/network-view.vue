@@ -9,7 +9,7 @@ import {
 import { translate } from '../util/geom/transform.js'
 import { intersectRayWithEllipse, connectEllipses } from '../util/geom/ellipses.js'
 import Arrow from './arrow.vue'
-import uuid from '../util/random/uuid.js'
+import uuid from '../util/random/uuid'
 import { mapValues } from '../util/map-obj.js'
 
 /**
