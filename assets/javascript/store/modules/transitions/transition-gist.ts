@@ -1,4 +1,4 @@
-import { TransitionSummary, TransitionType } from './transition'
+import { TransitionType, Transition } from './transition'
 
 /**
  * Short summary of the transition condition, e.g. "Type 4".
@@ -6,7 +6,7 @@ import { TransitionSummary, TransitionType } from './transition'
  * @param summary transition to summarize
  * @return the short summary
  */
-export function gistWhen (summary: TransitionSummary): string {
+export function gistWhen (summary: Transition): string {
   switch (summary.type) {
     case TransitionType.Dial:
       return `Dial ${summary.pattern}`

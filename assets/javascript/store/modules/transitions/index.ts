@@ -1,7 +1,9 @@
+import actions from './transitions-actions'
 import getters from './transitions-getters'
 import mutations from './transitions-mutations'
 import { deserialize } from './transitions-deserialize'
 import { PhonebookTransitions } from '../../../phonebook/phonebook-transitions'
+import { TransitionModuleState } from './transitions-module-state'
 
 /**
  * Initialize the transitions `vuex` module with the given initial data.
@@ -10,10 +12,12 @@ import { PhonebookTransitions } from '../../../phonebook/phonebook-transitions'
  * @returns `vuex` module for transitions
  */
 export default function createTransitionsModule (transitions: PhonebookTransitions): object {
+  const state: TransitionModuleState = {
+    transitions: deserialize(transitions)
+  }
   return {
-    state: {
-      transitions: deserialize(transitions)
-    },
+    actions,
+    state,
     getters,
     mutations
   }

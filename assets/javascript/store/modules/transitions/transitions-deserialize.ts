@@ -1,11 +1,13 @@
 import {
-  TransitionSummary,
   TransitionType,
-  DialSummary,
-  EndSummary,
-  HangUpSummary,
-  PickUpSummary,
-  TimeoutSummary
+  Dial,
+  End,
+  HangUp,
+  PickUp,
+  Timeout,
+  TransitionState,
+  TransitionSpec,
+  createTransition
 } from './transition'
 import {
   PhonebookTransitions,
@@ -14,7 +16,7 @@ import {
   PhonebookTimeoutOptions
 } from '../../../phonebook/phonebook-transitions'
 
-export function deserialize (transitions: PhonebookTransitions): TransitionSummary[] {
+export function deserialize (transitions: PhonebookTransitions): TransitionState[] {
   const summaries = []
   for (const [sourceState, transitionsForSource] of Object.entries(transitions)) {
     summaries.push(
@@ -24,10 +26,10 @@ export function deserialize (transitions: PhonebookTransitions): TransitionSumma
   return summaries
 }
 
-function deserializeTransitionsFrom (sourceState: string, transitionsForSource: PhonebookTransitionsForSourceState): TransitionSummary[] {
-  const summaries = []
+function deserializeTransitionsFrom (sourceState: string, transitionsForSource: PhonebookTransitionsForSourceState): TransitionState[] {
+  const transitions : TransitionSpec[] = []
   if (typeof transitionsForSource.dial !== 'undefined') {
-    summaries.push(
+    transitions.push(
       ...deserializeDialSummaries(
         sourceState,
         transitionsForSource.dial
@@ -35,75 +37,70 @@ function deserializeTransitionsFrom (sourceState: string, transitionsForSource: 
     )
   }
   if (typeof transitionsForSource.timeout !== 'undefined') {
-    summaries.push(
+    transitions.push(
       deserializeTimeout(sourceState, transitionsForSource.timeout)
     )
   }
   if (typeof transitionsForSource.end !== 'undefined') {
-    summaries.push(
+    transitions.push(
       deserializeEndSummary(sourceState, transitionsForSource.end)
     )
   }
   if (typeof transitionsForSource.hang_up !== 'undefined') {
-    summaries.push(
+    transitions.push(
       deserializeHangUpSummary(sourceState, transitionsForSource.hang_up)
     )
   }
   if (typeof transitionsForSource.pick_up !== 'undefined') {
-    summaries.push(
+    transitions.push(
       deserializePickUpSummary(sourceState, transitionsForSource.pick_up)
     )
   }
-  return summaries
+  return transitions.map(createTransition)
 }
 
-function deserializeDialSummaries (from: string, options: PhonebookDialPatterns): DialSummary[] {
+function deserializeDialSummaries (from: string, options: PhonebookDialPatterns): Dial[] {
   const summaries = []
   for (const [pattern, to] of Object.entries(options)) {
-    const summary: DialSummary = {
+    const dial: Dial = {
       type: TransitionType.Dial,
-      removed: false,
       from,
       to,
       pattern
     }
-    summaries.push(summary)
+    summaries.push(dial)
   }
   return summaries
 }
 
-function deserializeTimeout (from: string, { to, after }: PhonebookTimeoutOptions): TimeoutSummary {
+function deserializeTimeout (from: string, { to, after }: PhonebookTimeoutOptions): Timeout {
   return {
     type: TransitionType.Timeout,
-    removed: false,
     from,
     to,
     after
   }
 }
 
-function deserializeEndSummary (from: string, to: string): EndSummary {
+function deserializeEndSummary (from: string, to: string): End {
   return {
     type: TransitionType.End,
-    removed: false,
     from,
     to
   }
 }
 
-function deserializeHangUpSummary (from: string, to: string): HangUpSummary {
+function deserializeHangUpSummary (from: string, to: string): HangUp {
   return {
     type: TransitionType.HangUp,
-    removed: false,
     from,
     to
   }
 }
 
-function deserializePickUpSummary (from: string, to: string): PickUpSummary {
+function deserializePickUpSummary (from: string, to: string): PickUp {
   return {
     type: TransitionType.PickUp,
-    removed: false,
     from,
     to
   }

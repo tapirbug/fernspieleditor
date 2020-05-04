@@ -1,7 +1,7 @@
-import actions from './undo-actions.js'
-import getters from './undo-getters.js'
-import mutations from './undo-mutations.js'
-import state from './undo-state.js'
+import actions from './undo-actions'
+import { getters } from './undo-getters'
+import mutations from './undo-mutations'
+import { initialState } from './undo-state'
 
 /**
  * Initialize the module that manages the undo/redo stack.
@@ -14,6 +14,6 @@ export default function createUndoModule () {
     actions,
     getters,
     mutations,
-    state
+    state: initialState()
   }
 }

@@ -3,14 +3,9 @@ import {
   FINISH_UNDO,
   START_REDO,
   FINISH_REDO,
-  MOVE_STATE,
-  UPDATE_STATE,
-  SET_PHONEBOOK_TITLE,
-  MAKE_INITIAL_STATE,
-  REMOVE_STATE,
-  ADD_TRANSITION,
-  REMOVE_TRANSITION
+  DO
 } from '../../mutation-types.js'
+import { Transaction } from './undo-transaction.js'
 
 export default {
   [START_UNDO] (undo) {
@@ -27,7 +22,21 @@ export default {
     undo.undoing = false
     undo.nextUndoIdx = undo.nextUndoIdx + 1
   },
-  [MOVE_STATE] (undo, redoPayload) {
+  [DO] (undo, transaction: Transaction) {
+    if (undo.undoing) {
+      return
+    }
+  
+    // first delete all redo steps, if any
+    undo.stack.length = undo.nextUndoIdx + 1
+
+    // then add the new transaction to the end
+    undo.stack.push(transaction)
+  
+    // next step to undo is the last one, which we just added
+    undo.nextUndoIdx = undo.stack.length - 1
+  }
+  /*[MOVE_STATE] (undo, redoPayload) {
     const { from, to, ...rest } = redoPayload
     const undoPayload = {
       ...rest,
@@ -120,40 +129,11 @@ export default {
       undo,
       'Remove transition',
       {
-        redoMutation: REMOVE_TRANSITION,
+        mutation: REMOVE_TRANSITION,
         undoMutation: ADD_TRANSITION,
         payload
       }
     )
-  }
+  },*/
 }
 
-function push (undo, title, step) {
-  if (undo.undoing) {
-    return
-  }
-
-  let steps = typeof step.length === 'undefined' ? [ step ] : step
-  steps = steps.map(step => {
-    const normalizedStep = {}
-    normalizedStep.redoMutation = step.redoMutation || step.mutation
-    normalizedStep.undoMutation = step.undoMutation || step.mutation
-    normalizedStep.redoPayload = step.redoPayload || step.payload || {}
-    normalizedStep.undoPayload = step.undoPayload || step.payload || {}
-    if (typeof normalizedStep.redoMutation === 'undefined' || typeof normalizedStep.undoMutation === 'undefined') {
-      throw new Error(`Mutation is missing: ${JSON.stringify(step)}`)
-    }
-    return normalizedStep
-  })
-
-  // already undid, now doing something else, cannot redo anymore,
-  // delete these redo steps
-  undo.stack.length = undo.nextUndoIdx + 1
-  undo.stack.push({
-    title,
-    steps
-  })
-
-  // next step to undo is the last one
-  undo.nextUndoIdx = undo.stack.length - 1
-}

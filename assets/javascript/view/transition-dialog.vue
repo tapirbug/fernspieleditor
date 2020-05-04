@@ -1,105 +1,17 @@
 <script>
-import { mapMutations, mapGetters } from 'vuex'
-import { ADD_TRANSITION } from '../store/mutation-types.js'
+import { mapActions, mapGetters } from 'vuex'
+import { ADD_TRANSITION } from '../store/action-types.js'
+import { data, computed, methods, props } from './transition-dialog-logic'
 
 /**
  * A floating dialog over a state to add transitions.
  */
 export default {
   name: 'TransitionDialog',
-  props: {
-    from: {
-      type: String,
-      required: true
-    }
-  },
-  data () {
-    return {
-      done: false,
-      transitionTargetId: null,
-      transitionType: null,
-      dialNumber: null,
-      timeoutSeconds: null,
-      allTransitionTypes: {
-        dial: 'Dial',
-        timeout: 'Timeout',
-        pick_up: 'Pick up',
-        hang_up: 'Hang up'
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['states'])
-  },
-  methods: {
-    ...mapMutations([ADD_TRANSITION]),
-    selectTransitionTarget (id) {
-      this.transitionTargetId = id
-    },
-    config () {
-      const transitionType = this.transitionType
-      if (!transitionType) {
-        return
-      }
-
-      if (!this.transitionTargetId) {
-        return
-      }
-
-      const config = (() => {
-        if (transitionType === 'dial') {
-          if (this.dialNumber === null) {
-            return
-          }
-          const num = this.dialNumber | 0
-          if (num < 0 || num > 9) {
-            return
-          }
-
-          // Dialed number
-          return {
-            pattern: '' + num
-          }
-        } else if (transitionType === 'timeout') {
-          if (!this.timeoutSeconds) {
-            return
-          }
-
-          // Timeout
-          return {
-            after: parseFloat(this.timeoutSeconds)
-          }
-        } else {
-          // pick up or hang up
-          return {}
-        }
-      })()
-
-      if (!config) {
-        return
-      }
-
-      return {
-        type: transitionType,
-        from: this.from,
-        to: this.transitionTargetId,
-        removed: false,
-        ...config
-      }
-    },
-    updateTransitionIfComplete (otherwiseFocusSel) {
-      this.$nextTick(() => {
-        const config = this.config()
-
-        if (!config) {
-          this.$el.querySelector(otherwiseFocusSel).click()
-        } else {
-          this[ADD_TRANSITION](config)
-          this.$emit('addtransitiondone', config)
-        }
-      })
-    }
-  }
+  props,
+  data,
+  computed,
+  methods
 }
 </script>
 

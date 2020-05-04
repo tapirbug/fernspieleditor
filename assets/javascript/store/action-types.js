@@ -14,3 +14,7 @@ export const DEPLOY = 'DEPLOY'
 
 /// Typing or something but not committing right away (debounced)
 export const CONTINUE_UPDATE_STATE = 'CONTINUE_UPDATE_STATE'
+
+// Add/remove transitions
+export const ADD_TRANSITION = 'ADD_TRANSITION'
+export const REMOVE_TRANSITION = 'REMOVE_TRANSITION'

@@ -1,63 +1,63 @@
 import {
-  TransitionSummary,
-  DialSummary,
-  TimeoutSummary,
-  PickUpSummary,
-  HangUpSummary,
-  EndSummary,
-  TransitionType
+  Dial,
+  Timeout,
+  PickUp,
+  HangUp,
+  End,
+  TransitionType,
+  Transition
 } from './transition'
 import {
   PhonebookTransitions,
   PhonebookTransitionsForSourceState
 } from '../../../phonebook/phonebook-transitions'
 
-export function serialize (summaries: TransitionSummary[]): PhonebookTransitions {
-  const transitions = {}
-  for (const summary of summaries) {
-    serializeSummary(summary, transitions)
+export function serialize (transitionsFromState: Transition[]): PhonebookTransitions {
+  const phonebookTransitions = {}
+  for (const transition of transitionsFromState) {
+    serializeState(transition, phonebookTransitions)
   }
-  return transitions
+  return phonebookTransitions
 }
 
-function serializeSummary (summary: TransitionSummary, transitionsPerSource: PhonebookTransitions): void {
-  if (!summary.removed) {
+function serializeState (state: Transition, transitionsPerSource: PhonebookTransitions): void {
+  if (!state.removed) {
     const transitions: PhonebookTransitionsForSourceState =
-      typeof transitionsPerSource[summary.from] === 'undefined'
+      typeof transitionsPerSource[state.from] === 'undefined'
       // start with empty transition map for source state
-        ? (transitionsPerSource[summary.from] = {})
+        ? (transitionsPerSource[state.from] = {})
       // already have one transition, continue
-        : transitionsPerSource[summary.from]
+        : transitionsPerSource[state.from]
 
     // then add transitions to the map
-    switch (summary.type) {
+    switch (state.type) {
       case TransitionType.Dial:
-        serializeDial(summary, transitions)
+        serializeDial(state, transitions)
         break
 
       case TransitionType.Timeout:
-        serializeTimeout(summary, transitions)
+        serializeTimeout(state, transitions)
         break
 
       case TransitionType.PickUp:
-        serializePickUp(summary, transitions)
+        serializePickUp(state, transitions)
         break
 
       case TransitionType.HangUp:
-        serializeHangUp(summary, transitions)
+        serializeHangUp(state, transitions)
         break
 
       case TransitionType.End:
-        serializeEnd(summary, transitions)
+        serializeEnd(state, transitions)
         break
 
       default:
-        throw new Error(`unhandled type: ${JSON.stringify(summary)}`)
+        throw new Error(`unhandled type: ${JSON.stringify(state)}`)
     }
   }
 }
 
-function serializeDial (summary: DialSummary, transitions: PhonebookTransitionsForSourceState): void {
+function serializeDial (summary: Dial, transitions: PhonebookTransitionsForSourceState): void {
   if (typeof transitions.dial === 'undefined') {
     transitions.dial = {}
   }
@@ -76,7 +76,7 @@ function serializeDial (summary: DialSummary, transitions: PhonebookTransitionsF
   }
 }
 
-function serializeTimeout (summary: TimeoutSummary, transitions: PhonebookTransitionsForSourceState): void {
+function serializeTimeout (summary: Timeout, transitions: PhonebookTransitionsForSourceState): void {
   if (typeof transitions.timeout !== 'undefined') {
     throw new Error(
       'Encountered more than one timeout transition, ' +
@@ -91,7 +91,7 @@ function serializeTimeout (summary: TimeoutSummary, transitions: PhonebookTransi
   }
 }
 
-function serializePickUp (summary: PickUpSummary, transitions: PhonebookTransitionsForSourceState): void {
+function serializePickUp (summary: PickUp, transitions: PhonebookTransitionsForSourceState): void {
   if (typeof transitions.pick_up !== 'undefined') {
     throw new Error(
       'Encountered more than one pick up transition, ' +
@@ -102,7 +102,7 @@ function serializePickUp (summary: PickUpSummary, transitions: PhonebookTransiti
   transitions.pick_up = summary.to
 }
 
-function serializeHangUp (summary: HangUpSummary, transitions: PhonebookTransitionsForSourceState): void {
+function serializeHangUp (summary: HangUp, transitions: PhonebookTransitionsForSourceState): void {
   if (typeof transitions.hang_up !== 'undefined') {
     throw new Error(
       'Encountered more than one hang up transition, ' +
@@ -113,7 +113,7 @@ function serializeHangUp (summary: HangUpSummary, transitions: PhonebookTransiti
   transitions.hang_up = summary.to
 }
 
-function serializeEnd (summary: EndSummary, transitions: PhonebookTransitionsForSourceState): void {
+function serializeEnd (summary: End, transitions: PhonebookTransitionsForSourceState): void {
   if (typeof transitions.end !== 'undefined') {
     throw new Error(
       'Encountered more than one state end transition, ' +

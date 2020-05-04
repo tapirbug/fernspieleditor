@@ -2,74 +2,74 @@ import {
   serialize
 } from '../../../../../assets/javascript/store/modules/transitions/transitions-serialize'
 import {
-  TransitionSummary,
   TransitionType,
-  PickUpSummary,
-  HangUpSummary,
-  EndSummary,
-  DialSummary,
-  TimeoutSummary
+  PickUp,
+  HangUp,
+  End,
+  Dial,
+  Timeout,
+  Transition
 } from '../../../../../assets/javascript/store/modules/transitions/transition'
 
 describe('serialize transition summaries', () => {
-  const pickUpActive: PickUpSummary = {
+  const pickUpActive: PickUp = {
     type: TransitionType.PickUp,
     from: 'A',
     to: 'B',
     removed: false
   }
-  const pickUpRemoved: PickUpSummary = {
+  const pickUpRemoved: PickUp = {
     type: TransitionType.PickUp,
     from: 'A',
     to: 'B',
     removed: true
   }
-  const hangUpActive: HangUpSummary = {
+  const hangUpActive: HangUp = {
     type: TransitionType.HangUp,
     from: 'C',
     to: 'D',
     removed: false
   }
-  const hangUpRemoved: HangUpSummary = {
+  const hangUpRemoved: HangUp = {
     type: TransitionType.HangUp,
     from: 'C',
     to: 'D',
     removed: true
   }
-  const endActive: EndSummary = {
+  const endActive: End = {
     type: TransitionType.End,
     from: 'K',
     to: 'L',
     removed: false
   }
-  const endRemoved: EndSummary = {
+  const endRemoved: End = {
     type: TransitionType.End,
     from: 'K',
     to: 'L',
     removed: true
   }
-  const dial0: DialSummary = {
+  const dial0: Dial = {
     type: TransitionType.Dial,
     from: 'Here',
     to: 'There',
     pattern: '0',
     removed: false
   }
-  const dial5Active: DialSummary = {
+  const dial5Active: Dial = {
     type: TransitionType.Dial,
     from: 'Here',
     to: 'There',
     pattern: '5',
     removed: false
   }
-  const dial5Removed: DialSummary = {
+  const dial5Removed: Dial = {
     type: TransitionType.Dial,
     from: 'Here',
     to: 'There',
     pattern: '5',
     removed: true
   }
-  const timeout: TimeoutSummary = {
+  const timeout: Timeout = {
     type: TransitionType.Timeout,
     after: 5.1,
     from: 'Hereio',
@@ -78,10 +78,10 @@ describe('serialize transition summaries', () => {
   }
 
   describe('serialize in isolation', () => {
-    const pickUpSummaries: TransitionSummary[] = [pickUpActive, pickUpRemoved]
-    const hangUpSummaries: TransitionSummary[] = [hangUpActive, hangUpRemoved]
-    const endSummaries: TransitionSummary[] = [endActive, endRemoved]
-    const dialSummaries: TransitionSummary[] = [dial0, dial5Active, dial5Removed]
+    const pickUpSummaries: Transition[] = [pickUpActive, pickUpRemoved]
+    const hangUpSummaries: Transition[] = [hangUpActive, hangUpRemoved]
+    const endSummaries: Transition[] = [endActive, endRemoved]
+    const dialSummaries: Transition[] = [dial0, dial5Active, dial5Removed]
 
     test('pick up', () => {
       const serialized = serialize(pickUpSummaries)

@@ -1,105 +1,16 @@
-<script>
-import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
-import { REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE } from '../store/mutation-types.js'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+<script lang="ts">
 import TransitionDialog from './transition-dialog.vue'
 import SoundPicker from './sound-picker.vue'
-
-/**
- * Editor for the currently focused element.
- */
+import { data, computed, methods } from './inspector-logic'
 export default {
   name: 'Inspector',
   components: {
     'transition-dialog': TransitionDialog,
     'sound-picker': SoundPicker
   },
-  data () {
-    return {
-      addingTransition: false
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'focusedStateId',
-      'focusedState',
-      'hasFocusedState',
-      'isAny',
-      'transitionSummariesWith',
-      'initial',
-      'isInitial'
-    ]),
-    nothingFocused () {
-      return !this.hasFocusedState
-    }
-  },
-  methods: {
-    ...mapMutations([REMOVE_TRANSITION, REMOVE_STATE, MAKE_INITIAL_STATE]),
-    ...mapActions([CONTINUE_UPDATE_STATE]),
-    change (evtOrNewValue, id, prop) {
-      let value = (() => {
-        if (typeof evtOrNewValue !== 'object') {
-          // Scalar has been passed directly
-          return evtOrNewValue
-        } else if (typeof evtOrNewValue.target !== 'undefined') {
-          // Was a real event, pluck the data out of it
-          const target = evtOrNewValue.target
-          if (target.type === 'checkbox') {
-            // A checkbox or similar
-            return !!target.checked
-          } else {
-            return target.value
-          }
-        } else {
-          // Some other object, set as the new value directly
-          return evtOrNewValue
-        }
-      })()
-
-      if (prop === 'ring') {
-        value = parseFloat(value)
-      }
-
-      const prevValue = this.focusedState[prop]
-
-      if (value !== prevValue) {
-        this[CONTINUE_UPDATE_STATE]({
-          id,
-          change: {
-            [prop]: value
-          },
-          changeBack: {
-            [prop]: prevValue
-          }
-        })
-      }
-    },
-    removeTransition (summary) {
-      this[REMOVE_TRANSITION](summary)
-    },
-    removeState () {
-      this[REMOVE_STATE]({
-        id: this.focusedStateId,
-        wasInitial: this.isInitial(this.focusedStateId)
-      })
-    },
-    toggleActiveClass (when) {
-      return {
-        'is-active': !!when,
-        'is-inactive': !when
-      }
-    },
-    setInitial (evt) {
-      this[MAKE_INITIAL_STATE](
-        {
-          change: evt.target.checked
-            ? this.focusedStateId
-            : null,
-          changeBack: this.initial
-        }
-      )
-    }
-  }
+  data,
+  computed,
+  methods
 }
 </script>
 
@@ -190,7 +101,7 @@ export default {
       <h3>Transitions</h3>
       <article
         v-for="transition in transitionSummariesWith(focusedStateId)"
-        :key="`from-or-to-${JSON.stringify(transition)}`"
+        :key="`from-or-to-${transition.id}`"
         class="card"
       >
         <header>
@@ -207,7 +118,7 @@ export default {
             <div class="inspector-modify-transition-btns">
               <button
                 class="dangerous"
-                @click="removeTransition(transition)"
+                @click="removeTransition(transition.id)"
               >
                 Delete
               </button>

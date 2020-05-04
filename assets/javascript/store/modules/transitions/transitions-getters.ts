@@ -1,6 +1,6 @@
-import { TransitionsState } from './transitions-state'
+import { TransitionModuleState } from './transitions-module-state'
 import { gistWhen } from './transition-gist'
-import { TransitionSummary } from './transition'
+import { TransitionSummary, TransitionState, summarize } from './transition'
 import { PhonebookTransitions } from 'assets/javascript/phonebook/phonebook-transitions'
 import { serialize } from './transitions-serialize'
 
@@ -27,7 +27,7 @@ type RootGetters = StatesGetters & EditorGetters
  * Transition edges without the extra metadata in `fromName`, `toName` and
  * `when`.
  */
-function activeTransitions (state: TransitionsState, _getters, _rootState, rootGetters: RootGetters): TransitionSummary[] {
+function activeTransitions (state: TransitionModuleState, _getters, _rootState, rootGetters: RootGetters): TransitionState[] {
   return state.transitions
     // Hide the removed transitions, and those where the originating or traget state is removed.
     .filter(summary => !(summary.removed ||
@@ -49,16 +49,7 @@ function summaries (_state, getters, _rootState, rootGetters: RootGetters): Tran
 
   return getters.activeTransitions
     // Fill in optional metadata for convenience of UI code
-    .map(
-      summary => {
-        return {
-          ...summary,
-          fromName: name(summary.from),
-          toName: name(summary.to),
-          when: gistWhen(summary)
-        }
-      }
-    )
+    .map(state => summarize(state, name))
 
   function name (ofStateId: string): string {
     const cachedName = names.get(ofStateId)

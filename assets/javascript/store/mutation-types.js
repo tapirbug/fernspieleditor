@@ -4,6 +4,8 @@ export const REPLACE_PHONEBOOK = 'REPLACE_PHONEBOOK'
 // Undo/redo
 export const START_UNDO = 'START_UNDO'
 export const FINISH_UNDO = 'FINISH_UNDO'
+export const DO = 'DO'
+export const DONE = 'DONE'
 export const START_REDO = 'START_REDO'
 export const CONTRIBUTE_UNDO = 'CONTRIBUTE_UNDO'
 export const FINISH_REDO = 'FINISH_REDO'
@@ -26,8 +28,9 @@ export const MOVE_STATE = 'MOVE_STATE'
 export const MAKE_INITIAL_STATE = 'MAKE_INITIAL_STATE'
 
 // Transitions
-export const ADD_TRANSITION = 'ADD_TRANSITION'
-export const REMOVE_TRANSITION = 'REMOVE_TRANSITION'
+export const PUSH_TRANSITION = 'PUSH_TRANSITION'
+export const SET_TRANSITION_REMOVED = 'SET_TRANSITION_REMOVED'
+export const SET_TRANSITION_REVIVED = 'SET_TRANSITION_REVIVED'
 
 // Sound mutations
 export const UPDATE_SOUND = 'UPDATE_SOUND'
