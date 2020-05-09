@@ -1,3 +1,5 @@
+import { Vec2D } from "../util/geom/vec2d";
+
 /**
  * fernspieleditor-specific additions to the phonebook format, e.g.
  * positions of state in the editor.
@@ -29,11 +31,6 @@ export interface PhonebookFernspieleditorStateExt {
 
 export interface PhonebookFernspieleditorStateNetworkExt {
   position: Vec2D
-}
-
-export interface Vec2D {
-  x: number
-  y: number
 }
 
 const enum FernspieleditorExtVersion {
