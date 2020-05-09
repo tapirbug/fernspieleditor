@@ -3,7 +3,8 @@
     "target": "es2017",
     "baseUrl": ".",
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true
   },
   "include": [
     "**/*.ts"
