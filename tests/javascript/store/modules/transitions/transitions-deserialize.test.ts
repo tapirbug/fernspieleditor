@@ -35,44 +35,60 @@ describe('deserialization of transitions in phonebooks', () => {
     const summaries = deserialize(phonebookTransitions)
 
     expect(summaries).toHaveLength(6)
-    expect(summaries).toContainEqual({
-      type: TransitionType.PickUp,
-      from: 'any',
-      to: 'State A',
-      removed: false
-    })
-    expect(summaries).toContainEqual({
-      type: TransitionType.HangUp,
-      from: 'any',
-      to: 'State B',
-      removed: false
-    })
-    expect(summaries).toContainEqual({
-      type: TransitionType.End,
-      from: 'any',
-      to: 'State C',
-      removed: false
-    })
-    expect(summaries).toContainEqual({
-      type: TransitionType.Timeout,
-      from: 'State B',
-      to: 'State C',
-      after: 60,
-      removed: false
-    })
-    expect(summaries).toContainEqual({
-      type: TransitionType.Timeout,
-      from: 'State C',
-      to: 'State C',
-      after: 1.5,
-      removed: false
-    })
-    expect(summaries).toContainEqual({
-      type: TransitionType.Timeout,
-      from: 'State A',
-      to: 'State A',
-      after: 5,
-      removed: false
-    })
+    expect(summaries).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining(
+          {
+            type: TransitionType.PickUp,
+            from: 'any',
+            to: 'State A',
+            removed: false
+          }
+        ),
+        expect.objectContaining(
+          {
+            type: TransitionType.HangUp,
+            from: 'any',
+            to: 'State B',
+            removed: false
+          }
+        ),
+        expect.objectContaining(
+          {
+            type: TransitionType.End,
+            from: 'any',
+            to: 'State C',
+            removed: false
+          }
+        ),
+        expect.objectContaining(
+          {
+            type: TransitionType.Timeout,
+            from: 'State B',
+            to: 'State C',
+            after: 60,
+            removed: false
+          }
+        ),
+        expect.objectContaining(
+          {
+            type: TransitionType.Timeout,
+            from: 'State C',
+            to: 'State C',
+            after: 1.5,
+            removed: false
+          }
+        ),
+        expect.objectContaining(
+          {
+            type: TransitionType.Timeout,
+            from: 'State A',
+            to: 'State A',
+            after: 5,
+            removed: false
+          }
+        )
+      ])
+    )
   })
 })

@@ -3,8 +3,10 @@ import { gistWhen } from './transition-gist'
 import { TransitionSummary, TransitionState, summarize } from './transition'
 import { PhonebookTransitions } from 'assets/javascript/phonebook/phonebook-transitions'
 import { serialize } from './transitions-serialize'
+import { StatesGetters } from '../states/states-getters'
+import { EditorGetters } from '../editor/editor-getters'
 
-export default {
+export const getters = {
   activeTransitions,
   summaries,
   transitionSummariesFrom,
@@ -13,21 +15,28 @@ export default {
   transitions
 }
 
-interface StatesGetters {
-  findState(stateId: string): {name: string}
+export interface TransitionGetters {
+  readonly activeTransitions: TransitionState[]
+  readonly summaries: TransitionSummary[]
+  transitionSummariesFrom(stateId: string): TransitionSummary[]
+  transitionSummariesTo(stateId: string): TransitionSummary[]
+  transitionSummariesWith(stateId: string): TransitionSummary[]
+  readonly transitions: PhonebookTransitions
 }
 
-interface EditorGetters {
-  isRemoved(stateId: string): boolean
-}
-
-type RootGetters = StatesGetters & EditorGetters
+/**
+ * Getters that are expected to be available on root for the getters to properly
+ * function.
+ * 
+ * Exported for tests only.
+ */
+export type TransitionRootGetters = StatesGetters & EditorGetters
 
 /**
  * Transition edges without the extra metadata in `fromName`, `toName` and
  * `when`.
  */
-function activeTransitions (state: TransitionModuleState, _getters, _rootState, rootGetters: RootGetters): TransitionState[] {
+function activeTransitions (state: TransitionModuleState, _getters, _rootState, rootGetters: TransitionRootGetters): TransitionState[] {
   return state.transitions
     // Hide the removed transitions, and those where the originating or traget state is removed.
     .filter(summary => !(summary.removed ||
@@ -44,7 +53,7 @@ function activeTransitions (state: TransitionModuleState, _getters, _rootState, 
  * @param _rootState unused root state
  * @param rootGetters root getters, to find the name of a state
  */
-function summaries (_state, getters, _rootState, rootGetters: RootGetters): TransitionSummary[] {
+function summaries (_state, getters, _rootState, rootGetters: TransitionRootGetters): TransitionSummary[] {
   const names = new Map<string, string>()
 
   return getters.activeTransitions

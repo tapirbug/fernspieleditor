@@ -15,73 +15,42 @@ describe('serialize transition summaries', () => {
   const pickUpActive: PickUp = {
     type: TransitionType.PickUp,
     from: 'A',
-    to: 'B',
-    removed: false
-  }
-  const pickUpRemoved: PickUp = {
-    type: TransitionType.PickUp,
-    from: 'A',
-    to: 'B',
-    removed: true
+    to: 'B'
   }
   const hangUpActive: HangUp = {
     type: TransitionType.HangUp,
     from: 'C',
-    to: 'D',
-    removed: false
-  }
-  const hangUpRemoved: HangUp = {
-    type: TransitionType.HangUp,
-    from: 'C',
-    to: 'D',
-    removed: true
+    to: 'D'
   }
   const endActive: End = {
     type: TransitionType.End,
     from: 'K',
-    to: 'L',
-    removed: false
-  }
-  const endRemoved: End = {
-    type: TransitionType.End,
-    from: 'K',
-    to: 'L',
-    removed: true
+    to: 'L'
   }
   const dial0: Dial = {
     type: TransitionType.Dial,
     from: 'Here',
     to: 'There',
-    pattern: '0',
-    removed: false
+    pattern: '0'
   }
   const dial5Active: Dial = {
     type: TransitionType.Dial,
     from: 'Here',
     to: 'There',
-    pattern: '5',
-    removed: false
-  }
-  const dial5Removed: Dial = {
-    type: TransitionType.Dial,
-    from: 'Here',
-    to: 'There',
-    pattern: '5',
-    removed: true
+    pattern: '5'
   }
   const timeout: Timeout = {
     type: TransitionType.Timeout,
     after: 5.1,
     from: 'Hereio',
-    to: 'Therio',
-    removed: false
+    to: 'Therio'
   }
 
   describe('serialize in isolation', () => {
-    const pickUpSummaries: Transition[] = [pickUpActive, pickUpRemoved]
-    const hangUpSummaries: Transition[] = [hangUpActive, hangUpRemoved]
-    const endSummaries: Transition[] = [endActive, endRemoved]
-    const dialSummaries: Transition[] = [dial0, dial5Active, dial5Removed]
+    const pickUpSummaries: Transition[] = [pickUpActive]
+    const hangUpSummaries: Transition[] = [hangUpActive]
+    const endSummaries: Transition[] = [endActive]
+    const dialSummaries: Transition[] = [dial0, dial5Active]
 
     test('pick up', () => {
       const serialized = serialize(pickUpSummaries)
@@ -135,17 +104,13 @@ describe('serialize transition summaries', () => {
     })
   })
 
-  describe('serialize mixed types and removed states', () => {
+  describe('serialize mixed types', () => {
     const mixed = [
       pickUpActive,
-      pickUpRemoved,
-      hangUpRemoved,
       hangUpActive,
       timeout,
       endActive,
-      endRemoved,
       dial0,
-      dial5Removed,
       dial5Active
     ]
 

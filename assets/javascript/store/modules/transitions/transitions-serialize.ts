@@ -21,39 +21,37 @@ export function serialize (transitionsFromState: Transition[]): PhonebookTransit
 }
 
 function serializeState (state: Transition, transitionsPerSource: PhonebookTransitions): void {
-  if (!state.removed) {
-    const transitions: PhonebookTransitionsForSourceState =
-      typeof transitionsPerSource[state.from] === 'undefined'
-      // start with empty transition map for source state
-        ? (transitionsPerSource[state.from] = {})
-      // already have one transition, continue
-        : transitionsPerSource[state.from]
+  const transitions: PhonebookTransitionsForSourceState =
+    typeof transitionsPerSource[state.from] === 'undefined'
+    // start with empty transition map for source state
+      ? (transitionsPerSource[state.from] = {})
+    // already have one transition, continue
+      : transitionsPerSource[state.from]
 
-    // then add transitions to the map
-    switch (state.type) {
-      case TransitionType.Dial:
-        serializeDial(state, transitions)
-        break
+  // then add transitions to the map
+  switch (state.type) {
+    case TransitionType.Dial:
+      serializeDial(state, transitions)
+      break
 
-      case TransitionType.Timeout:
-        serializeTimeout(state, transitions)
-        break
+    case TransitionType.Timeout:
+      serializeTimeout(state, transitions)
+      break
 
-      case TransitionType.PickUp:
-        serializePickUp(state, transitions)
-        break
+    case TransitionType.PickUp:
+      serializePickUp(state, transitions)
+      break
 
-      case TransitionType.HangUp:
-        serializeHangUp(state, transitions)
-        break
+    case TransitionType.HangUp:
+      serializeHangUp(state, transitions)
+      break
 
-      case TransitionType.End:
-        serializeEnd(state, transitions)
-        break
+    case TransitionType.End:
+      serializeEnd(state, transitions)
+      break
 
-      default:
-        throw new Error(`unhandled type: ${JSON.stringify(state)}`)
-    }
+    default:
+      throw new Error(`unhandled type: ${JSON.stringify(state)}`)
   }
 }
 

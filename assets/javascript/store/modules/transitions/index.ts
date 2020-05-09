@@ -1,5 +1,5 @@
 import actions from './transitions-actions'
-import getters from './transitions-getters'
+import { getters } from './transitions-getters'
 import mutations from './transitions-mutations'
 import { deserialize } from './transitions-deserialize'
 import { PhonebookTransitions } from '../../../phonebook/phonebook-transitions'
