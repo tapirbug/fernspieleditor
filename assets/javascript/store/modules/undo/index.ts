@@ -1,4 +1,4 @@
-import actions from './undo-actions'
+import { actions } from './undo-actions'
 import { getters } from './undo-getters'
 import mutations from './undo-mutations'
 import { initialState } from './undo-state'

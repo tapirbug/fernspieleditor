@@ -12,7 +12,12 @@ import { ActionContext } from 'vuex'
 import { UndoState } from './undo-state.js'
 import { UndoGetters } from './undo-getters.js'
 
-export default {
+export interface UndoActions {
+  undo()
+  redo()
+}
+
+export const actions = {
   [UNDO]: undo,
   [REDO]: redo
 }
