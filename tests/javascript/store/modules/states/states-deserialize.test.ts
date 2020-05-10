@@ -9,7 +9,7 @@ describe('deserialize the state parts of a phonebook', () => {
   const stateId = 'State A'
   const name = stateId
   const description = stateId
-  const sounds = [ 'Sound A' ]
+  const sounds = ['Sound A']
   const ring = 0.1
   const terminal = false
   const position = {
@@ -66,13 +66,13 @@ describe('deserialize the state parts of a phonebook', () => {
 })
 
 interface PhonebookTestInit {
-  initial: string,
-  focused: string,
-  states: PhonebookStates,
+  initial: string
+  focused: string
+  states: PhonebookStates
   statesExt: PhonebookFernspieleditorStatesExt
 }
 
-function initPhonebook({ initial, focused, states, statesExt }: PhonebookTestInit): PhonebookSubsetForStates {
+function initPhonebook ({ initial, focused, states, statesExt }: PhonebookTestInit): PhonebookSubsetForStates {
   return {
     initial,
     states: states,

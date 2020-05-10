@@ -1,4 +1,4 @@
-import { Vec2D } from "../util/geom/vec2d";
+import { Vec2D } from '../util/geom/vec2d'
 
 /**
  * fernspieleditor-specific additions to the phonebook format, e.g.

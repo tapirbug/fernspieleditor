@@ -120,9 +120,9 @@ describe('transition getters', () => {
     ]
   }
   const rootGetters = {
-    isRemoved(id) { return id === 'Removed State' },
-    isAny(id) { return id === 'any' },
-    findState(id) {
+    isRemoved (id) { return id === 'Removed State' },
+    isAny (id) { return id === 'any' },
+    findState (id) {
       return {
         id,
         name: id,
@@ -130,14 +130,14 @@ describe('transition getters', () => {
         sounds: [],
         ring: 0,
         terminal: false,
-        position: {x:0, y:0}
+        position: { x: 0, y: 0 }
       }
     }
   } as TransitionRootGetters // assuming that the other getters are not used
 
   describe('getting active transitions', () => {
     const active = activeTransitions(state, {}, {}, rootGetters)
-    it ('contains the transitions that do not involve the removed state and are not removed', () => {
+    it('contains the transitions that do not involve the removed state and are not removed', () => {
       expect(active).toHaveLength(6)
       expect(active).toEqual(
         expect.arrayContaining([
@@ -150,7 +150,7 @@ describe('transition getters', () => {
         ])
       )
     })
-    it ('does not contain the transitions that involve the removed state', () => {
+    it('does not contain the transitions that involve the removed state', () => {
       expect(active).toEqual(
         expect.not.arrayContaining([
           expect.objectContaining({ id: pickUpFromRemovedStateId })
@@ -162,7 +162,7 @@ describe('transition getters', () => {
         ])
       )
     })
-    it ('does not contain the transitions that are removed', () => {
+    it('does not contain the transitions that are removed', () => {
       expect(active).toEqual(
         expect.not.arrayContaining([
           expect.objectContaining({ id: endRemovedId })

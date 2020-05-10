@@ -78,8 +78,8 @@ export const methods = {
   setInitial (this: Inspector, evt) {
     this.setInitialState(
       evt.target.checked
-          ? this.focusedStateId
-          : null
+        ? this.focusedStateId
+        : null
     )
   }
 }

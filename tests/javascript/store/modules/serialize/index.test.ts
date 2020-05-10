@@ -147,7 +147,7 @@ interface TestContext {
   actions: StatesActions & UndoActions & TransitionsActions & SerializeActions & SoundsActions
 }
 
-function initTestContext(): TestContext {
+function initTestContext (): TestContext {
   const store = new Vuex.Store({
     modules: {
       info: infoModule({
@@ -179,58 +179,58 @@ function initTestContext(): TestContext {
       })
     }
   })
-  const getters : StatesGetters & TransitionGetters = store.getters
+  const getters: StatesGetters & TransitionGetters = store.getters
   return {
     store,
     getters,
     actions: {
-      addState(spec: StateSpec): Promise<StateSummary> {
-        return store.dispatch(ADD_STATE, spec)
+      addState (spec: StateSpec): Promise<StateSummary> {
+        return await store.dispatch(ADD_STATE, spec)
       },
-      removeState(stateId: string): void {
+      removeState (stateId: string): void {
         store.dispatch(REMOVE_STATE, stateId)
       },
-      continueUpdateState(spec: StateSpec): void {
+      continueUpdateState (spec: StateSpec): void {
         store.dispatch(CONTINUE_UPDATE_STATE, spec)
       },
-      updateState(spec: StateSpec): Promise<StateSummary> {
-        return store.dispatch(UPDATE_STATE, spec)
+      updateState (spec: StateSpec): Promise<StateSummary> {
+        return await store.dispatch(UPDATE_STATE, spec)
       },
-      focusState(id: string): void {
+      focusState (id: string): void {
         store.dispatch(FOCUS_STATE, id)
       },
-      setInitialState(id: string): void {
+      setInitialState (id: string): void {
         store.dispatch(SET_INITIAL_STATE, id)
       },
-      undo() {
+      undo () {
         store.dispatch(UNDO)
       },
-      redo() {
+      redo () {
         store.dispatch(REDO)
       },
-      addTransition(spec: TransitionSpec) {
-        return store.dispatch(ADD_TRANSITION, spec)
+      addTransition (spec: TransitionSpec) {
+        return await store.dispatch(ADD_TRANSITION, spec)
       },
-      removeTransition(transitionId: string) {
+      removeTransition (transitionId: string) {
         store.dispatch(REMOVE_TRANSITION, transitionId)
       },
-      serialize() {
-        return store.dispatch(SERIALIZE)
+      serialize () {
+        return await store.dispatch(SERIALIZE)
       },
-      toYaml() {
-        return store.dispatch(TO_YAML)
+      toYaml () {
+        return await store.dispatch(TO_YAML)
       },
-      addSound(spec: SoundSpec) {
-        return store.dispatch(ADD_SOUND, spec)
+      addSound (spec: SoundSpec) {
+        return await store.dispatch(ADD_SOUND, spec)
       },
-      removeSound(id: string) {
+      removeSound (id: string) {
         store.dispatch(REMOVE_SOUND, id)
       },
-      updateSound(updated: SoundSpec) {
+      updateSound (updated: SoundSpec) {
         store.dispatch(UPDATE_SOUND, updated)
       },
-      serializeSounds(): Promise<PhonebookSubsetForSounds> {
-        return store.dispatch(SERIALIZE_SOUNDS)
+      serializeSounds (): Promise<PhonebookSubsetForSounds> {
+        return await store.dispatch(SERIALIZE_SOUNDS)
       }
     }
   }

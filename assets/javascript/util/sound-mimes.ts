@@ -1,8 +1,8 @@
 const extsToMime = {
-  'wav': 'audio/wav',
-  'wave': 'audio/wav',
-  'mp3': 'audio/mpeg',
-  'mp4': 'audio/mp4'
+  wav: 'audio/wav',
+  wave: 'audio/wav',
+  mp3: 'audio/mpeg',
+  mp4: 'audio/mp4'
 }
 
 /**

@@ -4,7 +4,7 @@ export interface PhonebookSound {
   volume: number
   backoff: number
   loop: boolean
-  speech: string,
+  speech: string
   file: string
 }
 

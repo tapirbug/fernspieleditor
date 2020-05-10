@@ -7,7 +7,7 @@ interface Data {
   transitionTargetId: string | null
   transitionType: TransitionType | null
   dialNumber: string | null
-  timeoutSeconds: string | null,
+  timeoutSeconds: string | null
   /**
    * Transition types mapped against human-readable
    * names for the types.
@@ -41,7 +41,7 @@ const allTransitionTypes = {
 /**
  * A floating dialog over a state to add transitions.
  */
-export function data () : Data {
+export function data (): Data {
   return {
     done: false,
     transitionTargetId: null,
@@ -55,20 +55,20 @@ export function data () : Data {
 export const computed = {
   ...mapGetters(['states'])
 }
- 
+
 export const methods = {
   ...mapActions({
-    'addTransition': ADD_TRANSITION 
+    addTransition: ADD_TRANSITION
   }),
   selectTransitionTarget (id) {
     this.transitionTargetId = id
   },
-  currentTransitionSpec () : TransitionSpec | null {
+  currentTransitionSpec (): TransitionSpec | null {
     return currentTransitionSpec(this)
   },
   updateTransitionIfComplete (otherwiseFocusSel) {
     this.$nextTick(() => {
-      const config : TransitionSpec | null = this.currentTransitionSpec()
+      const config: TransitionSpec | null = this.currentTransitionSpec()
 
       if (config === null) {
         this.$el.querySelector(otherwiseFocusSel).click()
@@ -80,7 +80,7 @@ export const methods = {
   }
 }
 
-function currentTransitionSpec(data: Self): TransitionSpec | null {
+function currentTransitionSpec (data: Self): TransitionSpec | null {
   const transitionType = data.transitionType
   const from = data.from
   const to = data.transitionTargetId
@@ -113,7 +113,7 @@ function currentTransitionSpec(data: Self): TransitionSpec | null {
       const afterStr = data.timeoutSeconds
       if (afterStr === null) {
         return null
-      }      
+      }
 
       const after = parseFloat(afterStr)
       if (isNaN(after)) {
@@ -136,9 +136,7 @@ function currentTransitionSpec(data: Self): TransitionSpec | null {
         to
       }
 
-    
     default:
       throw new Error(`Unhandled transition type: ${transitionType}`)
-
   }
 }

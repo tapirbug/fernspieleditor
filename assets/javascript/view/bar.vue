@@ -2,7 +2,6 @@
 import { mapGetters, mapActions } from 'vuex'
 import { saveAs } from 'file-saver'
 import { TO_YAML, LOAD_FILE, CONNECT, DEPLOY } from '../store/action-types'
-import { SET_PHONEBOOK_TITLE, BUMP_ITERATION } from '../store/mutation-types'
 import { infoActionMapping } from '../store/modules/info/info-actions'
 
 /**

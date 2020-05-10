@@ -267,7 +267,7 @@ interface TestContext {
   actions: StatesActions & UndoActions
 }
 
-function initStore(): TestContext {
+function initStore (): TestContext {
   const store = new Vuex.Store({
     modules: {
       states: states({
@@ -287,33 +287,33 @@ function initStore(): TestContext {
       undo: undo()
     }
   })
-  const getters : StatesGetters & TransitionGetters = store.getters
+  const getters: StatesGetters & TransitionGetters = store.getters
   return {
     store,
     getters,
     actions: {
-      addState(spec: StateSpec): Promise<StateSummary> {
-        return store.dispatch(ADD_STATE, spec)
+      addState (spec: StateSpec): Promise<StateSummary> {
+        return await store.dispatch(ADD_STATE, spec)
       },
-      removeState(stateId: string): void {
+      removeState (stateId: string): void {
         store.dispatch(REMOVE_STATE, stateId)
       },
-      continueUpdateState(spec: StateSpec): void {
+      continueUpdateState (spec: StateSpec): void {
         store.dispatch(CONTINUE_UPDATE_STATE, spec)
       },
-      updateState(spec: StateSpec): Promise<StateSummary> {
-        return store.dispatch(UPDATE_STATE, spec)
+      updateState (spec: StateSpec): Promise<StateSummary> {
+        return await store.dispatch(UPDATE_STATE, spec)
       },
-      focusState(id: string): void {
+      focusState (id: string): void {
         store.dispatch(FOCUS_STATE, id)
       },
-      setInitialState(id: string): void {
+      setInitialState (id: string): void {
         store.dispatch(SET_INITIAL_STATE, id)
       },
-      undo() {
+      undo () {
         store.dispatch(UNDO)
       },
-      redo() {
+      redo () {
         store.dispatch(REDO)
       }
     }

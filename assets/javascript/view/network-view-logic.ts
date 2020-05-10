@@ -14,8 +14,8 @@ import { Vec2D } from '../util/geom/vec2d.js'
 import { StateSummaryWithRemoved } from '../store/modules/states/state.js'
 
 interface NetworkViewData {
-  palmId: string|null,
-  palmEl: HTMLElement|null,
+  palmId: string|null
+  palmEl: HTMLElement|null
   firstGrabPosition: Vec2D|null
   lastGrabPosition: Vec2D|null
   stateSizes: StateSizes
@@ -27,13 +27,13 @@ interface NetworkViewComputed {
 
 interface NetworkViewMethods {
   updateStateSizes(): void
-  stateSize (id: string): {width:number,height:number}|undefined
+  stateSize (id: string): {width: number, height: number}|undefined
   select(id: string): void
   deselect(): void
   startGrab (id: string, position: Vec2D, el: HTMLElement): void
   continueGrab(position: Vec2D)
-  movePalm (to: Vec2D),
-  endGrab (),
+  movePalm (to: Vec2D)
+  endGrab ()
   move(evt: MouseEvent)
   down (id: string, evt: MouseEvent)
   typed (evt: KeyboardEvent, id: string)
@@ -44,7 +44,7 @@ interface NetworkViewMethods {
 }
 
 interface StateSizes {
-  [stateId: string]: {width:number,height:number}
+  [stateId: string]: {width: number, height: number}
 }
 
 /**
@@ -59,7 +59,7 @@ interface NetworkView extends
   TransitionGetters,
   EditorGetters {}
 
-export function data () : NetworkViewData {
+export function data (): NetworkViewData {
   return {
     palmId: null,
     palmEl: null,
@@ -99,7 +99,7 @@ export const computed = {
   arrows
 }
 
-export const methods : NetworkViewMethods = {
+export const methods: NetworkViewMethods = {
   ...mapActions({
     ...statesActionMapping
   }),
