@@ -1,7 +1,7 @@
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { ADD_SOUND, UPDATE_SOUND } from '../store/mutation-types'
-import { isAudioFilename } from '../util/sound-mimes.js'
+import { mapGetters, mapActions } from 'vuex'
+import { ADD_SOUND, UPDATE_SOUND } from '../store/action-types'
+import { isAudioFilename } from '../util/sound-mimes'
 
 /**
  * Menu bar.
@@ -16,10 +16,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['sounds'])
+    ...mapGetters(['sounds', 'hasFile', 'isEmbedded'])
   },
   methods: {
-    ...mapMutations({
+    ...mapActions({
       addSound: ADD_SOUND,
       updateSound: UPDATE_SOUND
     }),
@@ -75,13 +75,6 @@ export default {
         id: soundId,
         file: ''
       })
-    },
-    hasFile (soundId) {
-      return typeof this.sounds[soundId].file === 'object' || // file object
-        (typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.length > 0) // string filename
-    },
-    isEmbedded (soundId) {
-      return typeof this.sounds[soundId].file === 'string' && this.sounds[soundId].file.startsWith('data:')
     }
   }
 }
@@ -93,8 +86,8 @@ export default {
 
     <ul class="sound-editor-sounds">
       <li
-        v-for="(sound, soundId) in sounds"
-        :key="`sound-editor-li-${soundId}`"
+        v-for="sound in sounds"
+        :key="`sound-editor-li-${sound.id}`"
         class="sound-editor-sound"
       >
         <details class="sound-editor-sound-props">
@@ -104,7 +97,7 @@ export default {
               <input
                 type="text"
                 :value="sound.name"
-                @input="updateSound({ id: soundId, name: $event.target.value })"
+                @input="updateSound({ id: sound.id, name: $event.target.value })"
               >
             </h3>
             <div class="sound-editor-sound-simple-input">
@@ -113,7 +106,7 @@ export default {
                 min="0"
                 max="1"
                 step="0.05"
-                @change="updateSound({id: soundId, volume: $event.target.value })"
+                @change="updateSound({id: sound.id, volume: $event.target.value })"
               >
             </div>
             <div class="sound-editor-sound-simple-input">
@@ -121,7 +114,7 @@ export default {
                 <input
                   type="checkbox"
                   :checked="sound.loop"
-                  @change="updateSound({ id: soundId, loop: $event.target.checked })"
+                  @change="updateSound({ id: sound.id, loop: $event.target.checked })"
                 >
                 <span class="checkable">Loop</span>
               </label>
@@ -134,25 +127,25 @@ export default {
               placeholder="Speech"
               title="Text written here will be spoken out loud when entering a state with this sound applied."
               :value="sound.speech"
-              @input="updateSound({ id: soundId, speech: $event.target.value })"
+              @input="updateSound({ id: sound.id, speech: $event.target.value })"
             ></textarea>
 
             <h4>WAV/MP3</h4>
             <div class="file-input">
-              <span v-if="isEmbedded(soundId)">
+              <span v-if="isEmbedded(sound.id)">
                 <span
-                  v-if="isEmbedded(soundId)"
+                  v-if="isEmbedded(sound.id)"
                   class="label normal"
                 >Embedded</span>
               </span>
               <input
                 type="file"
                 title="Drop a file here to proivde custom sound or music. When set, text-to-speech is disabled."
-                @input="updateFile(soundId, $event.target)"
+                @input="updateFile(sound.id, $event.target)"
               >
               <button
-                :disabled="!hasFile(soundId)"
-                @click="resetPicker(soundId)"
+                :disabled="!hasFile(sound.id)"
+                @click="resetPicker(sound.id)"
               >
                 Clear
               </button>

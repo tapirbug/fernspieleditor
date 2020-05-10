@@ -67,7 +67,11 @@ export interface StepSpec {
    * 
    * If omitted, is set to `payload`.
    */
-  undoPayload?
+  undoPayload?,
+  /**
+   * Can be used to opt out of cloning and freezing of payloads.
+   */
+  noCopy?: boolean
 }
 
 
@@ -89,8 +93,12 @@ export function createStep (spec: StepSpec) : Step {
   const redoPayload = 'redoPayload' in spec ? spec.redoPayload : payload
   const step = { mutation, payload, undoMutation, undoPayload, redoMutation, redoPayload }
   
-  // make an immutable copy of the step so it cannot be changed afterwards
-  const immutableStep = JSON.parse(JSON.stringify(step))
-  Object.freeze(immutableStep)
-  return immutableStep
+  if ('noCopy' in spec && spec.noCopy === true) {
+    return step
+  } else {
+    // make an immutable copy of the undo and redo so it cannot be changed afterwards, unless disabled
+    const immutableStep = JSON.parse(JSON.stringify(step))
+    Object.freeze(immutableStep)
+    return immutableStep
+  }
 }

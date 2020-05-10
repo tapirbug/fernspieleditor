@@ -3,8 +3,9 @@ import { REMOVE_TRANSITION } from '../store/action-types'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { statesGetterMappings, StatesGetters } from '../store/modules/states/states-getters'
 import { statesActionMapping, StatesActions } from '../store/modules/states/states-actions'
+import { SoundsGetters, soundsGetterMappings } from '../store/modules/sounds/sounds-getters'
 
-interface Inspector extends StatesActions, StatesGetters {}
+interface Inspector extends StatesActions, StatesGetters, SoundsGetters {}
 
 /**
  * Editor for the currently focused element.
@@ -18,6 +19,7 @@ export function data () {
 export const computed = {
   ...mapGetters([
     ...statesGetterMappings,
+    ...soundsGetterMappings,
     'hasFocusedState',
     'transitionSummariesWith',
     'initial',

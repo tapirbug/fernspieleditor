@@ -30,3 +30,9 @@ export const SET_INITIAL_STATE = 'SET_INITIAL_STATE'
 // Add/remove transitions
 export const ADD_TRANSITION = 'ADD_TRANSITION'
 export const REMOVE_TRANSITION = 'REMOVE_TRANSITION'
+
+// Sounds
+export const ADD_SOUND = 'ADD_SOUND'
+export const UPDATE_SOUND = 'UPDATE_SOUND'
+export const REMOVE_SOUND = 'REMOVE_SOUND'
+export const SERIALIZE_SOUNDS = 'SERIALIZE_SOUNDS'

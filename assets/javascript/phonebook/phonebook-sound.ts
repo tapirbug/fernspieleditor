@@ -4,7 +4,8 @@ export interface PhonebookSound {
   volume: number
   backoff: number
   loop: boolean
-  speech: string
+  speech: string,
+  file: string
 }
 
 export interface PhonebookSounds {
@@ -21,7 +22,7 @@ export function defaultSound (): PhonebookSound {
     volume: 0.9,
     backoff: 0.2,
     loop: false,
-    // file: data:audio/wav;base64,ABC
+    file: '',
     speech: ''
   }
 }

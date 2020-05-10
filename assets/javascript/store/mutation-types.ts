@@ -33,8 +33,10 @@ export const SET_TRANSITION_REMOVED = 'SET_TRANSITION_REMOVED'
 export const SET_TRANSITION_REVIVED = 'SET_TRANSITION_REVIVED'
 
 // Sound mutations
-export const UPDATE_SOUND = 'UPDATE_SOUND'
-export const ADD_SOUND = 'ADD_SOUND'
+export const PUSH_SOUND = 'PUSH_SOUND'
+export const REPLACE_SOUND = 'REPLACE_SOUND'
+export const SET_SOUND_REMOVED = 'SET_SOUND_REMOVED'
+export const SET_SOUND_REVIVED = 'SET_SOUND_REVIVED'
 
 // Change UI state without modifying the phonebook
 // that would be generated

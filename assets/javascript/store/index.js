@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import defaultVueState from '../phonebook/phonebook-startup'
 import createLogger from 'vuex/dist/logger'
-import modules from './modules/index.js'
+import modules from './modules/index'
 
 Vue.use(Vuex)
 

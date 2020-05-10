@@ -1,5 +1,5 @@
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 /**
  * Picks a set of sounds from the store
@@ -17,7 +17,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapState(['sounds'])
+    ...mapGetters(['sounds'])
   },
   methods: {
     isPicked (soundId) {

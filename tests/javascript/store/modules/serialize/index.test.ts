@@ -21,7 +21,11 @@ import {
   ADD_TRANSITION,
   REMOVE_TRANSITION,
   SERIALIZE,
-  TO_YAML
+  TO_YAML,
+  ADD_SOUND,
+  REMOVE_SOUND,
+  UPDATE_SOUND,
+  SERIALIZE_SOUNDS
 } from '../../../../../assets/javascript/store/action-types'
 import { TransitionGetters } from '../../../../../assets/javascript/store/modules/transitions/transitions-getters'
 import { StatesGetters } from '../../../../../assets/javascript/store/modules/states/states-getters'
@@ -31,6 +35,10 @@ import { UndoActions } from 'assets/javascript/store/modules/undo/undo-actions'
 import { FernspieleditorExtVersion } from 'assets/javascript/phonebook/phonebook-fernspieleditor-ext'
 import { TransitionsActions } from 'assets/javascript/store/modules/transitions/transitions-actions'
 import { TransitionSpec, TransitionType } from 'assets/javascript/store/modules/transitions/transition'
+import { SoundsActions } from 'assets/javascript/store/modules/sounds/sounds-actions'
+import { SoundSpec } from 'assets/javascript/store/modules/sounds/sound-spec'
+import { PhonebookSubsetForInfo } from 'assets/javascript/store/modules/info/info-deserialize'
+import { PhonebookSubsetForSounds } from 'assets/javascript/store/modules/sounds/sounds-phonebook-subset'
 
 Vue.use(Vuex)
 
@@ -38,7 +46,8 @@ describe('serialize module', () => {
   it('serializes states and transitions to phonebook objects', async () => {
     expect.assertions(3)
     const { actions } = initTestContext()
-    actions.addState({ id: 'FromState', name: 'FromState' })
+    const sound = await actions.addSound({ id: 'SoundA', name: 'Sound A', volume: 0.68 })
+    actions.addState({ id: 'FromState', name: 'FromState', sounds: [sound.id] })
     actions.addState({ id: 'ToState', name: 'ToState' })
     actions.addTransition({
       type: TransitionType.Timeout,
@@ -62,14 +71,23 @@ describe('serialize module', () => {
   author: Heinz Elbert
   description: desc
   iteration: 42
-sounds: {}
+sounds:
+  SoundA:
+    name: Sound A
+    description: ""
+    volume: 0.68
+    backoff: 0.2
+    loop: false
+    speech: ""
+    file: ""
 initial: FromState
 states:
   FromState:
     name: FromState
     description: ""
     terminal: false
-    sounds: []
+    sounds:
+      - SoundA
     ring: 0
   ToState:
     name: ToState
@@ -100,7 +118,8 @@ vendor:
               y: 100
 `
     const { actions } = initTestContext()
-    actions.addState({ id: 'FromState', name: 'FromState' })
+    const sound = await actions.addSound({ id: 'SoundA', name: 'Sound A', volume: 0.68 })
+    actions.addState({ id: 'FromState', name: 'FromState', sounds: [sound.id] })
     actions.updateState({
       id: 'FromState',
       position: {
@@ -125,7 +144,7 @@ vendor:
 interface TestContext {
   store: Store<any>
   getters: StatesGetters & TransitionGetters
-  actions: StatesActions & UndoActions & TransitionsActions & SerializeActions
+  actions: StatesActions & UndoActions & TransitionsActions & SerializeActions & SoundsActions
 }
 
 function initTestContext(): TestContext {
@@ -155,7 +174,9 @@ function initTestContext(): TestContext {
       transitions: transitionsModule({}),
       undo: undoModule(),
       serialize: serializeModule(),
-      sounds: soundsModule()
+      sounds: soundsModule({
+        sounds: {}
+      })
     }
   })
   const getters : StatesGetters & TransitionGetters = store.getters
@@ -198,6 +219,18 @@ function initTestContext(): TestContext {
       },
       toYaml() {
         return store.dispatch(TO_YAML)
+      },
+      addSound(spec: SoundSpec) {
+        return store.dispatch(ADD_SOUND, spec)
+      },
+      removeSound(id: string) {
+        store.dispatch(REMOVE_SOUND, id)
+      },
+      updateSound(updated: SoundSpec) {
+        store.dispatch(UPDATE_SOUND, updated)
+      },
+      serializeSounds(): Promise<PhonebookSubsetForSounds> {
+        return store.dispatch(SERIALIZE_SOUNDS)
       }
     }
   }
