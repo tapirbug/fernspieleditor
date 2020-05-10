@@ -2,13 +2,7 @@ import {
   getters, TransitionRootGetters
 } from '../../../../../assets/javascript/store/modules/transitions/transitions-getters'
 import {
-  PickUp,
   TransitionType,
-  HangUp,
-  End,
-  Dial,
-  Timeout,
-  createTransition,
   PickUpState,
   HangUpState,
   EndState,

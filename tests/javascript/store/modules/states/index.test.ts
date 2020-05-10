@@ -1,9 +1,9 @@
 /// Tests the states module together with transitions and undo
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
-import states from '../../../../../assets/javascript/store/modules/states/index'
+import states from '../../../../../assets/javascript/store/modules/states/states-module'
 import transitions from '../../../../../assets/javascript/store/modules/transitions/index'
-import undo from '../../../../../assets/javascript/store/modules/undo/index'
+import undo from '../../../../../assets/javascript/store/modules/undo/undo-module'
 import {
   ADD_STATE,
   REMOVE_STATE,
@@ -293,7 +293,7 @@ function initStore (): TestContext {
     getters,
     actions: {
       addState (spec: StateSpec): Promise<StateSummary> {
-        return await store.dispatch(ADD_STATE, spec)
+        return store.dispatch(ADD_STATE, spec)
       },
       removeState (stateId: string): void {
         store.dispatch(REMOVE_STATE, stateId)
@@ -302,7 +302,7 @@ function initStore (): TestContext {
         store.dispatch(CONTINUE_UPDATE_STATE, spec)
       },
       updateState (spec: StateSpec): Promise<StateSummary> {
-        return await store.dispatch(UPDATE_STATE, spec)
+        return store.dispatch(UPDATE_STATE, spec)
       },
       focusState (id: string): void {
         store.dispatch(FOCUS_STATE, id)

@@ -3,12 +3,12 @@ import {
 } from '../../../../../assets/javascript/store/modules/serialize/serialize-actions'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
-import statesModule from '../../../../../assets/javascript/store/modules/states/index'
-import infoModule from '../../../../../assets/javascript/store/modules/info/index'
+import statesModule from '../../../../../assets/javascript/store/modules/states/states-module'
+import infoModule from '../../../../../assets/javascript/store/modules/info/info-module'
 import transitionsModule from '../../../../../assets/javascript/store/modules/transitions/index'
-import serializeModule from '../../../../../assets/javascript/store/modules/serialize/index'
-import soundsModule from '../../../../../assets/javascript/store/modules/sounds/index'
-import undoModule from '../../../../../assets/javascript/store/modules/undo/index'
+import serializeModule from '../../../../../assets/javascript/store/modules/serialize/serialize-module'
+import soundsModule from '../../../../../assets/javascript/store/modules/sounds/sounds-module'
+import undoModule from '../../../../../assets/javascript/store/modules/undo/undo-module'
 import {
   ADD_STATE,
   REMOVE_STATE,
@@ -37,7 +37,6 @@ import { TransitionsActions } from 'assets/javascript/store/modules/transitions/
 import { TransitionSpec, TransitionType } from 'assets/javascript/store/modules/transitions/transition'
 import { SoundsActions } from 'assets/javascript/store/modules/sounds/sounds-actions'
 import { SoundSpec } from 'assets/javascript/store/modules/sounds/sound-spec'
-import { PhonebookSubsetForInfo } from 'assets/javascript/store/modules/info/info-deserialize'
 import { PhonebookSubsetForSounds } from 'assets/javascript/store/modules/sounds/sounds-phonebook-subset'
 
 Vue.use(Vuex)
@@ -185,7 +184,7 @@ function initTestContext (): TestContext {
     getters,
     actions: {
       addState (spec: StateSpec): Promise<StateSummary> {
-        return await store.dispatch(ADD_STATE, spec)
+        return store.dispatch(ADD_STATE, spec)
       },
       removeState (stateId: string): void {
         store.dispatch(REMOVE_STATE, stateId)
@@ -194,7 +193,7 @@ function initTestContext (): TestContext {
         store.dispatch(CONTINUE_UPDATE_STATE, spec)
       },
       updateState (spec: StateSpec): Promise<StateSummary> {
-        return await store.dispatch(UPDATE_STATE, spec)
+        return store.dispatch(UPDATE_STATE, spec)
       },
       focusState (id: string): void {
         store.dispatch(FOCUS_STATE, id)
@@ -209,19 +208,19 @@ function initTestContext (): TestContext {
         store.dispatch(REDO)
       },
       addTransition (spec: TransitionSpec) {
-        return await store.dispatch(ADD_TRANSITION, spec)
+        return store.dispatch(ADD_TRANSITION, spec)
       },
       removeTransition (transitionId: string) {
         store.dispatch(REMOVE_TRANSITION, transitionId)
       },
       serialize () {
-        return await store.dispatch(SERIALIZE)
+        return store.dispatch(SERIALIZE)
       },
       toYaml () {
-        return await store.dispatch(TO_YAML)
+        return store.dispatch(TO_YAML)
       },
       addSound (spec: SoundSpec) {
-        return await store.dispatch(ADD_SOUND, spec)
+        return store.dispatch(ADD_SOUND, spec)
       },
       removeSound (id: string) {
         store.dispatch(REMOVE_SOUND, id)
@@ -230,7 +229,7 @@ function initTestContext (): TestContext {
         store.dispatch(UPDATE_SOUND, updated)
       },
       serializeSounds (): Promise<PhonebookSubsetForSounds> {
-        return await store.dispatch(SERIALIZE_SOUNDS)
+        return store.dispatch(SERIALIZE_SOUNDS)
       }
     }
   }
