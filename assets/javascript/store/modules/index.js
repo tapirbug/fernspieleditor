@@ -1,5 +1,5 @@
 import deserialize from './deserialize/index'
-import info from './info/index.js'
+import info from './info/index'
 import remote from './remote/index.js'
 import serialize from './serialize/index'
 import sounds from './sounds/index.js'
@@ -25,7 +25,7 @@ import undo from './undo/index'
  */
 export default function createModules (phonebook) {
   return {
-    info: info(phonebook.info || {}),
+    info: info(phonebook || {}),
     deserialize: deserialize(),
     states: states(phonebook || {}),
     transitions: transitions(phonebook.transitions || {}),

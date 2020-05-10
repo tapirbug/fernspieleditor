@@ -1,5 +1,6 @@
-import getters from './info-getters.js'
-import mutations from './info-mutations.js'
+import { getters } from './info-getters'
+import { mutations } from './info-mutations'
+import { PhonebookSubsetForInfo, deserializeInfo } from './info-deserialize'
 
 /**
  * Initialize the `vuex` module that manages metadata about the phonebook,
@@ -12,9 +13,9 @@ import mutations from './info-mutations.js'
  * @param {object} info initial state
  * @returns {object} `vuex` module for phonebook metadata
  */
-export default function createInfoModule (info) {
+export default function createInfoModule (info: PhonebookSubsetForInfo) {
   return {
-    state: info,
+    state: deserializeInfo(info),
     getters,
     mutations
   }

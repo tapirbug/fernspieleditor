@@ -57,7 +57,11 @@ describe('serialize module', () => {
 
   it('serializes states and transitions to YAML', async () => {
     expect.assertions(1)
-    const expectedYaml = `info: {}
+    const expectedYaml = `info:
+  title: Sauerteig
+  author: Heinz Elbert
+  description: desc
+  iteration: 42
 sounds: {}
 initial: FromState
 states:
@@ -127,7 +131,14 @@ interface TestContext {
 function initTestContext(): TestContext {
   const store = new Vuex.Store({
     modules: {
-      info: infoModule(),
+      info: infoModule({
+        info: {
+          title: 'Sauerteig',
+          author: 'Heinz Elbert',
+          description: 'desc',
+          iteration: 42
+        }
+      }),
       states: statesModule({
         initial: null,
         states: {},
