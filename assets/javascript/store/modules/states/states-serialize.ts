@@ -1,7 +1,7 @@
-import { PhonebookStates } from "../../../phonebook/phonebook-states";
-import { PhonebookSubsetForStates } from "./state";
-import { StatesGetters } from "./states-getters";
-import { FernspieleditorExtVersion, PhonebookFernspieleditorStatesExt } from "../../../phonebook/phonebook-fernspieleditor-ext";
+import { PhonebookStates } from '../../../phonebook/phonebook-states'
+import { PhonebookSubsetForStates } from './state'
+import { StatesGetters } from './states-getters'
+import { FernspieleditorExtVersion, PhonebookFernspieleditorStatesExt } from '../../../phonebook/phonebook-fernspieleditor-ext'
 
 export function serialize (getters: StatesGetters): PhonebookSubsetForStates {
   return {

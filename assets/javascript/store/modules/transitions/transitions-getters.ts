@@ -25,7 +25,7 @@ export interface TransitionGetters {
 /**
  * Getters that are expected to be available on root for the getters to properly
  * function.
- * 
+ *
  * Exported for tests only.
  */
 export type TransitionRootGetters = StatesGetters

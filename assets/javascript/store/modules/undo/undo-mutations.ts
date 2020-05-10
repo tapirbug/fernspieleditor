@@ -26,15 +26,14 @@ export default {
     if (undo.undoing) {
       return
     }
-  
+
     // first delete all redo steps, if any
     undo.stack.length = undo.nextUndoIdx + 1
 
     // then add the new transaction to the end
     undo.stack.push(transaction)
-  
+
     // next step to undo is the last one, which we just added
     undo.nextUndoIdx = undo.stack.length - 1
   }
 }
-

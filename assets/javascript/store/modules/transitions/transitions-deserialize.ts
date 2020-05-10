@@ -27,7 +27,7 @@ export function deserialize (transitions: PhonebookTransitions): TransitionState
 }
 
 function deserializeTransitionsFrom (sourceState: string, transitionsForSource: PhonebookTransitionsForSourceState): TransitionState[] {
-  const transitions : TransitionSpec[] = []
+  const transitions: TransitionSpec[] = []
   if (typeof transitionsForSource.dial !== 'undefined') {
     transitions.push(
       ...deserializeDialSummaries(

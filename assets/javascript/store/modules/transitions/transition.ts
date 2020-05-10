@@ -9,10 +9,10 @@
  * much for editing.
  */
 
-import uuidV4 from "../../../util/random/uuid"
-import { gistWhen } from "./transition-gist"
+import uuidV4 from '../../../util/random/uuid'
+import { gistWhen } from './transition-gist'
 
-export function createTransition(input: TransitionSpec): TransitionState {
+export function createTransition (input: TransitionSpec): TransitionState {
   return {
     id: uuidV4(),
     removed: false,
@@ -20,7 +20,7 @@ export function createTransition(input: TransitionSpec): TransitionState {
   }
 }
 
-export function summarize(state: TransitionState, findName: (id: string) => string): TransitionSummary {
+export function summarize (state: TransitionState, findName: (id: string) => string): TransitionSummary {
   return {
     ...state,
     fromName: findName(state.from),
@@ -31,7 +31,7 @@ export function summarize(state: TransitionState, findName: (id: string) => stri
 
 export type Transition = Dial | Timeout | PickUp | HangUp | End
 
- /**
+/**
   * Persisted state of a transition.
   */
 export type TransitionState = DialState | TimeoutState | PickUpState | HangUpState | EndState
@@ -100,11 +100,10 @@ export interface SummaryCommon {
   toName: string
 }
 
-
 /**
   * Shared fields of all transition summary types.
   */
- export interface TransitionCommon {
+export interface TransitionCommon {
   /**
    * Type of the transition
    *

@@ -1,15 +1,15 @@
-import uuidV4 from "../../../util/random/uuid"
-import { Vec2D } from "assets/javascript/util/geom/vec2d"
-import { PhonebookStates } from "../../../phonebook/phonebook-states"
-import { PhonebookVendor } from "../../../phonebook/phonebook-vendor"
+import uuidV4 from '../../../util/random/uuid'
+import { Vec2D } from 'assets/javascript/util/geom/vec2d'
+import { PhonebookStates } from '../../../phonebook/phonebook-states'
+import { PhonebookVendor } from '../../../phonebook/phonebook-vendor'
 
 const defaultName = 'New State'
-const defaultPosition : Vec2D = {
+const defaultPosition: Vec2D = {
   x: 100,
   y: 100
 }
 
-export function createState(input: StateSpec): StateState {
+export function createState (input: StateSpec): StateState {
   return {
     removed: false,
     id: 'id' in input ? input.id : uuidV4(),
@@ -18,11 +18,11 @@ export function createState(input: StateSpec): StateState {
     sounds: 'sounds' in input ? input.sounds : [],
     ring: 'ring' in input ? input.ring : 0,
     terminal: 'terminal' in input ? input.terminal : false,
-    position: 'position' in input ? input.position : {...defaultPosition}
+    position: 'position' in input ? input.position : { ...defaultPosition }
   }
 }
 
-export function summarize(state: StateState): StateSummary {
+export function summarize (state: StateState): StateSummary {
   return {
     ...state
   }
@@ -37,10 +37,10 @@ export interface StateCommon {
   description: string
   sounds: string[]
   ring: number
-  terminal: boolean,
+  terminal: boolean
   /**
    * Position in the ntwork view.
-   * 
+   *
    * Not part of the core phonebook format, but persisted in
    * the vendor extensions of the phonebook.
    */
@@ -68,8 +68,7 @@ export interface StateSpec {
   position?: Vec2D
 }
 
-export interface StateSummary extends StateCommon {
-}
+export type StateSummary = StateCommon
 
 export interface StateSummaryWithRemoved extends StateSummary {
   removed: boolean
@@ -87,6 +86,6 @@ export interface StateCommon {
  */
 export interface PhonebookSubsetForStates {
   states: PhonebookStates
-  vendor: PhonebookVendor,
+  vendor: PhonebookVendor
   initial: string
 }

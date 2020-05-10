@@ -1,6 +1,6 @@
-import { InfoModuleState } from "./info-module-state"
-import { PhonebookSubsetForInfo } from "./info-deserialize"
-import { serializeInfo } from "./info-serialize"
+import { InfoModuleState } from './info-module-state'
+import { PhonebookSubsetForInfo } from './info-deserialize'
+import { serializeInfo } from './info-serialize'
 
 export const getters = {
   phonebookTitle: ({ info: { title } }: InfoModuleState) => title,

@@ -50,15 +50,15 @@ export const actions = {
 }
 
 interface StatesContext extends ActionContext<StatesModuleState, object> {
-  getters: StatesGetters,
+  getters: StatesGetters
   rootGetters: TransitionGetters
 }
 
-function addState({ commit }: StatesContext, spec: StateSpec): StateSummary {
+function addState ({ commit }: StatesContext, spec: StateSpec): StateSummary {
   const state = createState(spec)
   performReversible(
     commit,
-    "Add state",
+    'Add state',
     {
       mutation: PUSH_STATE,
       payload: state,
@@ -71,9 +71,9 @@ function addState({ commit }: StatesContext, spec: StateSpec): StateSummary {
   return summarize(state)
 }
 
-function removeState({ commit, state }: StatesContext, stateIdToRemove: string): void {
+function removeState ({ commit, state }: StatesContext, stateIdToRemove: string): void {
   if (stateIdToRemove === 'any') {
-    throw new Error("The any state cannot be removed")
+    throw new Error('The any state cannot be removed')
   }
 
   if (!state.states.some(({ id }) => id === stateIdToRemove)) {
@@ -84,11 +84,11 @@ function removeState({ commit, state }: StatesContext, stateIdToRemove: string):
 
   performReversible(
     commit,
-    "Remove state",
+    'Remove state',
     removeStateSteps()
   )
 
-  function removeStateSteps(): StepSpec[] {
+  function removeStateSteps (): StepSpec[] {
     const steps: StepSpec[] = []
 
     if (stateIdToRemove === state.focusedStateId) {
@@ -146,7 +146,7 @@ function continueUpdateState () {
     )
     debounceStateId = id
 
-    function updateState() {
+    function updateState () {
       dispatch(UPDATE_STATE, diff)
     }
   }
@@ -154,7 +154,7 @@ function continueUpdateState () {
 
 function updateState ({ commit, state: moduleState }: StatesContext, diff: StateSpec): StateSummary {
   if (!('id' in diff)) {
-    throw new Error(`Cannot update state, no ID given`)
+    throw new Error('Cannot update state, no ID given')
   }
 
   for (const existingState of moduleState.states) {
@@ -166,7 +166,7 @@ function updateState ({ commit, state: moduleState }: StatesContext, diff: State
 
       performReversible(
         commit,
-        "Update state",
+        'Update state',
         {
           mutation: REPLACE_STATE,
           payload: updatedState,
@@ -177,15 +177,15 @@ function updateState ({ commit, state: moduleState }: StatesContext, diff: State
       return summarize(updatedState)
     }
   }
-  
+
   throw new Error(`Cannot update state with ID ${diff.id}, not found`)
 }
 
-function focusState({ commit }: StatesContext, stateId: string|null): void {
+function focusState ({ commit }: StatesContext, stateId: string|null): void {
   commit(MUTATION_FOCUS_STATE, stateId)
 }
 
-function setInitialState({ state, commit }: StatesContext, stateId: string|null) {
+function setInitialState ({ state, commit }: StatesContext, stateId: string|null) {
   const previouslyInitial = state.initial
   performReversible(
     commit,

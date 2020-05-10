@@ -1,10 +1,10 @@
-import { StatesModuleState } from "./states-module-state";
-import { createState, PhonebookSubsetForStates, StateState } from "./state";
-import { Vec2D } from "assets/javascript/util/geom/vec2d";
+import { StatesModuleState } from './states-module-state'
+import { createState, PhonebookSubsetForStates, StateState } from './state'
+import { Vec2D } from 'assets/javascript/util/geom/vec2d'
 
 const anyId = 'any'
 
-export function deserialize(phonebook: PhonebookSubsetForStates): StatesModuleState {
+export function deserialize (phonebook: PhonebookSubsetForStates): StatesModuleState {
   const {
     states,
     vendor: { fernspieleditor: { focusedStateId, extensionProperties: { states: statesExt } } }
@@ -25,10 +25,10 @@ export function deserialize(phonebook: PhonebookSubsetForStates): StatesModuleSt
     Object.entries(states)
       .map(
         ([id, phonebookProps]) => {
-          const position : Vec2D = id in statesExt
+          const position: Vec2D = id in statesExt
             ? statesExt[id].network.position
             : { x: 300, y: 300 }
-          const stateState : StateState = createState({
+          const stateState: StateState = createState({
             id,
             ...phonebookProps,
             position

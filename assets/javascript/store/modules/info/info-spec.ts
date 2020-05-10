@@ -3,7 +3,7 @@
  */
 export interface InfoSpec {
   title?: string
-  description?: string,
-  author?: string,
+  description?: string
+  author?: string
   iteration?: number
 }

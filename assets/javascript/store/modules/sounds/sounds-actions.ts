@@ -33,8 +33,8 @@ export const actions = {
   [SERIALIZE_SOUNDS]: doSerializeSounds
 }
 
-function addSound({ commit }: SoundsContext, spec: SoundSpec): Sound {
-  const sound : Sound = createSound({
+function addSound ({ commit }: SoundsContext, spec: SoundSpec): Sound {
+  const sound: Sound = createSound({
     ...defaultSound(),
     ...spec
   })
@@ -53,7 +53,7 @@ function addSound({ commit }: SoundsContext, spec: SoundSpec): Sound {
   return sound
 }
 
-function removeSound({ commit }: SoundsContext, id: string): void {
+function removeSound ({ commit }: SoundsContext, id: string): void {
   performReversible(
     commit,
     'Remove sound',
@@ -66,7 +66,7 @@ function removeSound({ commit }: SoundsContext, id: string): void {
   )
 }
 
-function updateSound({ commit, getters }: SoundsContext, update: SoundSpec): void {
+function updateSound ({ commit, getters }: SoundsContext, update: SoundSpec): void {
   if (!('id' in update)) {
     throw new Error('ID is mandatory, cannot update')
   }
@@ -90,10 +90,10 @@ function updateSound({ commit, getters }: SoundsContext, update: SoundSpec): voi
 }
 
 function doSerializeSounds ({ state }: SoundsContext): Promise<PhonebookSubsetForSounds> {
-  return serializeSounds(state)
+  return await serializeSounds(state)
 }
 
-/*function sanitizeSound (sound) {
+/* function sanitizeSound (sound) {
   const sanitized = {
     // Make sure props have expected types
     name: toStr(sound.name),

@@ -1,7 +1,7 @@
 import {
   PhonebookInfo
 } from '../../../phonebook/phonebook-info'
-import { InfoModuleState } from './info-module-state';
+import { InfoModuleState } from './info-module-state'
 
 export interface PhonebookSubsetForInfo {
   info: PhonebookInfo

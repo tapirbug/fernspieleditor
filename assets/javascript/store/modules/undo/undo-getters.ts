@@ -1,5 +1,5 @@
-import { UndoState } from "./undo-state";
-import { Transaction } from "./undo-transaction";
+import { UndoState } from './undo-state'
+import { Transaction } from './undo-transaction'
 
 export interface UndoGetters {
   readonly canUndo: boolean
@@ -17,7 +17,7 @@ export const getters = {
   undoStepTitle
 }
 
-function canUndo ({stack, nextUndoIdx}: UndoState): boolean {
+function canUndo ({ stack, nextUndoIdx }: UndoState): boolean {
   return stack.length > 0 && nextUndoIdx > 0
 }
 

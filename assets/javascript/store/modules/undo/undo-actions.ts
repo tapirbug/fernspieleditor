@@ -26,7 +26,7 @@ interface UndoContext extends ActionContext<UndoState, object> {
   getters: UndoGetters
 }
 
-function undo(ctx: UndoContext) {
+function undo (ctx: UndoContext) {
   const { commit, getters } = ctx
 
   if (!getters.canUndo) {
@@ -39,9 +39,9 @@ function undo(ctx: UndoContext) {
   commit(FINISH_UNDO)
 }
 
-function redo(ctx: UndoContext) {
+function redo (ctx: UndoContext) {
   const { commit, getters } = ctx
-  
+
   if (!getters.canRedo) {
     return
   }

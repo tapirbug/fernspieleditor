@@ -26,7 +26,7 @@ function pushState (moduleState: StatesModuleState, newState: StateState): void 
   moduleState.states.push(newState)
 }
 
-function setStateRemoved(removed: boolean): (StatesModuleState, string) => void {
+function setStateRemoved (removed: boolean): (StatesModuleState, string) => void {
   return function (moduleState: StatesModuleState, id: string) {
     for (const state of moduleState.states) {
       if (state.id === id) {
@@ -38,7 +38,7 @@ function setStateRemoved(removed: boolean): (StatesModuleState, string) => void 
   }
 }
 
-function replaceState(moduleState: StatesModuleState, updated: StateState) {
+function replaceState (moduleState: StatesModuleState, updated: StateState) {
   const updateIdx = moduleState.states.findIndex(eachState => eachState.id === updated.id)
   if (updateIdx === -1) {
     throw new Error(`ID ${updated.id} could not be updated because it was not found`)
@@ -51,7 +51,7 @@ function replacePhonebook (moduleState: StatesModuleState, phonebook: Phonebook)
   // clear existing states
   moduleState.states = []
   moduleState.focusedStateId = null
-  
+
   // and set the new ones
   if (typeof phonebook === 'object' && typeof phonebook.states === 'object') {
     moduleState.states = Object.entries(phonebook.states)
@@ -59,10 +59,10 @@ function replacePhonebook (moduleState: StatesModuleState, phonebook: Phonebook)
   }
 }
 
-function focusState(moduleState: StatesModuleState, stateId: string) {
+function focusState (moduleState: StatesModuleState, stateId: string) {
   moduleState.focusedStateId = stateId
 }
 
-function makeInitialState(moduleState: StatesModuleState, id: string) {
+function makeInitialState (moduleState: StatesModuleState, id: string) {
   moduleState.initial = id
 }

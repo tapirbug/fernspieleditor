@@ -20,26 +20,26 @@ interface SerializeContext extends ActionContext<any, any> {
   rootGetters: ModuleGetters
 }
 
-async function toYaml(ctx): Promise<string> {
+async function toYaml (ctx): Promise<string> {
   const phonebook = await serialize(ctx)
   return YAML.stringify(phonebook)
 }
 
-async function serialize({ dispatch, getters, rootState, rootGetters }: SerializeContext): Promise<Phonebook> {
+async function serialize ({ dispatch, getters, rootState, rootGetters }: SerializeContext): Promise<Phonebook> {
   if (!getters.canSave) {
-    return Promise.reject(new Error('File is inconsistent and cannot be saved'))
+    return await Promise.reject(new Error('File is inconsistent and cannot be saved'))
   }
 
-  const phonebookSubsetForSounds = await dispatch(SERIALIZE_SOUNDS, null, {root: true}) as PhonebookSubsetForSounds
+  const phonebookSubsetForSounds = await dispatch(SERIALIZE_SOUNDS, null, { root: true }) as PhonebookSubsetForSounds
   const {
     phonebookSubsetForInfo,
     phonebookSubsetForStates
   } = rootGetters
-  const phonebook : Phonebook = {
+  const phonebook: Phonebook = {
     info: { ...phonebookSubsetForInfo.info },
     sounds: { ...phonebookSubsetForSounds.sounds },
     initial: rootGetters.initial,
-    states: {...phonebookSubsetForStates.states},
+    states: { ...phonebookSubsetForStates.states },
     transitions: rootGetters.transitions,
     vendor: {
       fernspieleditor: {
@@ -52,6 +52,4 @@ async function serialize({ dispatch, getters, rootState, rootGetters }: Serializ
     }
   }
   return phonebook
-
-  
 }

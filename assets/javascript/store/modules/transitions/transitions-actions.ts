@@ -6,7 +6,7 @@ import {
 } from '../../mutation-types'
 import areTransitionsMutuallyExclusive from './transition-exclusive'
 import { TransitionSummary, TransitionSpec, createTransition, TransitionState, summarize } from './transition'
-import { Step, StepSpec }  from '../undo/undo-step'
+import { Step, StepSpec } from '../undo/undo-step'
 import performReversible from '../undo/undo-reversible'
 
 export interface TransitionsActions {
@@ -21,11 +21,11 @@ export const actions = {
 
 /**
  * Adds the given transition and returns its ID.
- * 
+ *
  * @param ctx vuex context
- * @param newTransition 
+ * @param newTransition
  */
-function addTransition({ commit, getters, rootGetters }, input: TransitionSpec): TransitionSummary {
+function addTransition ({ commit, getters, rootGetters }, input: TransitionSpec): TransitionSummary {
   const transition = createTransition(input)
   const summary = summarize(
     transition,
@@ -39,12 +39,12 @@ function addTransition({ commit, getters, rootGetters }, input: TransitionSpec):
   return summary
 }
 
-function addTransitionSteps(getters, transition: TransitionState): Step[] {
+function addTransitionSteps (getters, transition: TransitionState): Step[] {
   const steps = []
   for (const existingTransition of getters.summaries as TransitionSummary[]) {
     if (areTransitionsMutuallyExclusive(existingTransition, transition)) {
       // e.g. if there already is a "Dial 5" on this state, or if there already is a "Pick Up"
-      const removeConflicting : StepSpec = {
+      const removeConflicting: StepSpec = {
         mutation: SET_TRANSITION_REMOVED,
         payload: existingTransition.id,
         undoMutation: SET_TRANSITION_REVIVED,
@@ -54,7 +54,7 @@ function addTransitionSteps(getters, transition: TransitionState): Step[] {
     }
   }
 
-  const addNew : Step = {
+  const addNew: Step = {
     mutation: PUSH_TRANSITION,
     payload: transition,
     undoMutation: SET_TRANSITION_REMOVED,
@@ -67,7 +67,7 @@ function addTransitionSteps(getters, transition: TransitionState): Step[] {
   return steps
 }
 
-function removeTransition({ commit }, transitionId: string) {
+function removeTransition ({ commit }, transitionId: string) {
   performReversible(
     commit,
     `Remove transition ${transitionId}`,

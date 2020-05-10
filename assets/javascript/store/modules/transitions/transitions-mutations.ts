@@ -17,7 +17,7 @@ export default {
 }
 
 function pushTransition (state: TransitionModuleState, newTransition: TransitionState): void {
-   // first time adding this transition, add to the end
+  // first time adding this transition, add to the end
   state.transitions.push(newTransition)
 }
 

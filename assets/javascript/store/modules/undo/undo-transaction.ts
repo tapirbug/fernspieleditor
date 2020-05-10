@@ -1,4 +1,4 @@
-import { Step, StepSpec, createStep } from "./undo-step";
+import { Step, StepSpec, createStep } from './undo-step'
 
 export interface Transaction {
   /**
@@ -30,14 +30,14 @@ export interface TransactionSpec {
 
 /**
  * Instantiates a transaction from the given specification.
- * 
+ *
  * @param spec title and step(s)
  */
-export function createTransaction(spec: TransactionSpec): Transaction {
+export function createTransaction (spec: TransactionSpec): Transaction {
   const { title, stepSpecOrSpecs } = spec
   const stepSpecs = ('length' in stepSpecOrSpecs)
     ? stepSpecOrSpecs
-    : [ stepSpecOrSpecs ]
+    : [stepSpecOrSpecs]
   const steps = stepSpecs.map(createStep)
   return {
     title,

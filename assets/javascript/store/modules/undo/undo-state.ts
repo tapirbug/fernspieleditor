@@ -1,4 +1,4 @@
-import { Transaction } from "./undo-transaction";
+import { Transaction } from './undo-transaction'
 
 export interface UndoState {
   stack: Transaction[]
@@ -10,7 +10,7 @@ export interface UndoState {
 /**
  * Initial state of the `undo` module.
  */
-export function initialState() : UndoState {
+export function initialState (): UndoState {
   return {
     stack: [],
     nextUndoIdx: 0,
@@ -18,4 +18,3 @@ export function initialState() : UndoState {
     firstContribution: false
   }
 }
-

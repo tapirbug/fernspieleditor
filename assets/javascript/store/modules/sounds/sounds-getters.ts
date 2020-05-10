@@ -1,11 +1,11 @@
-import { Sound } from "./sound"
-import { SoundsModuleState } from "./sounds-module-state"
-import { PhonebookSubsetForSounds } from "./sounds-phonebook-subset"
-import { serializeSounds } from "./sounds-serialize"
+import { Sound } from './sound'
+import { SoundsModuleState } from './sounds-module-state'
+import { PhonebookSubsetForSounds } from './sounds-phonebook-subset'
+import { serializeSounds } from './sounds-serialize'
 
 export interface SoundsGetters {
   findSound(id: string): Sound|null
-  readonly sounds: ReadonlyArray<Sound>
+  readonly sounds: readonly Sound[]
   hasFile(id: string): boolean
   isEmbedded(id: string): boolean
 }
@@ -24,7 +24,7 @@ export const getters = {
   isEmbedded
 }
 
-function findSound (state: SoundsModuleState): (string)=>Sound|null {
+function findSound (state: SoundsModuleState): (string) => Sound|null {
   return function (id: string) {
     for (const sound of state.sounds) {
       if (sound.id === id) {
@@ -35,11 +35,11 @@ function findSound (state: SoundsModuleState): (string)=>Sound|null {
   }
 }
 
-function sounds (state: SoundsModuleState): ReadonlyArray<Sound> {
+function sounds (state: SoundsModuleState): readonly Sound[] {
   return state.sounds.filter(sound => !sound.removed)
 }
 
-function hasFile (state: SoundsModuleState, getters: SoundsGetters): (string)=>boolean {
+function hasFile (state: SoundsModuleState, getters: SoundsGetters): (string) => boolean {
   return function (id: string) {
     const sound = getters.findSound(id)
     if (sound === null) {
@@ -49,7 +49,7 @@ function hasFile (state: SoundsModuleState, getters: SoundsGetters): (string)=>b
   }
 }
 
-function isEmbedded (state: SoundsModuleState, getters: SoundsGetters): (string)=>boolean {
+function isEmbedded (state: SoundsModuleState, getters: SoundsGetters): (string) => boolean {
   return function (id: string) {
     const sound = getters.findSound(id)
     if (sound === null) {

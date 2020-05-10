@@ -1,13 +1,13 @@
-import { StepSpec, createStep } from "./undo-step";
-import { DO } from "../../mutation-types";
-import { createTransaction } from "./undo-transaction";
-import { Commit } from "vuex";
+import { StepSpec, createStep } from './undo-step'
+import { DO } from '../../mutation-types'
+import { createTransaction } from './undo-transaction'
+import { Commit } from 'vuex'
 
-export default function performReversible(commit: Commit, title: string, stepSpecOrSpecs: StepSpec | StepSpec[]) {
+export default function performReversible (commit: Commit, title: string, stepSpecOrSpecs: StepSpec | StepSpec[]) {
   const transaction = createTransaction({ title, stepSpecOrSpecs })
 
   // do it for the first time
-  for(const step of transaction.steps) {
+  for (const step of transaction.steps) {
     commit(step.mutation, step.payload, { root: true })
   }
 

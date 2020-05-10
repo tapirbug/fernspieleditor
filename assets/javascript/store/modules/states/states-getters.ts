@@ -1,9 +1,7 @@
-import { StateState, createState, StateSummary, summarize, StateSummaryWithRemoved, PhonebookSubsetForStates } from "./state"
-import { StatesModuleState } from "./states-module-state"
-import { PhonebookStates } from "assets/javascript/phonebook/phonebook-states"
-import { serialize } from "./states-serialize"
-
-
+import { StateState, createState, StateSummary, summarize, StateSummaryWithRemoved, PhonebookSubsetForStates } from './state'
+import { StatesModuleState } from './states-module-state'
+import { PhonebookStates } from 'assets/javascript/phonebook/phonebook-states'
+import { serialize } from './states-serialize'
 
 export interface StatesGetters {
   /**
@@ -17,7 +15,7 @@ export interface StatesGetters {
   readonly stateIds: string[]
   findState(id: string): StateSummary|null
   isAny(id: string): boolean
-  isRemoved(stateId: string): boolean,
+  isRemoved(stateId: string): boolean
   readonly focusedState: StateSummary|null
   readonly hasFocusedState: boolean
   isFocused(stateId: string): boolean
@@ -65,39 +63,39 @@ export const getters = {
   phonebookSubsetForStates
 }
 
-function stateStates(state: StatesModuleState): StateState[] {
+function stateStates (state: StatesModuleState): StateState[] {
   return state.states
 }
 
-function activeStateStates(state: StatesModuleState): StateState[] {
+function activeStateStates (state: StatesModuleState): StateState[] {
   return stateStates(state)
-      .filter(s => !s.removed)
+    .filter(s => !s.removed)
 }
 
-function allStates(state: StatesModuleState): StateSummaryWithRemoved[] {
+function allStates (state: StatesModuleState): StateSummaryWithRemoved[] {
   return stateStates(state)
-      .map(stateState => {
-        return {
-          ...summarize(stateState),
-          removed: stateState.removed
-        }
-      })
+    .map(stateState => {
+      return {
+        ...summarize(stateState),
+        removed: stateState.removed
+      }
+    })
 }
 
-function states(state: StatesModuleState): StateSummary[] {
+function states (state: StatesModuleState): StateSummary[] {
   return activeStateStates(state)
-      .map(summarize)
+    .map(summarize)
 }
 
-function stateIds(state: StatesModuleState) {
-    return activeStateStates(state)
-        .map(s => s.id)
+function stateIds (state: StatesModuleState) {
+  return activeStateStates(state)
+    .map(s => s.id)
 }
 
-function findState(state: StatesModuleState): (string) => StateSummary|null {
-  return function(id: string): StateSummary|null {
+function findState (state: StatesModuleState): (string) => StateSummary|null {
+  return function (id: string): StateSummary|null {
     const matching = stateStates(state)
-        .filter(s => s.id === id)
+      .filter(s => s.id === id)
 
     if (matching.length === 0) {
       return null
@@ -107,12 +105,12 @@ function findState(state: StatesModuleState): (string) => StateSummary|null {
   }
 }
 
-function isAny(): (string) => boolean {
+function isAny (): (string) => boolean {
   return id => id === 'any'
 }
 
-function isRemoved(moduleState: StatesModuleState): (string) => boolean {
-  return function(stateId): boolean {
+function isRemoved (moduleState: StatesModuleState): (string) => boolean {
+  return function (stateId): boolean {
     for (const state of moduleState.states) {
       if (state.id === stateId) {
         return state.removed
@@ -147,16 +145,16 @@ function initial (moduleState: StatesModuleState): string|null {
   return moduleState.initial
 }
 
-function hasInitial (moduleState:  StatesModuleState): boolean {
+function hasInitial (moduleState: StatesModuleState): boolean {
   return moduleState.initial !== null
 }
 
 function isInitial (moduleState: StatesModuleState): (string) => boolean {
-  return function(id) {
+  return function (id) {
     return id === moduleState.initial
   }
 }
 
-function phonebookSubsetForStates(_, getters: StatesGetters): PhonebookSubsetForStates {
+function phonebookSubsetForStates (_, getters: StatesGetters): PhonebookSubsetForStates {
   return serialize(getters)
 }

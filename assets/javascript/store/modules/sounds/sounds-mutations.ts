@@ -12,7 +12,7 @@ export const mutations = {
   [PUSH_SOUND]: pushSound,
   [REPLACE_SOUND]: replaceSound,
   [SET_SOUND_REMOVED]: setSoundRemoved(true),
-  [SET_SOUND_REVIVED]: setSoundRemoved(false),
+  [SET_SOUND_REVIVED]: setSoundRemoved(false)
 }
 
 function pushSound (state: SoundsModuleState, sound: Sound): void {
@@ -28,7 +28,7 @@ function replaceSound (state: SoundsModuleState, newSound: Sound) {
 }
 
 function setSoundRemoved (removed: boolean): (SoundsModuleState, string) => void {
-  return function forStateAndId(state: SoundsModuleState, id: string) {
+  return function forStateAndId (state: SoundsModuleState, id: string) {
     for (const existingSound of state.sounds) {
       if (existingSound.id === id) {
         existingSound.removed = removed

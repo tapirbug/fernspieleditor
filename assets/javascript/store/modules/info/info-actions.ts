@@ -23,14 +23,13 @@ export const actions = {
 
 export const infoActionMapping = {
   updateInfo: UPDATE_INFO,
-  bumpIteration: BUMP_ITERATION 
+  bumpIteration: BUMP_ITERATION
 }
 
-interface InfoContext extends ActionContext<InfoModuleState, any> {
-}
+type InfoContext = ActionContext<InfoModuleState, any>
 
 function updateInfo ({ commit, state: { info: oldInfo } }: InfoContext, diff: InfoSpec): void {
-  const updated : Info = {
+  const updated: Info = {
     ...oldInfo,
     ...diff
   }
@@ -46,6 +45,6 @@ function updateInfo ({ commit, state: { info: oldInfo } }: InfoContext, diff: In
 }
 
 function bumpIteration ({ dispatch, state: { info: { iteration } } }: InfoContext): void {
-  const bumpedSpec : InfoSpec = { iteration: iteration + 1 }
+  const bumpedSpec: InfoSpec = { iteration: iteration + 1 }
   dispatch(UPDATE_INFO, bumpedSpec) // iteration is intentionally not reversible
 }
