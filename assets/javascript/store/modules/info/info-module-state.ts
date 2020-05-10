@@ -1,6 +1,5 @@
+import { Info } from "./info";
+
 export interface InfoModuleState {
-  title: string
-  description: string,
-  author: string,
-  iteration: number
+  info: Info
 }

@@ -7,6 +7,10 @@ export const TO_YAML = 'TO_YAML'
 export const UNDO = 'UNDO'
 export const REDO = 'REDO'
 
+// Update phonebook info (author, title, increment iteration, etc.)
+export const UPDATE_INFO = 'UPDATE_INFO'
+export const BUMP_ITERATION = 'BUMP_ITERATION'
+
 /// Connect/deploy
 export const CONNECT = 'CONNECT'
 export const DISCONNECT = 'DISCONNECT'

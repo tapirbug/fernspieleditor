@@ -4,6 +4,8 @@ import { TO_YAML, SERIALIZE } from '../../action-types.js'
 import { Phonebook } from '../../../phonebook/phonebook'
 import { PhonebookSubsetForStates } from '../states/state.js'
 import { FernspieleditorExtVersion } from '../../../phonebook/phonebook-fernspieleditor-ext'
+import { ActionContext } from 'vuex'
+import { ModuleGetters } from '../module-getters.js'
 
 export interface SerializeActions {
   toYaml(): Promise<string>
@@ -15,19 +17,26 @@ export const actions = {
   [SERIALIZE]: serialize
 }
 
+interface SerializeContext extends ActionContext<any, any> {
+  rootGetters: ModuleGetters
+}
+
 async function toYaml(ctx): Promise<string> {
   const phonebook = await serialize(ctx)
   return YAML.stringify(phonebook)
 }
 
-async function serialize({ getters, rootState, rootGetters }): Promise<Phonebook> {
+async function serialize({ getters, rootState, rootGetters }: SerializeContext): Promise<Phonebook> {
   if (!getters.canSave) {
     return Promise.reject(new Error('File is inconsistent and cannot be saved'))
   }
 
-  const phonebookSubsetForStates: PhonebookSubsetForStates = rootGetters.phonebookSubsetForStates
+  const {
+    phonebookSubsetForInfo,
+    phonebookSubsetForStates
+  } = rootGetters
   const phonebook : Phonebook = {
-    info: rootState.info,
+    info: { ...phonebookSubsetForInfo.info },
     sounds: await inlineFiles(rootState.sounds),
     initial: rootGetters.initial,
     states: {...phonebookSubsetForStates.states},

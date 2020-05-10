@@ -9,9 +9,11 @@ export interface PhonebookSubsetForInfo {
 
 export function deserializeInfo (phonebook: PhonebookSubsetForInfo): InfoModuleState {
   return {
-    title: phonebook.info.title,
-    author: phonebook.info.author,
-    description: phonebook.info.description,
-    iteration: phonebook.info.iteration
+    info: {
+      title: phonebook.info.title,
+      author: phonebook.info.author,
+      description: phonebook.info.description,
+      iteration: phonebook.info.iteration
+    }
   }
 }

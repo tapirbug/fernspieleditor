@@ -87,5 +87,10 @@ export function createStep (spec: StepSpec) : Step {
   const undoPayload = 'undoPayload' in spec ? spec.undoPayload : payload
   const redoMutation = 'redoMutation' in spec ? spec.redoMutation : mutation
   const redoPayload = 'redoPayload' in spec ? spec.redoPayload : payload
-  return { mutation, payload, undoMutation, undoPayload, redoMutation, redoPayload }
+  const step = { mutation, payload, undoMutation, undoPayload, redoMutation, redoPayload }
+  
+  // make an immutable copy of the step so it cannot be changed afterwards
+  const immutableStep = JSON.parse(JSON.stringify(step))
+  Object.freeze(immutableStep)
+  return immutableStep
 }

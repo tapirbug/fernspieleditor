@@ -1,3 +1,4 @@
+import { actions } from './info-actions'
 import { getters } from './info-getters'
 import { mutations } from './info-mutations'
 import { PhonebookSubsetForInfo, deserializeInfo } from './info-deserialize'
@@ -15,6 +16,7 @@ import { PhonebookSubsetForInfo, deserializeInfo } from './info-deserialize'
  */
 export default function createInfoModule (info: PhonebookSubsetForInfo) {
   return {
+    actions,
     state: deserializeInfo(info),
     getters,
     mutations

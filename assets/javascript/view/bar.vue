@@ -1,8 +1,9 @@
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { saveAs } from 'file-saver'
 import { TO_YAML, LOAD_FILE, CONNECT, DEPLOY } from '../store/action-types.js'
 import { SET_PHONEBOOK_TITLE, BUMP_ITERATION } from '../store/mutation-types.js'
+import { infoActionMapping } from '../store/modules/info/info-actions'
 
 /**
  * Menu bar.
@@ -40,11 +41,8 @@ export default {
   methods: {
     ...mapActions({
       connect: CONNECT,
-      deploy: DEPLOY
-    }),
-    ...mapMutations({
-      setPhonebookTitle: SET_PHONEBOOK_TITLE,
-      bumpIteration: BUMP_ITERATION
+      deploy: DEPLOY,
+      ...infoActionMapping
     }),
     // Run / deploy
     setEndpoint (newEndpoint) {
@@ -156,9 +154,10 @@ export default {
     typedPhonebookTitle (evt) {
       const oldTitle = this.phonebookTitle
       const newTitle = evt.target.innerText
-
       if (oldTitle !== newTitle) {
-        this.setPhonebookTitle({ oldTitle, newTitle })
+        this.updateInfo({
+          title: newTitle
+        })
       }
     }
   }

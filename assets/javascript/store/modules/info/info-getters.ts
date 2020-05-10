@@ -1,12 +1,15 @@
 import { InfoModuleState } from "./info-module-state"
+import { PhonebookSubsetForInfo } from "./info-deserialize"
+import { serializeInfo } from "./info-serialize"
 
 export const getters = {
-  phonebookTitle: (infoState: InfoModuleState) => infoState.title,
-  phonebookAuthor: (infoState: InfoModuleState) => infoState.author,
-  phonebookDescription: (infoState: InfoModuleState) => infoState.description,
-  iteration: (infoState: InfoModuleState) => infoState.iteration || 0,
-  filenameSuggestion: (infoState: InfoModuleState) =>
-    `${snakeCase(infoState.title)}-${infoState.iteration || 0}.phonebook.yaml`
+  phonebookTitle: ({ info: { title } }: InfoModuleState) => title,
+  phonebookAuthor: ({ info: { author } }: InfoModuleState) => author,
+  phonebookDescription: ({ info: { description } }: InfoModuleState) => description,
+  iteration: ({ info: { iteration } }: InfoModuleState) => iteration,
+  filenameSuggestion: ({ info: { title, iteration } }: InfoModuleState) =>
+    `${snakeCase(title)}-${iteration}.phonebook.yaml`,
+  phonebookSubsetForInfo: (state: InfoModuleState) => serializeInfo(state)
 }
 
 export interface InfoGetters {
@@ -15,6 +18,7 @@ export interface InfoGetters {
   readonly phonebookDescription: string
   readonly iteration: number
   readonly filenameSuggestion: string
+  readonly phonebookSubsetForInfo: PhonebookSubsetForInfo
 }
 
 function snakeCase (sentence: string): string {

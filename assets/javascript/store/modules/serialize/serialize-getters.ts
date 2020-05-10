@@ -1,3 +1,8 @@
+export interface SerializeGetters {
+  readonly canSave: boolean
+  readonly saveBlockers: string[]
+}
+
 export const getters = {
   canSave: (_state, getters) => {
     return getters.saveBlockers.length === 0

@@ -1,14 +1,11 @@
 import {
-  SET_PHONEBOOK_TITLE,
-  BUMP_ITERATION
+  SET_INFO
 } from '../../mutation-types.js'
 import { InfoModuleState } from './info-module-state.js'
+import { Info } from './info.js'
 
 export const mutations = {
-  [SET_PHONEBOOK_TITLE] (info: InfoModuleState, { newTitle }) {
-    info.title = newTitle
-  },
-  [BUMP_ITERATION] (info: InfoModuleState) {
-    info.iteration = typeof info.iteration === 'number' ? (info.iteration + 1) : 1
+  [SET_INFO] (moduleState: InfoModuleState, newInfo: Info) {
+    moduleState.info = newInfo
   }
 }

@@ -17,8 +17,7 @@ export const ENTER_REMOTE = 'ENTER_REMOTE'
 export const RELEASE_SOCKET = 'RELEASE_SOCKET'
 
 // Phonebook Metadata
-export const SET_PHONEBOOK_TITLE = 'SET_PHONEBOOK_TITLE'
-export const BUMP_ITERATION = 'BUMP_ITERATION'
+export const SET_INFO = 'SET_INFO'
 
 // State mutations
 export const PUSH_STATE = 'PUSH_STATE'
