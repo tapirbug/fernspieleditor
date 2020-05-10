@@ -1,5 +1,4 @@
 <script>
-import { ADD_TRANSITION } from '../store/action-types'
 import { data, computed, methods, props } from './transition-dialog-logic'
 
 /**
