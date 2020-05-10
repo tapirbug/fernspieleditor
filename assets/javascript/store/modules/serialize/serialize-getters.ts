@@ -1,11 +1,11 @@
-export default {
+export const getters = {
   canSave: (_state, getters) => {
     return getters.saveBlockers.length === 0
   },
-  saveBlockers: (_state, _getters, { states, initial: { initial } }, rootGetters) => {
+  saveBlockers: (_state, _getters, _, rootGetters) => {
     const blockers = []
 
-    if (!initial) {
+    if (!rootGetters.hasInitial) {
       blockers.push('Some state must be marked as the initial state')
     }
 

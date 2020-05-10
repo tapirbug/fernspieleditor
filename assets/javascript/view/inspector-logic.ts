@@ -1,7 +1,10 @@
-import { CONTINUE_UPDATE_STATE } from '../store/action-types.js'
-import { REMOVE_STATE, MAKE_INITIAL_STATE } from '../store/mutation-types.js'
+import { MAKE_INITIAL_STATE } from '../store/mutation-types.js'
 import { REMOVE_TRANSITION } from '../store/action-types.js'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { statesGetterMappings, StatesGetters } from '../store/modules/states/states-getters'
+import { statesActionMapping, StatesActions } from '../store/modules/states/states-actions'
+
+interface Inspector extends StatesActions, StatesGetters {}
 
 /**
  * Editor for the currently focused element.
@@ -14,10 +17,8 @@ export function data () {
 
 export const computed = {
   ...mapGetters([
-    'focusedStateId',
-    'focusedState',
+    ...statesGetterMappings,
     'hasFocusedState',
-    'isAny',
     'transitionSummariesWith',
     'initial',
     'isInitial'
@@ -25,15 +26,15 @@ export const computed = {
   nothingFocused () {
     return !this.hasFocusedState
   }
-};
+}
 
 export const methods = {
-  ...mapMutations([REMOVE_STATE, MAKE_INITIAL_STATE]),
+  ...mapMutations([MAKE_INITIAL_STATE]),
   ...mapActions({
     removeTransition: REMOVE_TRANSITION,
-    continueUpdateState: CONTINUE_UPDATE_STATE
+    ...statesActionMapping
   }),
-  change (evtOrNewValue, id, prop) {
+  change (this: Inspector, evtOrNewValue, id, prop) {
     let value = (() => {
       if (typeof evtOrNewValue !== 'object') {
         // Scalar has been passed directly
@@ -62,20 +63,9 @@ export const methods = {
     if (value !== prevValue) {
       this.continueUpdateState({
         id,
-        change: {
-          [prop]: value
-        },
-        changeBack: {
-          [prop]: prevValue
-        }
+        [prop]: value
       })
     }
-  },
-  removeState () {
-    this[REMOVE_STATE]({
-      id: this.focusedStateId,
-      wasInitial: this.isInitial(this.focusedStateId)
-    })
   },
   toggleActiveClass (when) {
     return {
@@ -83,14 +73,11 @@ export const methods = {
       'is-inactive': !when
     }
   },
-  setInitial (evt) {
-    this[MAKE_INITIAL_STATE](
-      {
-        change: evt.target.checked
+  setInitial (this: Inspector, evt) {
+    this.setInitialState(
+      evt.target.checked
           ? this.focusedStateId
-          : null,
-        changeBack: this.initial
-      }
+          : null
     )
   }
 }

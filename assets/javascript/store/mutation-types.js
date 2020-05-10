@@ -21,9 +21,10 @@ export const SET_PHONEBOOK_TITLE = 'SET_PHONEBOOK_TITLE'
 export const BUMP_ITERATION = 'BUMP_ITERATION'
 
 // State mutations
-export const UPDATE_STATE = 'UPDATE_STATE'
-export const ADD_STATE = 'ADD_STATE'
-export const REMOVE_STATE = 'REMOVE_STATE'
+export const PUSH_STATE = 'PUSH_STATE'
+export const SET_STATE_REMOVED = 'SET_STATE_REMOVED'
+export const SET_STATE_REVIVED = 'SET_STATE_REVIVED'
+export const REPLACE_STATE = 'REPLACE_STATE'
 export const MOVE_STATE = 'MOVE_STATE'
 export const MAKE_INITIAL_STATE = 'MAKE_INITIAL_STATE'
 

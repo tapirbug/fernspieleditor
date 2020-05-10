@@ -172,7 +172,7 @@ export default {
         <footer>
           <button
             class="dangerous"
-            @click="removeState"
+            @click="removeState(focusedStateId)"
           >
             Delete state
           </button>

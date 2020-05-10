@@ -1,5 +1,5 @@
-import actions from './serialize-actions.js'
-import getters from './serialize-getters.js'
+import { actions } from './serialize-actions'
+import { getters } from './serialize-getters'
 
 /**
  * Initialize the `vuex` module for exporting phonebooks as YAML files.

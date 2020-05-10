@@ -1,11 +1,9 @@
-import deserialize from './deserialize/index.js'
-import editor from './editor/index.js'
+import deserialize from './deserialize/index'
 import info from './info/index.js'
-import initial from './initial/index.js'
 import remote from './remote/index.js'
-import serialize from './serialize/index.js'
+import serialize from './serialize/index'
 import sounds from './sounds/index.js'
-import states from './states/index.js'
+import states from './states/index'
 import transitions from './transitions/index'
 import undo from './undo/index'
 
@@ -17,7 +15,6 @@ import undo from './undo/index'
  * * `store.states` (State machine states and their inherent properties).
  * * `store.transitions` (Transitions between states)
  * * `store.sounds` (Speech and sound files)
- * * `store.vendor.fernspieleditor` (Editor-specific data, e.g. state positions in the editor)
  *
  * And these stateless modules:
  * * `serialize`
@@ -27,26 +24,12 @@ import undo from './undo/index'
  * @returns {object} `vuex` module for states
  */
 export default function createModules (phonebook) {
-  const editorState = (phonebook.vendor && phonebook.vendor.fernspieleditor)
-    ? phonebook.vendor.fernspieleditor
-    : {}
-
   return {
     info: info(phonebook.info || {}),
-    initial: initial(phonebook),
     deserialize: deserialize(),
-    states: states(phonebook.states || {}),
+    states: states(phonebook || {}),
     transitions: transitions(phonebook.transitions || {}),
     sounds: sounds(phonebook.sounds || {}),
-    vendor: {
-      state: {},
-      getters: {},
-      actions: {},
-      mutations: {},
-      modules: {
-        fernspieleditor: editor(editorState)
-      }
-    },
     serialize: serialize(),
     remote: remote(),
     undo: undo()

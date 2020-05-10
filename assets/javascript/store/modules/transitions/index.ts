@@ -1,4 +1,4 @@
-import actions from './transitions-actions'
+import { actions } from './transitions-actions'
 import { getters } from './transitions-getters'
 import mutations from './transitions-mutations'
 import { deserialize } from './transitions-deserialize'

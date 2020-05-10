@@ -89,15 +89,15 @@ export default {
         <div>
           <section class="transition-dialog-state-selection">
             <label
-              v-for="(state, id) in states"
-              :key="`${id}-label`"
+              v-for="state in states"
+              :key="`${state.id}-label`"
               class="stack pseudo button toggle"
               @change="updateTransitionIfComplete('#tab-1')"
             >
               {{ state.name }}
               <input
                 v-model="transitionTargetId"
-                :value="id"
+                :value="state.id"
                 type="radio"
               >
             </label>

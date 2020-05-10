@@ -9,7 +9,12 @@ import { TransitionSummary, TransitionSpec, createTransition, TransitionState, s
 import { Step, StepSpec }  from '../undo/undo-step'
 import performReversible from '../undo/undo-reversible'
 
-export default {
+export interface TransitionsActions {
+  addTransition(spec: TransitionSpec): Promise<TransitionSummary>
+  removeTransition(transitionId: string)
+}
+
+export const actions = {
   [ADD_TRANSITION]: addTransition,
   [REMOVE_TRANSITION]: removeTransition
 }

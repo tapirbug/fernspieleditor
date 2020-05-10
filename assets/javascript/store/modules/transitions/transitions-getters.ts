@@ -1,10 +1,8 @@
 import { TransitionModuleState } from './transitions-module-state'
-import { gistWhen } from './transition-gist'
 import { TransitionSummary, TransitionState, summarize } from './transition'
 import { PhonebookTransitions } from 'assets/javascript/phonebook/phonebook-transitions'
 import { serialize } from './transitions-serialize'
 import { StatesGetters } from '../states/states-getters'
-import { EditorGetters } from '../editor/editor-getters'
 
 export const getters = {
   activeTransitions,
@@ -30,7 +28,7 @@ export interface TransitionGetters {
  * 
  * Exported for tests only.
  */
-export type TransitionRootGetters = StatesGetters & EditorGetters
+export type TransitionRootGetters = StatesGetters
 
 /**
  * Transition edges without the extra metadata in `fromName`, `toName` and
