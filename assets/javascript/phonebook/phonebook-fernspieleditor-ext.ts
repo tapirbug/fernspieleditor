@@ -8,7 +8,7 @@ import { Vec2D } from "../util/geom/vec2d";
  */
 export interface PhonebookFernspieleditorExt {
   version: FernspieleditorExtVersion.Version1
-  focusedStateId: null
+  focusedStateId: string|null
   extensionProperties: PhonebookFernspieleditorExtProperties
 }
 
@@ -25,7 +25,6 @@ export interface PhonebookFernspieleditorStatesExt {
  * not in the fernspielapparat.
  */
 export interface PhonebookFernspieleditorStateExt {
-  removed: boolean
   network: PhonebookFernspieleditorStateNetworkExt
 }
 
@@ -33,6 +32,6 @@ export interface PhonebookFernspieleditorStateNetworkExt {
   position: Vec2D
 }
 
-const enum FernspieleditorExtVersion {
+export const enum FernspieleditorExtVersion {
   Version1 = 1
 }
