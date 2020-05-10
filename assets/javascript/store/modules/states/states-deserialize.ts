@@ -50,7 +50,6 @@ export function deserialize(phonebook: PhonebookSubsetForStates): StatesModuleSt
         },
         []
       )
-
   return {
     states: [any].concat(persistedStates),
     focusedStateId: focusedStateIdOrNull,

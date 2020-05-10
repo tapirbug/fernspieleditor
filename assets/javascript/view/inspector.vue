@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 import TransitionDialog from './transition-dialog.vue'
 import SoundPicker from './sound-picker.vue'
 import { data, computed, methods } from './inspector-logic'
