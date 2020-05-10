@@ -25,7 +25,7 @@ import { ModuleTree } from 'vuex'
  * @param {object} phonebook Initial root state, in phonebook format, to initialize the submodules with initial data
  * @returns {object} `vuex` module for states
  */
-export default function createModules (phonebook: Phonebook): ModuleTree<any> {
+export default function createModules (phonebook: Phonebook): ModuleTree<object> {
   return {
     info: info(phonebook),
     deserialize: deserialize(),

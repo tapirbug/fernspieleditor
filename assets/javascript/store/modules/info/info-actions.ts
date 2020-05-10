@@ -26,7 +26,7 @@ export const infoActionMapping = {
   bumpIteration: BUMP_ITERATION
 }
 
-type InfoContext = ActionContext<InfoModuleState, any>
+type InfoContext = ActionContext<InfoModuleState, object>
 
 function updateInfo ({ commit, state: { info: oldInfo } }: InfoContext, diff: InfoSpec): void {
   const updated: Info = {
@@ -44,7 +44,7 @@ function updateInfo ({ commit, state: { info: oldInfo } }: InfoContext, diff: In
   )
 }
 
-function bumpIteration ({ dispatch, state: { info: { iteration } } }: InfoContext): void {
+async function bumpIteration ({ dispatch, state: { info: { iteration } } }: InfoContext): Promise<void> {
   const bumpedSpec: InfoSpec = { iteration: iteration + 1 }
-  dispatch(UPDATE_INFO, bumpedSpec) // iteration is intentionally not reversible
+  await dispatch(UPDATE_INFO, bumpedSpec) // iteration is intentionally not reversible
 }
