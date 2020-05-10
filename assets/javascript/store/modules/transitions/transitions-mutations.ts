@@ -3,10 +3,10 @@ import {
   SET_TRANSITION_REMOVED,
   SET_TRANSITION_REVIVED,
   REPLACE_PHONEBOOK
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import { deserialize } from './transitions-deserialize'
-import { TransitionModuleState } from './transitions-module-state.js'
-import { TransitionState } from './transition.js'
+import { TransitionModuleState } from './transitions-module-state'
+import { TransitionState } from './transition'
 import { Phonebook } from 'assets/javascript/phonebook/phonebook'
 
 export default {

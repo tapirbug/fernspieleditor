@@ -3,13 +3,13 @@ import {
   DISCONNECT,
   DEPLOY,
   SERIALIZE
-} from '../../action-types.js'
+} from '../../action-types'
 import {
   ADD_CONNECTION,
   SELECT_CONNECTION,
   ENTER_REMOTE,
   RELEASE_SOCKET
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import YAML from 'yaml'
 
 const defaultPort = '38397'

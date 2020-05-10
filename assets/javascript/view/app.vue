@@ -3,7 +3,7 @@ import Auxiliary from './auxiliary.vue'
 import Bar from './bar.vue'
 import Drawer from './drawer.vue'
 import NetworkView from './network-view.vue'
-import { UNDO, REDO } from '../store/action-types.js'
+import { UNDO, REDO } from '../store/action-types'
 import { mapGetters, mapActions } from 'vuex'
 import GlobalEvents from 'vue-global-events'
 

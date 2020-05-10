@@ -1,5 +1,5 @@
-import { MAKE_INITIAL_STATE } from '../store/mutation-types.js'
-import { REMOVE_TRANSITION } from '../store/action-types.js'
+import { MAKE_INITIAL_STATE } from '../store/mutation-types'
+import { REMOVE_TRANSITION } from '../store/action-types'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { statesGetterMappings, StatesGetters } from '../store/modules/states/states-getters'
 import { statesActionMapping, StatesActions } from '../store/modules/states/states-actions'

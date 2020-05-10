@@ -1,8 +1,8 @@
 import {
   SET_INFO
-} from '../../mutation-types.js'
-import { InfoModuleState } from './info-module-state.js'
-import { Info } from './info.js'
+} from '../../mutation-types'
+import { InfoModuleState } from './info-module-state'
+import { Info } from './info'
 
 export const mutations = {
   [SET_INFO] (moduleState: InfoModuleState, newInfo: Info) {

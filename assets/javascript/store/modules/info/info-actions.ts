@@ -1,10 +1,10 @@
 import {
   UPDATE_INFO,
   BUMP_ITERATION
-} from '../../action-types.js'
+} from '../../action-types'
 import {
   SET_INFO
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import { ActionContext } from 'vuex'
 import { InfoModuleState } from './info-module-state'
 import { InfoSpec } from './info-spec'

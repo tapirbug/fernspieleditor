@@ -1,16 +1,16 @@
 import {
   UNDO,
   REDO
-} from '../../action-types.js'
+} from '../../action-types'
 import {
   START_UNDO,
   FINISH_UNDO,
   START_REDO,
   FINISH_REDO
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import { ActionContext } from 'vuex'
-import { UndoState } from './undo-state.js'
-import { UndoGetters } from './undo-getters.js'
+import { UndoState } from './undo-state'
+import { UndoGetters } from './undo-getters'
 
 export interface UndoActions {
   undo()

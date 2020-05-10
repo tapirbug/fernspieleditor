@@ -22,7 +22,7 @@ import {
   REMOVE_TRANSITION,
   SERIALIZE,
   TO_YAML
-} from '../../../../../assets/javascript/store/action-types.js'
+} from '../../../../../assets/javascript/store/action-types'
 import { TransitionGetters } from '../../../../../assets/javascript/store/modules/transitions/transitions-getters'
 import { StatesGetters } from '../../../../../assets/javascript/store/modules/states/states-getters'
 import { StatesActions } from 'assets/javascript/store/modules/states/states-actions'

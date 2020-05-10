@@ -1,5 +1,5 @@
 import { mapActions, mapGetters } from 'vuex'
-import { ADD_TRANSITION } from '../store/action-types.js'
+import { ADD_TRANSITION } from '../store/action-types'
 import { TransitionSpec, TransitionType } from '../store/modules/transitions/transition'
 
 interface Data {

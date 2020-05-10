@@ -3,7 +3,7 @@ import {
   SELECT_CONNECTION,
   ENTER_REMOTE,
   RELEASE_SOCKET
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import Vue from 'vue'
 
 export default {

@@ -1,9 +1,9 @@
 import {
   REPLACE_PHONEBOOK
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import {
   LOAD_FILE
-} from '../../action-types.js'
+} from '../../action-types'
 import { defaultState } from '../../../phonebook/phonebook-states'
 import YAML from 'yaml'
 import { mapValues } from '../../../util/map-obj.js'

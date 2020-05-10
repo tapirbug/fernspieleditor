@@ -5,7 +5,7 @@ import {
   REPLACE_STATE,
   FOCUS_STATE as ACTION_FOCUS_STATE,
   MAKE_INITIAL_STATE
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import {
   ADD_STATE,
   REMOVE_STATE,
@@ -13,7 +13,7 @@ import {
   CONTINUE_UPDATE_STATE,
   FOCUS_STATE as MUTATION_FOCUS_STATE,
   SET_INITIAL_STATE
-} from '../../action-types.js'
+} from '../../action-types'
 import { ActionContext } from 'vuex'
 import { StateSpec, createState, StateSummary, summarize } from './state'
 import { StatesModuleState } from './states-module-state.js'

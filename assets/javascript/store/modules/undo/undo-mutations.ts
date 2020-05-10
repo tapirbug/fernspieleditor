@@ -4,8 +4,8 @@ import {
   START_REDO,
   FINISH_REDO,
   DO
-} from '../../mutation-types.js'
-import { Transaction } from './undo-transaction.js'
+} from '../../mutation-types'
+import { Transaction } from './undo-transaction'
 
 export default {
   [START_UNDO] (undo) {

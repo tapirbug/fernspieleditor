@@ -6,7 +6,7 @@ import {
   REPLACE_PHONEBOOK,
   FOCUS_STATE,
   MAKE_INITIAL_STATE
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 import { StatesModuleState } from './states-module-state'
 import { createState, StateState } from './state'
 import { Phonebook } from '../../../phonebook/phonebook'

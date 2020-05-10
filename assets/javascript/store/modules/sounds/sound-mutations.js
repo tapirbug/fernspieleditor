@@ -6,7 +6,7 @@ import {
   ADD_SOUND,
   UPDATE_SOUND,
   REPLACE_PHONEBOOK
-} from '../../mutation-types.js'
+} from '../../mutation-types'
 
 export default {
   [UPDATE_SOUND] (sounds, { id, ...updatedProps }) {

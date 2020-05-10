@@ -1,6 +1,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { ADD_SOUND, UPDATE_SOUND } from '../store/mutation-types.js'
+import { ADD_SOUND, UPDATE_SOUND } from '../store/mutation-types'
 import { isAudioFilename } from '../util/sound-mimes.js'
 
 /**
