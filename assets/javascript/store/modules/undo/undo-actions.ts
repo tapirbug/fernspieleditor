@@ -22,6 +22,11 @@ export const actions = {
   [REDO]: redo
 }
 
+export const undoActionMapping = {
+  undo: UNDO,
+  redo: REDO
+}
+
 interface UndoContext extends ActionContext<UndoState, object> {
   getters: UndoGetters
 }

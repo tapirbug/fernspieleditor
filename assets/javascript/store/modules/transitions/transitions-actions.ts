@@ -19,6 +19,11 @@ export const actions = {
   [REMOVE_TRANSITION]: removeTransition
 }
 
+export const transitionActionMapping = {
+  addTransition: ADD_TRANSITION,
+  removeTransition: REMOVE_TRANSITION
+}
+
 /**
  * Adds the given transition and returns its ID.
  *

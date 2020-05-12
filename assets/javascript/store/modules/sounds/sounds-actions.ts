@@ -33,6 +33,13 @@ export const actions = {
   [SERIALIZE_SOUNDS]: doSerializeSounds
 }
 
+export const soundsActionMapping = {
+  addSound: ADD_SOUND,
+  removeSound: REMOVE_SOUND,
+  updateSound: UPDATE_SOUND,
+  serializeSounds: SERIALIZE_SOUNDS
+}
+
 function addSound ({ commit }: SoundsContext, spec: SoundSpec): Sound {
   const sound: Sound = createSound({
     ...defaultSound(),

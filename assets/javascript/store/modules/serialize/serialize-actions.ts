@@ -16,6 +16,11 @@ export const actions = {
   [SERIALIZE]: serialize
 }
 
+export const serializeActionMapping = {
+  toYaml: TO_YAML,
+  serialize: SERIALIZE
+}
+
 interface SerializeContext extends ActionContext<any, any> {
   rootGetters: ModuleGetters
 }
@@ -27,7 +32,7 @@ async function toYaml (ctx): Promise<string> {
 
 async function serialize ({ dispatch, getters, rootState, rootGetters }: SerializeContext): Promise<Phonebook> {
   if (!getters.canSave) {
-    return await Promise.reject(new Error('File is inconsistent and cannot be saved'))
+    throw new Error('File is inconsistent and cannot be saved')
   }
 
   const phonebookSubsetForSounds = await dispatch(SERIALIZE_SOUNDS, null, { root: true }) as PhonebookSubsetForSounds

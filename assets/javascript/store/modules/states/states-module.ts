@@ -12,7 +12,7 @@ import { StatesModuleState } from './states-module-state'
  * @param {object} states Initial map of states
  * @returns {object} `vuex` module for states
  */
-export default function createStateModule (phonebook: PhonebookSubsetForStates): Module<StatesModuleState, any> {
+export default function createStateModule (phonebook: PhonebookSubsetForStates): Module<StatesModuleState, object> {
   return {
     state: deserialize(phonebook),
     actions,
