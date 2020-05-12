@@ -22,7 +22,7 @@ export interface SoundsActions {
   serializeSounds(): Promise<PhonebookSubsetForSounds>
 }
 
-interface SoundsContext extends ActionContext<SoundsModuleState, any> {
+interface SoundsContext extends ActionContext<SoundsModuleState, object> {
   getters: SoundsGetters
 }
 
@@ -89,30 +89,6 @@ function updateSound ({ commit, getters }: SoundsContext, update: SoundSpec): vo
   )
 }
 
-function doSerializeSounds ({ state }: SoundsContext): Promise<PhonebookSubsetForSounds> {
+async function doSerializeSounds ({ state }: SoundsContext): Promise<PhonebookSubsetForSounds> {
   return await serializeSounds(state)
 }
-
-/* function sanitizeSound (sound) {
-  const sanitized = {
-    // Make sure props have expected types
-    name: toStr(sound.name),
-    loop: toBool(sound.loop),
-    speech: toStr(sound.speech),
-    volume: toFiniteFloat(sound.volume),
-    backoff: toFiniteFloat(sound.backoff)
-    // any additional properties from the parameter are left out
-  }
-
-  if (typeof sound.file === 'string' && sound.file !== '') {
-    // A file can be cleared by setting it to the empty string,
-    // only set non-empty paths and data-URIs
-    sanitized.file = sound.file
-  } else if (typeof sound.file === 'object' && sound.file !== null) {
-    // File objects are fine too
-    sanitized.file = sound.file
-  }
-
-  return sanitized
-}
-*/
