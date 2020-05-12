@@ -90,7 +90,7 @@ function currentTransitionSpec (data: Self): TransitionSpec | null {
   }
 
   switch (transitionType) {
-    case TransitionType.Dial:
+    case TransitionType.Dial: {
       const pattern = data.dialNumber
       if (pattern === null) {
         return null
@@ -108,8 +108,9 @@ function currentTransitionSpec (data: Self): TransitionSpec | null {
         to,
         pattern
       }
+    }
 
-    case TransitionType.Timeout:
+    case TransitionType.Timeout: {
       const afterStr = data.timeoutSeconds
       if (afterStr === null) {
         return null
@@ -126,6 +127,7 @@ function currentTransitionSpec (data: Self): TransitionSpec | null {
         from,
         to
       }
+    }
 
     case TransitionType.PickUp:
     case TransitionType.HangUp:
@@ -137,6 +139,6 @@ function currentTransitionSpec (data: Self): TransitionSpec | null {
       }
 
     default:
-      throw new Error(`Unhandled transition type: ${transitionType}`)
+      throw new Error(`Unhandled transition type: ${JSON.stringify(transitionType)}`)
   }
 }
