@@ -1,25 +1,14 @@
 /// Tests the states module together with transitions and undo
 import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
+import Vuex, { Store, mapActions } from 'vuex'
 import states from '../../../../../assets/javascript/store/modules/states/states-module'
 import transitions from '../../../../../assets/javascript/store/modules/transitions/index'
 import undo from '../../../../../assets/javascript/store/modules/undo/undo-module'
-import {
-  ADD_STATE,
-  REMOVE_STATE,
-  CONTINUE_UPDATE_STATE,
-  UPDATE_STATE,
-  UNDO,
-  REDO,
-  FOCUS_STATE,
-  SET_INITIAL_STATE
-} from '../../../../../assets/javascript/store/action-types'
 import { TransitionGetters } from '../../../../../assets/javascript/store/modules/transitions/transitions-getters'
 import { StatesGetters } from '../../../../../assets/javascript/store/modules/states/states-getters'
-import { StatesActions } from 'assets/javascript/store/modules/states/states-actions'
-import { StateSpec, StateSummary } from 'assets/javascript/store/modules/states/state'
-import { UndoActions } from 'assets/javascript/store/modules/undo/undo-actions'
-import { FernspieleditorExtVersion } from 'assets/javascript/phonebook/phonebook-fernspieleditor-ext'
+import { StatesActions, statesActionMapping } from '../../../../../assets/javascript/store/modules/states/states-actions'
+import { UndoActions, undoActionMapping } from '../../../../../assets/javascript/store/modules/undo/undo-actions'
+import { FernspieleditorExtVersion } from '../../../../../assets/javascript/phonebook/phonebook-fernspieleditor-ext'
 
 Vue.use(Vuex)
 
@@ -80,8 +69,8 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.focusState(summaryFromAdding.id)
-      actions.setInitialState(summaryFromAdding.id)
+      await actions.focusState(summaryFromAdding.id)
+      await actions.setInitialState(summaryFromAdding.id)
 
       const { states, initial, focusedStateId } = getters
       expect(initial).toEqual(summaryFromAdding.id)
@@ -106,7 +95,7 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.undo()
+      await actions.undo()
 
       expect(getters.states).toHaveLength(1)
       expect(getters.states).toEqual(expect.not.arrayContaining([
@@ -125,8 +114,8 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.undo()
-      actions.redo()
+      await actions.undo()
+      await actions.redo()
 
       expect(getters.states).toHaveLength(2) // any + added state = 2
       expect(getters.states).toEqual(expect.arrayContaining([
@@ -145,8 +134,8 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.undo()
-      actions.redo()
+      await actions.undo()
+      await actions.redo()
 
       expect(getters.states).toHaveLength(2) // any + added state = 2
       expect(getters.states).toEqual(expect.arrayContaining([
@@ -165,7 +154,7 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.removeState(summaryFromAdding.id)
+      await actions.removeState(summaryFromAdding.id)
 
       expect(getters.states).toHaveLength(1)
       expect(getters.states).toEqual(expect.not.arrayContaining([
@@ -184,8 +173,8 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.removeState(summaryFromAdding.id)
-      actions.undo()
+      await actions.removeState(summaryFromAdding.id)
+      await actions.undo()
 
       const { states, initial, focusedStateId } = getters
       expect(initial).toBeNull()
@@ -207,16 +196,16 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.focusState(summaryFromAdding.id) // focus should be restored after redo
-      actions.setInitialState(summaryFromAdding.id)
-      actions.removeState(summaryFromAdding.id)
+      await actions.focusState(summaryFromAdding.id) // focus should be restored after redo
+      await actions.setInitialState(summaryFromAdding.id)
+      await actions.removeState(summaryFromAdding.id)
 
       const {
         states: statesBeforeUndo,
         initial: initialBeforeUndo,
         focusedStateId: focusedStateIdBeforeUndo
       } = getters
-      actions.undo()
+      await actions.undo()
       const {
         states: statesAfterUndo,
         initial: initialAfterUndo,
@@ -249,9 +238,9 @@ describe('states module', () => {
           description: 'What a wonderful day to be a state.'
         }
       )
-      actions.removeState(summaryFromAdding.id)
-      actions.undo()
-      actions.redo()
+      await actions.removeState(summaryFromAdding.id)
+      await actions.undo()
+      await actions.redo()
 
       expect(getters.states).toHaveLength(1)
       expect(getters.states).toEqual(expect.not.arrayContaining([
@@ -262,13 +251,13 @@ describe('states module', () => {
 })
 
 interface TestContext {
-  store: Store<any>
+  store: Store<object>
   getters: StatesGetters & TransitionGetters
-  actions: StatesActions & UndoActions
+  actions: StatesActions & UndoActions & { $store: Store<object> }
 }
 
 function initStore (): TestContext {
-  const store = new Vuex.Store({
+  const store = new Vuex.Store<object>({
     modules: {
       states: states({
         initial: null,
@@ -289,33 +278,14 @@ function initStore (): TestContext {
   })
   const getters: StatesGetters & TransitionGetters = store.getters
   return {
-    store,
+    store: store,
     getters,
     actions: {
-      addState (spec: StateSpec): Promise<StateSummary> {
-        return store.dispatch(ADD_STATE, spec)
-      },
-      removeState (stateId: string): void {
-        store.dispatch(REMOVE_STATE, stateId)
-      },
-      continueUpdateState (spec: StateSpec): void {
-        store.dispatch(CONTINUE_UPDATE_STATE, spec)
-      },
-      updateState (spec: StateSpec): Promise<StateSummary> {
-        return store.dispatch(UPDATE_STATE, spec)
-      },
-      focusState (id: string): void {
-        store.dispatch(FOCUS_STATE, id)
-      },
-      setInitialState (id: string): void {
-        store.dispatch(SET_INITIAL_STATE, id)
-      },
-      undo () {
-        store.dispatch(UNDO)
-      },
-      redo () {
-        store.dispatch(REDO)
-      }
+      $store: store,
+      ...mapActions({
+        ...statesActionMapping,
+        ...undoActionMapping
+      })
     }
   }
 }
