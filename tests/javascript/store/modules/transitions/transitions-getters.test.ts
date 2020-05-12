@@ -113,6 +113,7 @@ describe('transition getters', () => {
       timeout
     ]
   }
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const rootGetters = {
     isRemoved (id) { return id === 'Removed State' },
     isAny (id) { return id === 'any' },
