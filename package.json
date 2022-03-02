@@ -37,7 +37,7 @@
     "eslint-plugin-standard": "4",
     "eslint-plugin-vue": "^6.2.2",
     "jest": "^25.4.0",
-    "karma": "^4.2.0",
+    "karma": "^6.3.16",
     "parcel": "^1.12.3",
     "sass": "^1.17.2",
     "ts-jest": "^25.4.0",
